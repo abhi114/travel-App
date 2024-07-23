@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "524047474503",
+    "project_id": "travelinfo-6a043",
+    "storage_bucket": "travelinfo-6a043.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:524047474503:android:94e81733c56bd1ac393662",
+        "android_client_info": {
+          "package_name": "com.travelinfo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCcnm40ItYFNdBWAt6_4c-hTuBXtzwJibA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
