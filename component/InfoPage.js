@@ -108,56 +108,120 @@ const InfoPage = ({route}) => {
   };
   return (
     <View style={styles.outerContainer}>
+      
       <ScrollView style={styles.container}>
-        <View style={styles.container}>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}> Full Name</Text>
-            <TextInput onChangeText={setName} value={name} placeholder="Enter Name" style={styles.textInput} />
-            <Text style={styles.sectionTitle}>Number</Text>
-            <TextInput onChangeText={enterNumber} value={number} placeholder="Enter Number" style={styles.textInput} />
+        <View style={styles.buttonContainer}>
+          <Text style={styles.headerText}>Your Details</Text>
+        </View>
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Full Name</Text>
+            <TextInput
+              onChangeText={setName}
+              value={name}
+              placeholder="Enter Name"
+              style={styles.textInput}
+            />
           </View>
+        </View>
 
-          <View style={styles.section}>
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Number</Text>
+            <TextInput
+              onChangeText={enterNumber}
+              value={number}
+              placeholder="Enter Number"
+              style={styles.textInput}
+            />
+          </View>
+        </View>
+
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
             <Text style={styles.sectionTitle}>Reporting Date and Time</Text>
-            <TextInput onChangeText={setRprDate} value={Rprtdate} placeholder="Enter reporting date and time" style={styles.textInput} />
+            <TextInput
+              onChangeText={setRprDate}
+              value={Rprtdate}
+              placeholder="Enter reporting date and time"
+              style={styles.textInput}
+            />
           </View>
-          <View style={styles.line}></View>
-          <View style={styles.section}>
+        </View>
+
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
             <Text style={styles.sectionTitle}>End Date</Text>
-            <TextInput value={endDate} onChangeText={setEndDate} placeholder="Enter date" style={styles.textInput} />
+            <TextInput
+              value={endDate}
+              onChangeText={setEndDate}
+              placeholder="Enter date"
+              style={styles.textInput}
+            />
           </View>
-          <View style={styles.line}></View>
-          <View style={styles.sectionRow}>
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Reporting Address</Text>
-              <TextInput value={address} onChangeText={setAddress} placeholder="Enter address" style={styles.textInput} />
-            </View>
-            <View style={styles.sectionIconContainer}>
-              <Icon1 name="location" size={30} color={'#000000'} />
+        </View>
+
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
+            <View style={styles.sectionRow}>
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Reporting Address</Text>
+                <TextInput
+                  value={address}
+                  onChangeText={setAddress}
+                  placeholder="Enter address"
+                  style={styles.textInput}
+                />
+              </View>
+              <View style={styles.sectionIconContainer}>
+                <Icon1 name="location" size={30} color={'#000000'} />
+              </View>
             </View>
           </View>
-          <View style={styles.line}></View>
-          <View style={styles.section}>
+        </View>
+
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
             <Text style={styles.sectionTitle}>Serving city</Text>
-            <TextInput value={city} onChangeText={setCity} placeholder="Enter City" style={styles.textInput} />
+            <TextInput
+              value={city}
+              onChangeText={setCity}
+              placeholder="Enter City"
+              style={styles.textInput}
+            />
           </View>
-          <View style={styles.line}></View>
-          <View style={styles.section}>
+        </View>
+
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
             <Text style={styles.sectionTitle}>Vehicle Details</Text>
-            <TextInput value={vehicleDetails} onChangeText={setvehicleDetails} placeholder="Enter Vehicle Details" style={styles.textInput} />
+            <TextInput
+              value={vehicleDetails}
+              onChangeText={setvehicleDetails}
+              placeholder="Enter Vehicle Details"
+              style={styles.textInput}
+            />
           </View>
-          <View style={styles.line}></View>
-          <Text style={styles.sectionTitle}>Duty Instructions</Text>
-          <TextInput value={dutyInstructions} onChangeText={setDutyInstructions} placeholder="Enter Instructions" style={styles.textInput} />
-          <View style={styles.line}></View>
+        </View>
+
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Duty Instructions</Text>
+            <TextInput
+              value={dutyInstructions}
+              onChangeText={setDutyInstructions}
+              placeholder="Enter Instructions"
+              style={styles.textInput}
+            />
+          </View>
         </View>
       </ScrollView>
+
       <View style={styles.buttonContainer}>
-        
         <TouchableOpacity
           onPress={() => afteraccept()}
-          style={[styles.button, styles.startButton]}>
-          <Text style={styles.buttonText}>proceed</Text>
+          style={styles.proceedButton}>
+          <Text style={styles.proceedButtonText}>Proceed</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -167,40 +231,42 @@ const InfoPage = ({route}) => {
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#d3d3d3',
+  },
+  headerContainer: {
+    backgroundColor: '#007bff',
+    padding: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#252F40',
+    textAlign: 'center',
   },
   container: {
     flex: 1,
   },
-  header: {
-    paddingTop: 5,
-    paddingLeft: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#D3D3D3',
-    height: 80, // Fixed height for the header
+  cardContainer: {
+    marginVertical: 10,
+    marginHorizontal: 20,
   },
-  headerTextContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-  },
-  headerText: {
-    marginBottom: 16,
-    fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  headerIconContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    marginRight: 12,
+  card: {
+    backgroundColor: '#C9E4CA',
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
   },
   section: {
     flexDirection: 'column',
   },
   sectionRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'pace-between',
   },
   sectionTitle: {
     margin: 16,
@@ -208,14 +274,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000000',
   },
-  sectionText: {
-    marginLeft: 15,
-    fontSize: 14,
-    fontWeight: 'bold',
-    color: '#000000',
-  },
   sectionIconContainer: {
-    justifyContent: 'center',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     marginRight: 12,
     marginTop: 18,
   },
@@ -227,26 +288,36 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    padding: 20,
-    backgroundColor: '#FFFFFF',
-  },
-  button: {
-    width: 110,
-    height: 50,
-    borderRadius: 10,
-    alignItems: 'center',
     justifyContent: 'center',
+    padding: 15,
+    backgroundColor: '#e6e6fa',
+    borderRadius: 10, // Add a slight corner radius
+    borderWidth: 1, // Add a thin border
+    borderColor: '#CCCCCC', // Light gray border color
+    shadowColor: '#000000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
   },
-  noShowButton: {
-    backgroundColor: '#808080',
+
+  proceedButton: {
+    backgroundColor: '#000080', // a nice blue color
+    borderRadius: 10,
+    padding: 10,
+    width: '60%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
   },
-  startButton: {
-    backgroundColor: '#0000FF',
-  },
-  buttonText: {
+
+  proceedButtonText: {
+    fontSize: 18,
+    fontWeight: 'bold',
     color: '#FFFFFF',
-    alignSelf: 'center',
+    textAlign: 'center',
   },
   textInput: {
     borderColor: 'black',
@@ -254,6 +325,10 @@ const styles = StyleSheet.create({
     borderRadius: 10, // Adjust corner curvature here
     padding: 10,
     margin: 5,
+    underlineStyle: {
+      borderBottomWidth: 2,
+      borderBottomColor: 'blue',
+    },
   },
 });
 

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, KeyboardAvoidingView, Platform, Image} from 'react-native';
+import {View, StyleSheet, KeyboardAvoidingView, Platform, Image, TouchableOpacity, Text, Alert} from 'react-native';
 import {TextInput, Button, Title} from 'react-native-paper';
 import {OtpInput} from 'react-native-otp-entry';
 import {useNavigation} from '@react-navigation/native';
@@ -10,7 +10,21 @@ const Login = ({route}) => {
   const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
   const [verificationId, setVerificationId] = useState(null);
+  const [restPassword,setresetPassword] = useState(false);
   const navigation = useNavigation();
+  const handleResetPassword =async ()=>{
+    if (emailId === '') {
+      Alert.alert('Please enter your email address');
+      return;
+    }
+    try {
+      await auth().sendPasswordResetEmail(emailId);
+      Alert.alert('Password reset email sent!', 'Please check your email to reset your password.');
+    } catch (error) {
+      console.error('Error sending password reset email:', error);
+      Alert.alert('Error', error.message);
+    }
+  }
   const handleRegister = async () => {
     if(emailId==='' || password ===''){
       alert("please fill email id and password");
@@ -57,22 +71,24 @@ const Login = ({route}) => {
           value={emailId}
           onChangeText={setEmailId}
           style={styles.input}
-          
         />
         <TextInput
           label="Password"
           value={password}
           onChangeText={setPassword}
           style={styles.input}
-          
         />
 
-        <Button
-          mode="contained"
-          onPress={handleRegister}
-          style={styles.button}>
+        <Button mode="contained" onPress={handleRegister} style={styles.button}>
           Login
         </Button>
+          <Button
+            mode="contained"
+            onPress={handleResetPassword}
+            style={styles.button}>
+            Reset Password
+          </Button>
+        
       </View>
     </KeyboardAvoidingView>
   );

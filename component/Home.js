@@ -10,9 +10,11 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome'; // Replace with your icon library
 import Icon1 from 'react-native-vector-icons/Entypo'; // Replace with your icon library
 import { useNavigation } from '@react-navigation/native';
+import {Linking} from 'react-native';
  
 const Home = ({route}) => {
     const navigate = useNavigation();
+    const [startKm,setStartkm]= useState();
     const {
       id,
       name,
@@ -24,6 +26,13 @@ const Home = ({route}) => {
       vehicleDetails,
       dutyInstructions,
     } = route.params;
+    const makecall = ()=>{
+      const phoneUrl = `tel:${number}`;
+      Linking.openURL(phoneUrl).catch(err =>
+        console.error('Failed to open URL:', err),
+      );
+    }
+   
     const [accept,setaccept] = useState(false);
     const afteraccept = ()=>{
         console.log("hit");
@@ -31,95 +40,134 @@ const Home = ({route}) => {
         setaccept(true);
         return;
         }
-        navigate.navigate("Duty");
+        navigate.navigate("Duty",{name,number,startKm});
 
     }
   return (
+    
     <View style={styles.outerContainer}>
       <ScrollView style={styles.container}>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <View style={styles.headerTextContainer}>
-              <Text style={styles.headerText}>{name}</Text>
-              <Text style={styles.headerText}>{number}</Text>
+        <View style={styles.cardContainer}>
+          <View style={[styles.card,{marginBottom:10}]}>
+            <View style={styles.header}>
+              <View style={styles.headerTextContainer}>
+                <Text style={styles.headerText}>{name}</Text>
+                <Text style={styles.headerText}>{number}</Text>
+              </View>
+              <TouchableOpacity onPress={()=>{makecall()}} style={styles.headerIconContainer}>
+                <Icon name="phone" size={35} color={'#ffA500'} />
+              </TouchableOpacity>
             </View>
-            <View style={styles.headerIconContainer}>
-              <Icon name="phone" size={35} color={'#ffA500'} />
-            </View>
           </View>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Reporting Date and Time</Text>
-            <Text style={styles.sectionText}>{Rprtdate}</Text>
-          </View>
-          <View style={styles.line}></View>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>End Date</Text>
-            <Text style={styles.sectionText}>{endDate}</Text>
-          </View>
-          <View style={styles.line}></View>
-          <View style={styles.sectionRow}>
+
+          <View style={styles.card}>
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Reporting Address</Text>
-              <Text style={styles.sectionText}>{address}</Text>
-            </View>
-            <View style={styles.sectionIconContainer}>
-              <Icon1 name="location" size={30} color={'#000000'} />
+              <Text style={styles.sectionTitle}>Reporting Date and Time</Text>
+              <Text style={styles.sectionText}>{Rprtdate}</Text>
             </View>
           </View>
+
           <View style={styles.line}></View>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Serving city</Text>
-            <Text style={styles.sectionText}>{city}</Text>
+
+          <View style={styles.card}>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>End Date</Text>
+              <Text style={styles.sectionText}>{endDate}</Text>
+            </View>
           </View>
+
           <View style={styles.line}></View>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Vehicle Details</Text>
-            <Text style={styles.sectionText}>{vehicleDetails}</Text>
+
+          <View style={styles.card}>
+            <View style={styles.sectionRow}>
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Reporting Address</Text>
+                <Text style={styles.sectionText}>{address}</Text>
+              </View>
+              <TouchableOpacity  style={styles.sectionIconContainer}>
+                <Icon1 name="location" size={30} color={'#000000'} />
+              </TouchableOpacity>
+            </View>
           </View>
+
           <View style={styles.line}></View>
-          <Text style={styles.sectionTitle}>{dutyInstructions}</Text>
+
+          <View style={styles.card}>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Serving city</Text>
+              <Text style={styles.sectionText}>{city}</Text>
+            </View>
+          </View>
+
           <View style={styles.line}></View>
+
+          <View style={styles.card}>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Vehicle Details</Text>
+              <Text style={styles.sectionText}>{vehicleDetails}</Text>
+            </View>
+          </View>
+
+          <View style={styles.line}></View>
+
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Duty Instructions</Text>
+            <Text style={styles.sectionText}>{dutyInstructions}</Text>
+          </View>
+
+          <View style={styles.line}></View>
+
           {accept && (
             <View>
-              <View style={[styles.section]}>
-                <Text style={styles.sectionTitle}>Start Km</Text>
-                <TextInput placeholder="Enter Km" style={styles.textInput} />
+              <View style={styles.card}>
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>Start Km</Text>
+                  <TextInput value={startKm} onChangeText={setStartkm} placeholder="Enter Km" style={styles.textInput} />
+                </View>
               </View>
+
               <View style={styles.line}></View>
-              <View style={[styles.section]}>
-                <Text style={styles.sectionTitle}>Send OTP</Text>
-                <Text style={styles.sectionText}>
-                  Please Select Any One of the Source to send OTP
-                </Text>
-                <View
-                  style={{flexDirection: 'column', flex: 1, borderWidth: 2}}>
+
+              <View style={styles.card}>
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>Send OTP</Text>
+                  <Text style={styles.sectionText}>
+                    Please Select Any One of the Source to send OTP
+                  </Text>
                   <View
                     style={{
+                      flexDirection: 'column',
                       flex: 1,
-                      flexDirection: 'row',
-                      backgroundColor: 'gray',
-                      alignItems: 'center',
-                      justifyContent: 'space-evenly',
-                      height: 50,
+                      borderWidth: 2,
                     }}>
-                    <Icon name="whatsapp" size={30} color={'#FFFF00'} />
-                    <Text style={[styles.text, {color: '#FFFFFF'}]}>
-                      Send code on Whatsapp
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      flex: 1,
-                      flexDirection: 'row',
-                      backgroundColor: 'white',
-                      alignItems: 'center',
-                      justifyContent: 'space-evenly',
-                      height: 50,
-                    }}>
-                    <Icon1 name="message" size={30} color={'#000000'} />
-                    <Text style={[styles.text, {color: '#000000'}]}>
-                      Send code on Message
-                    </Text>
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        backgroundColor: 'gray',
+                        alignItems: 'center',
+                        justifyContent: 'space-evenly',
+                        height: 50,
+                      }}>
+                      <Icon name="whatsapp" size={30} color={'#FFFF00'} />
+                      <Text style={[styles.text, {color: '#FFFFFF'}]}>
+                        Send code on Whatsapp
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        backgroundColor: 'white',
+                        alignItems: 'center',
+                        justifyContent: 'space-evenly',
+                        height: 50,
+                      }}>
+                      <Icon1 name="message" size={30} color={'#000000'} />
+                      <Text style={[styles.text, {color: '#000000'}]}>
+                        Send code on Message
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </View>
@@ -131,12 +179,16 @@ const Home = ({route}) => {
         <TouchableOpacity
           onPress={() => console.log('Reject')}
           style={[styles.button, styles.noShowButton]}>
-          <Text style={styles.buttonText}>{accept ? 'reject' : 'dismiss'}</Text>
+          <Text style={styles.buttonText}>
+            {accept ? 'reject' : 'dismiss'}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => afteraccept()}
           style={[styles.button, styles.startButton]}>
-          <Text style={styles.buttonText}>{accept ? 'accept' : 'start'}</Text>
+          <Text style={styles.buttonText}>
+            {accept ? 'accept' : 'start'}
+          </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -146,49 +198,58 @@ const Home = ({route}) => {
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#d3d3d3',
   },
   container: {
     flex: 1,
   },
+  cardContainer: {
+    padding: 20,
+  },
+  card: {
+    backgroundColor: '#C9E4CA',
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
+  },
   header: {
-    paddingTop: 5,
-    paddingLeft: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 12,
     backgroundColor: '#D3D3D3',
-    height: 80, // Fixed height for the header
+    borderRadius: 10,
+    marginHorizontal: 10,
   },
   headerTextContainer: {
     flexDirection: 'column',
     justifyContent: 'space-between',
   },
   headerText: {
-    marginBottom: 16,
     fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
   },
   headerIconContainer: {
-    flexDirection: 'column',
     justifyContent: 'center',
     marginRight: 12,
   },
   section: {
-    flexDirection: 'column',
+    marginBottom: 10,
   },
   sectionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   sectionTitle: {
-    margin: 16,
     fontSize: 18,
     fontWeight: 'bold',
     color: '#000000',
   },
   sectionText: {
-    marginLeft: 15,
     fontSize: 14,
     fontWeight: 'bold',
     color: '#000000',
@@ -199,20 +260,20 @@ const styles = StyleSheet.create({
     marginTop: 18,
   },
   line: {
-    marginTop: 15,
     height: 1,
-    backgroundColor: 'black',
+    backgroundColor: '#000000',
     marginVertical: 10,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    padding: 20,
-    backgroundColor: '#FFFFFF',
+    padding: 5,
+    marginBottom:10,
+    backgroundColor: '#d3d3d3',
   },
   button: {
-    width: 120,
-    height: 60,
+    width: 100,
+    height: 40,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
@@ -230,9 +291,9 @@ const styles = StyleSheet.create({
   textInput: {
     borderColor: 'black',
     borderWidth: 1,
-    borderRadius: 10, // Adjust corner curvature here
+    borderRadius: 10,
     padding: 10,
-    margin:5
+    margin: 5,
   },
 });
 

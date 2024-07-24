@@ -29,14 +29,14 @@ class Sign extends Component {
           Signature Capture Extended{' '}
         </Text>
         <SignatureCapture
-          style={[{flex: 1,width:500,height:300}, styles.signature]}
+          style={[{flex: 1, width: 500, height: 300}, styles.signature]}
           ref="sign"
           onSaveEvent={this._onSaveEvent}
           onDragEvent={this._onDragEvent}
           saveImageFileInExtStorage={false}
           showNativeButtons={false}
           showTitleLabel={false}
-          backgroundColor="#ff00ff"
+          backgroundColor="#2f4f4f"
           strokeColor="#ffffff"
           minStrokeWidth={4}
           maxStrokeWidth={4}
@@ -49,7 +49,7 @@ class Sign extends Component {
             onPress={() => {
               this.saveSign();
             }}>
-            <Text>Save</Text>
+            <Text style={styles.buttonText}>Save</Text>
           </TouchableHighlight>
 
           <TouchableHighlight
@@ -57,7 +57,7 @@ class Sign extends Component {
             onPress={() => {
               this.resetSign();
             }}>
-            <Text>Reset</Text>
+            <Text style={styles.buttonText}>Reset</Text>
           </TouchableHighlight>
         </View>
       </View>
@@ -65,22 +65,24 @@ class Sign extends Component {
   }
 }
 
-const Duty = () => {
-    const tableData = [
-      ['', 'Start', 'End Km'],
-      ['Km', '0.00', '0.0'],
-      ['Time', '00:00', '00:0'],
-    ];
+const Duty = ({route}) => {
+    
     const [accept, setaccept] = useState(false);
-     
+     const {name,number,startKm} = route.params;
+     const tableData = [
+       ['', 'Start', 'End Km'],
+       ['Km', startKm, '0.0'],
+       ['Time', '00:00', '00:0'],
+     ];
+     const [signatureEnable,setSignatureEnable] = useState(false);
   return (
     <View style={styles.outerContainer}>
       <ScrollView style={styles.container}>
         <View style={styles.container}>
           <View style={styles.header}>
             <View style={styles.headerTextContainer}>
-              <Text style={styles.headerText}>KAIREE SINGH</Text>
-              <Text style={styles.headerText}>NK230110005</Text>
+              <Text style={styles.headerText}>{name}</Text>
+              <Text style={styles.headerText}>{number}</Text>
             </View>
           </View>
         </View>
@@ -95,30 +97,28 @@ const Duty = () => {
             </View>
           ))}
         </View>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              onPress={() => console.log('Reject')}
-              style={[styles.button, styles.noShowButton]}>
-              <Text style={styles.buttonText}>
-                Signature
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => afteraccept()}
-              style={[styles.button, styles.startButton]}>
-              <Text style={styles.buttonText}>
-                SendOtp
-              </Text>
-            </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            onPress={() => setSignatureEnable(true)}
+            style={[styles.button, styles.noShowButton]}>
+            <Text style={styles.buttonText}>Signature</Text>
+          </TouchableOpacity>
         </View>
-        <Sign/>
+        {signatureEnable && <Sign />}
       </ScrollView>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          
+          style={[styles.button, styles.noShowButton]}>
+          <Text style={styles.buttonText}>Close Duty</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-    signature: `
+  signature: `
     .m-signature-pad {
       box-shadow: none;
       border: none;
@@ -135,11 +135,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     padding: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#ffffff',
   },
   button: {
-    width: 120,
-    height: 60,
+    width: 100,
+    height: 40,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
@@ -151,17 +151,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#0000FF',
   },
   signature: {
-        flex: 1,
-        borderColor: '#000033',
-        borderWidth: 1,
-    },
-    buttonStyle: {
-        flex: 1, justifyContent: "center", alignItems: "center", height: 50,
-        backgroundColor: "#eeeeee",
-        margin: 10
-    },
+    flex: 1,
+    borderColor: '#000033',
+    borderWidth: 3,
+  },
+  buttonStyle: {
+    flex: 1,
+    width: 100,
+    height: 40,
+    borderRadius: 10,
+    margin: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#808080',
+  },
   buttonText: {
-    color: '#FFFFFF',
+    color: '#f8f8ff',
     alignSelf: 'center',
   },
   textInput: {
@@ -173,7 +178,7 @@ const styles = StyleSheet.create({
   },
   outerContainer: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#f0f8ff',
   },
   table: {
     // Set table styles here (optional)
