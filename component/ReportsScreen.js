@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
+import {View, Text, FlatList, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 
 const UserDataScreen = ({route}) => {
@@ -44,97 +44,299 @@ const UserDataScreen = ({route}) => {
                     fontWeight: 'bold',
                     color: '#000000',
                   }}>
-                  {item}
+                  {item}     
                 </Text>
+                {!expanded[item] ? (<Text>Click for detailed View</Text>):(<Text>Click for normal view</Text>)}
               </View>
               {expanded[item] && (
-                <View style={styles.cardBody}>
-                  {Object.keys(userData[item].PassengerData).map(
-                    passengerKey => (
-                      <View key={passengerKey}>
+                <View>
+                  <View style={styles.cardBody}>
+                    {Object.keys(userData[item].PassengerData).map(
+                      passengerKey => (
+                        <View key={passengerKey}>
+                          <Text
+                            style={{
+                              fontSize: 18,
+                              fontWeight: 'bold',
+                              color: '#000000',
+                            }}>
+                            Driver's Name:
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+
+                              color: '#000000',
+                            }}>
+                            {userData[item].name}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+                              fontWeight: 'bold',
+                              color: '#000000',
+                            }}>
+                            Reporting Date:
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+
+                              color: '#000000',
+                            }}>
+                            {userData[item].ReportingDate}
+                          </Text>
+
+                          <Text
+                            style={{
+                              fontSize: 18,
+                              fontWeight: 'bold',
+                              color: '#000000',
+                            }}>
+                            End Date:
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+
+                              color: '#000000',
+                            }}>
+                            {userData[item].endDate}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+                              fontWeight: 'bold',
+                              color: '#000000',
+                            }}>
+                            Start Km:
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+
+                              color: '#000000',
+                            }}>
+                            {userData[item].startKm}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+                              fontWeight: 'bold',
+                              color: '#000000',
+                            }}>
+                            End Km:
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+
+                              color: '#000000',
+                            }}>
+                            {userData[item].endKm}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+                              fontWeight: 'bold',
+                              color: '#000000',
+                            }}>
+                            Start Fuel:
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+
+                              color: '#000000',
+                            }}>
+                            {userData[item].starFuel}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+                              fontWeight: 'bold',
+                              color: '#000000',
+                            }}>
+                            End Fuel:
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 18,
+
+                              color: '#000000',
+                            }}>
+                            {userData[item].endFuel}
+                          </Text>
+                          <View>
+                            <Text
+                              style={{
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                color: '#000000',
+                              }}>
+                              Driver's Signature:
+                            </Text>
+                            {userData[item].passengersSignature !==
+                            undefined ? (
+                              <View style={styles.Imagecontainer}>
+                                <Image
+                                  source={{
+                                    uri: userData[item].driversSignature,
+                                  }}
+                                  style={styles.image}
+                                  resizeMode="contain"
+                                />
+                              </View>
+                            ) : (
+                              <View style={styles.Imagecontainer}>
+                                <Text
+                                  style={{
+                                    margin: 8,
+                                    fontSize: 18,
+
+                                    color: '#000000',
+                                  }}>
+                                  No signature available
+                                </Text>
+                              </View>
+                            )}
+                          </View>
+                          <View style={styles.line}></View>
+                          <Text
+                            style={{
+                              fontSize: 18,
+                              fontWeight: 'bold',
+                              color: '#000000',
+                            }}>
+                            {passengerKey}:{' '}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 15,
+
+                              color: '#000000',
+                            }}>
+                            Name:{' '}
+                            {
+                              userData[item].PassengerData[passengerKey]
+                                .PassengerName
+                            }
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 15,
+
+                              color: '#000000',
+                            }}>
+                            Destination Address:{' '}
+                            {
+                              userData[item].PassengerData[passengerKey]
+                                .DestinationAddress
+                            }
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 15,
+
+                              color: '#000000',
+                            }}>
+                            Starting Address:{' '}
+                            {
+                              userData[item].PassengerData[passengerKey]
+                                .StartingAddress
+                            }
+                          </Text>
+                        </View>
+                      ),
+                    )}
+                    <Text style={styles.heading}>Address</Text>
+                    <Text
+                      style={{
+                        fontSize: 15,
+
+                        color: '#000000',
+                      }}>
+                      {userData[item].address}
+                    </Text>
+                    <Text style={styles.heading}>City</Text>
+                    <Text
+                      style={{
+                        fontSize: 15,
+
+                        color: '#000000',
+                      }}>
+                      {userData[item].city}
+                    </Text>
+                    <Text style={styles.heading}>Duty Instructions</Text>
+                    <Text
+                      style={{
+                        fontSize: 15,
+
+                        color: '#000000',
+                      }}>
+                      {userData[item].dutyInstructions}
+                    </Text>
+                    <Text style={styles.heading}>Vehicle Details</Text>
+                    <Text
+                      style={{
+                        fontSize: 15,
+
+                        color: '#000000',
+                      }}>
+                      {userData[item].vehicleDetails}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text
+                      style={{
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                        color: '#000000',
+                      }}>
+                      Passenger's Signature:
+                    </Text>
+                    {userData[item].passengersSignature !== undefined ? (
+                      <View style={styles.Imagecontainer}>
+                        <Image
+                          source={{uri: userData[item].passengersSignature}}
+                          style={styles.image}
+                          resizeMode="contain"
+                        />
+                      </View>
+                    ) : (
+                      <View style={styles.Imagecontainer}>
                         <Text
                           style={{
+                            margin: 8,
                             fontSize: 18,
-                            fontWeight: 'bold',
-                            color: '#000000',
-                          }}>
-                          {passengerKey}:{' '}
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 15,
 
                             color: '#000000',
                           }}>
-                          Name:{' '}
-                          {
-                            userData[item].PassengerData[passengerKey]
-                              .PassengerName
-                          }
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 15,
-
-                            color: '#000000',
-                          }}>
-                          Destination Address:{' '}
-                          {
-                            userData[item].PassengerData[passengerKey]
-                              .DestinationAddress
-                          }
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 15,
-
-                            color: '#000000',
-                          }}>
-                          Starting Address:{' '}
-                          {
-                            userData[item].PassengerData[passengerKey]
-                              .StartingAddress
-                          }
+                          No signature available
                         </Text>
                       </View>
-                    ),
-                  )}
-                  <Text style={styles.heading}>Address</Text>
+                    )}
+                  </View>
                   <Text
                     style={{
-                      fontSize: 15,
+                      margin: 8,
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      color: '#000000',
+                    }}>
+                    Feedbacks - 
+                  </Text>
+                  {userData[item].Feedback !== undefined ? (<View style={styles.feedbackcard}>
+                  <Text
+                    style={{
+                      margin: 8,
+                      fontSize: 18,
 
                       color: '#000000',
                     }}>
-                    {userData[item].address}
+                    {userData[item].Feedback}
                   </Text>
-                  <Text style={styles.heading}>City</Text>
-                  <Text
-                    style={{
-                      fontSize: 15,
-
-                      color: '#000000',
-                    }}>
-                    {userData[item].city}
-                  </Text>
-                  <Text style={styles.heading}>Duty Instructions</Text>
-                  <Text
-                    style={{
-                      fontSize: 15,
-
-                      color: '#000000',
-                    }}>
-                    {userData[item].dutyInstructions}
-                  </Text>
-                  <Text style={styles.heading}>Vehicle Details</Text>
-                  <Text
-                    style={{
-                      fontSize: 15,
-
-                      color: '#000000',
-                    }}>
-                    {userData[item].vehicleDetails}
-                  </Text>
+                  </View>):(<Text>Feedbacks Not available</Text>)}
                 </View>
               )}
             </View>
@@ -172,12 +374,37 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
   },
+  Imagecontainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: 200,
+    height: 200,
+    resizeMode: 'contain',
+  },
+  line: {
+    height: 1,
+    backgroundColor: '#000000',
+    marginVertical: 10,
+  },
   dateText: {
     fontSize: 16,
     fontWeight: 'bold',
   },
   cardBody: {
     padding: 10,
+  },
+  feedbackcard: {
+    backgroundColor: '#C9E4CA',
+    borderRadius: 10,
+    padding: 20,
+    marginTop: 5,
+    shadowColor: '#000000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
   },
   heading: {
     fontSize: 15,
@@ -197,7 +424,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 5,
-    marginBottom:15
+    marginBottom: 15,
   },
 });
 

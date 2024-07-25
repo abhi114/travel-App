@@ -75,7 +75,8 @@ const Home = ({route}) => {
           startFuel,
           endFuel,
           Rprtdate,
-          endDate
+          endDate,
+          mainData
         });
 
     }

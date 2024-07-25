@@ -1,8 +1,12 @@
 // FeedbackScreen.js
+import { useNavigation } from '@react-navigation/native';
 import React, {useState} from 'react';
+import { TouchableOpacity } from 'react-native';
 import {View, Text, ScrollView, StyleSheet} from 'react-native';
 
-const FeedbackScreen = () => {
+const FeedbackScreen = ({route}) => {
+  const {id} = route.params
+  const navigation = useNavigation();
   const [feedbacks, setFeedbacks] = useState([
     {
       id: 1,
@@ -27,6 +31,11 @@ const FeedbackScreen = () => {
             <Text style={styles.cardText}>{feedback.text}</Text>
           </View>
         ))}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => navigation.navigate('ButtonPage', {id})}>
+          <Text style={styles.buttonText}>Go To Selection Page</Text>
+        </TouchableOpacity>
       </ScrollView>
     </View>
   );
@@ -37,11 +46,27 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
     padding: 20,
+    justifyContent:'center'
   },
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+  },
+  button: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 25,
+    padding: 15,
+    margin: 20,
+    width: 200,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf:'center'
+  },
+  buttonText: {
+    fontSize: 12,
+    color: '#fff',
+    fontWeight: 'bold',
   },
   card: {
     backgroundColor: '#fff',

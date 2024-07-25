@@ -3,28 +3,50 @@ import React, { Component, useRef, useState } from 'react'
 
 import SignatureCapture from 'react-native-signature-capture';
 import { useNavigation } from '@react-navigation/native';
+import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
 
 
 
-
-const Sign = () => {
+const Sign = ({id, Rprtdate, mainData}) => {
   const signRef = useRef(null);
   const [currentSignature, setCurrentSignature] = useState('driversSignature');
   const [signatureSaved, setSignatureSaved] = useState(false);
-
+  //console.log("id is" + id);
   const saveSign = () => {
     signRef.current.saveImage();
   };
+  const storeData = async url => {
+    try {
+      const userRef = firestore().collection('users').doc(id); // Reference user document
+      mainData[Rprtdate][currentSignature] = url;
 
+      const updatedUserData = mainData; // Add new key-value pair
+      console.log('updated data is' + JSON.stringify(updatedUserData));
+      await userRef.set(updatedUserData, {merge: true}); // Set user data in the document
+    } catch (error) {
+      console.error('Error storing user data:', error);
+    }
+  };
   const resetSign = () => {
     signRef.current.resetImage();
   };
 
-  const _onSaveEvent = result => {
+  const _onSaveEvent = async result => {
     //result.encoded - for the base64 encoded png
     //result.pathName - for the file path name
     console.log(result);
     setSignatureSaved(true);
+    const storageref = storage().ref();
+    const imageRef = storageref.child(
+      `signatures/${id}/${currentSignature}.png`,
+    );
+    await imageRef.putString(result.encoded, 'base64', {
+      contentType: 'image/png',
+    });
+    const downloadURL = await imageRef.getDownloadURL();
+    console.log('url is' + downloadURL);
+    await storeData(downloadURL);
     resetSign();
   };
 
@@ -125,6 +147,7 @@ const Duty = ({route}) => {
        endFuel,
        Rprtdate,
        endDate,
+       mainData
      } = route.params;
      const tableData = [
        ['', 'Start', 'End '],
@@ -132,9 +155,13 @@ const Duty = ({route}) => {
        ['Duration', Rprtdate, endDate],
        ['Fuel',startFuel,endFuel]
      ];
+     
      const [signatureEnable,setSignatureEnable] = useState(false);
      const handleCloseDuty = ()=>{
-      navigation.navigate("Feedback");
+      navigation.navigate("Feedback",{id});
+     }
+     const getData = ()=>{
+
      }
   return (
     <View style={styles.outerContainer}>
@@ -205,13 +232,13 @@ const Duty = ({route}) => {
             <Text style={styles.buttonText}>Signature</Text>
           </TouchableOpacity>
         </View>
-        {signatureEnable && <Sign />}
+        {signatureEnable && <Sign id={id} Rprtdate={Rprtdate} mainData={mainData}/>}
       </ScrollView>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={() => handleCloseDuty()}
           style={[styles.button, styles.noShowButton]}>
-          <Text style={styles.buttonText}>Close Duty</Text>
+          <Text style={styles.buttonText}>End Duty</Text>
         </TouchableOpacity>
       </View>
     </View>

@@ -5,6 +5,7 @@ import {OtpInput} from 'react-native-otp-entry';
 import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import { validateEmail } from './helpers/helpers';
 const Login = ({route}) => {
  
   const [emailId, setEmailId] = useState('');
@@ -30,7 +31,11 @@ const Login = ({route}) => {
       alert("please fill email id and password");
       return;
     }
+    if(!validateEmail(emailId)){
+      return;
+    }
     try {
+      
       const email = auth().signInWithEmailAndPassword(emailId,password).then(async (user)=>{
         console.log("sign in");
         if(user){
