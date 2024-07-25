@@ -6,15 +6,20 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Replace with your icon library
 import Icon1 from 'react-native-vector-icons/Entypo'; // Replace with your icon library
+import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import {Linking} from 'react-native';
  
 const Home = ({route}) => {
     const navigate = useNavigation();
-    const [startKm,setStartkm]= useState();
+    const [startKm,setStartkm] = useState('');
+    const [endkm,setendKm] = useState('');
+    const [startFuel,setStartFuel] = useState('');
+    const [endFuel,setEndFuel] = useState('');
     const {
       id,
       name,
@@ -25,6 +30,7 @@ const Home = ({route}) => {
       city,
       vehicleDetails,
       dutyInstructions,
+      mainData
     } = route.params;
     const makecall = ()=>{
       const phoneUrl = `tel:${number}`;
@@ -32,29 +38,62 @@ const Home = ({route}) => {
         console.error('Failed to open URL:', err),
       );
     }
-   
+    const storeData = async (startkmvalue,endkmvalue,startfuelValue,endfuelValue) => {
+      try {
+        const userRef = firestore().collection('users').doc(id); // Reference user document
+        mainData[Rprtdate].startKm=startkmvalue
+        mainData[Rprtdate].endKm = endkmvalue
+        mainData[Rprtdate].starFuel = startfuelValue;
+        mainData[Rprtdate].endFuel = endfuelValue;
+        
+        const updatedUserData = mainData // Add new key-value pair
+        console.log("updated data is" + JSON.stringify(updatedUserData));
+        await userRef.set(updatedUserData, {merge: true}); // Set user data in the document
+      } catch (error) {
+        console.error('Error storing user data:', error);
+      }
+    };
     const [accept,setaccept] = useState(false);
-    const afteraccept = ()=>{
+    
+    const afteraccept = async ()=>{
         console.log("hit");
         if(accept === false){
         setaccept(true);
         return;
         }
-        navigate.navigate("Duty",{name,number,startKm});
+        if(startKm == '' || endkm == '' || startFuel== '' || endFuel == ''){
+          Alert.alert("please enter the km and fuel values");
+          return;
+        }
+        await storeData(startKm,endkm,startFuel,endFuel);
+        navigate.navigate('Duty', {
+          name,
+          number,
+          startKm,
+          endkm,
+          id,
+          startFuel,
+          endFuel,
+          Rprtdate,
+          endDate
+        });
 
     }
   return (
-    
     <View style={styles.outerContainer}>
       <ScrollView style={styles.container}>
         <View style={styles.cardContainer}>
-          <View style={[styles.card,{marginBottom:10}]}>
+          <View style={[styles.card, {marginBottom: 10}]}>
             <View style={styles.header}>
               <View style={styles.headerTextContainer}>
                 <Text style={styles.headerText}>{name}</Text>
                 <Text style={styles.headerText}>{number}</Text>
               </View>
-              <TouchableOpacity onPress={()=>{makecall()}} style={styles.headerIconContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  makecall();
+                }}
+                style={styles.headerIconContainer}>
                 <Icon name="phone" size={35} color={'#ffA500'} />
               </TouchableOpacity>
             </View>
@@ -84,7 +123,7 @@ const Home = ({route}) => {
                 <Text style={styles.sectionTitle}>Reporting Address</Text>
                 <Text style={styles.sectionText}>{address}</Text>
               </View>
-              <TouchableOpacity  style={styles.sectionIconContainer}>
+              <TouchableOpacity style={styles.sectionIconContainer}>
                 <Icon1 name="location" size={30} color={'#000000'} />
               </TouchableOpacity>
             </View>
@@ -122,10 +161,51 @@ const Home = ({route}) => {
               <View style={styles.card}>
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Start Km</Text>
-                  <TextInput value={startKm} onChangeText={setStartkm} placeholder="Enter Km" style={styles.textInput} />
+                  <TextInput
+                    value={startKm}
+                    onChangeText={setStartkm}
+                    placeholder="Enter Km"
+                    style={styles.textInput}
+                  />
+                </View>
+              </View>
+              <View style={styles.line}></View>
+              <View style={[styles.card, {marginTop: 5}]}>
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>End Km</Text>
+                  <TextInput
+                    value={endkm}
+                    onChangeText={setendKm}
+                    placeholder="Enter Km"
+                    style={styles.textInput}
+                  />
                 </View>
               </View>
 
+              <View style={styles.line}></View>
+              <View style={[styles.card, {marginTop: 5}]}>
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>Starting Fuel Reading</Text>
+                  <TextInput
+                    value={startFuel}
+                    onChangeText={setStartFuel}
+                    placeholder="Enter Start Fuel Reading"
+                    style={styles.textInput}
+                  />
+                </View>
+              </View>
+              <View style={styles.line}></View>
+              <View style={[styles.card, {marginTop: 5}]}>
+                <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>End Fuel Reading</Text>
+                  <TextInput
+                    value={endFuel}
+                    onChangeText={setEndFuel}
+                    placeholder="Enter End Fuel Reading"
+                    style={styles.textInput}
+                  />
+                </View>
+              </View>
               <View style={styles.line}></View>
 
               <View style={styles.card}>
@@ -177,18 +257,14 @@ const Home = ({route}) => {
       </ScrollView>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={() => console.log('Reject')}
+          onPress={() => navigate.goBack()}
           style={[styles.button, styles.noShowButton]}>
-          <Text style={styles.buttonText}>
-            {accept ? 'reject' : 'dismiss'}
-          </Text>
+          <Text style={styles.buttonText}>{accept ? 'reject' : 'dismiss'}</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => afteraccept()}
           style={[styles.button, styles.startButton]}>
-          <Text style={styles.buttonText}>
-            {accept ? 'accept' : 'start'}
-          </Text>
+          <Text style={styles.buttonText}>{accept ? 'accept' : 'start'}</Text>
         </TouchableOpacity>
       </View>
     </View>

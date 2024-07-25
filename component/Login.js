@@ -40,7 +40,7 @@ const Login = ({route}) => {
               //console.log(userRef);
               //const userData = { name: 'John Doe', address: '123 Main St' };
               //await userRef.set(userData);
-              navigation.navigate('InfoPage',{emailId,id});
+              navigation.navigate('ButtonPage',{emailId,id});
         }
       })
     } catch (error) {

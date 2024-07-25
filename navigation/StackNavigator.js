@@ -6,6 +6,9 @@ import Home from '../component/Home';
 import Duty from '../component/Duty';
 import Register from '../component/Register';
 import InfoPage from '../component/InfoPage';
+import FeedbackScreen from '../component/Feedback';
+import ReportsScreen from '../component/ReportsScreen';
+import ButtonPage from '../component/ButtonPage';
 
 
 
@@ -38,6 +41,9 @@ const StackNavigator = () => {
         name="Duty"
         component={Duty}
       />
+      <Stack.Screen options={{headerShown:false}} name='Feedback' component={FeedbackScreen}/>
+      <Stack.Screen options={{headerShown:false}} name='ReportsScreen' component={ReportsScreen}/>
+      <Stack.Screen options={{headerShown:false}} name='ButtonPage' component={ButtonPage}/>
     </Stack.Navigator>
   );
 }

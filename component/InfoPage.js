@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import {
   ScrollView,
   View,
@@ -11,6 +11,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'; // Replace with your i
 import Icon1 from 'react-native-vector-icons/Entypo'; // Replace with your icon library
 import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
+import Icon3 from 'react-native-vector-icons/AntDesign';
 
 const InfoPage = ({route}) => {
     const {id} = route.params;
@@ -22,8 +23,44 @@ const InfoPage = ({route}) => {
   const [endDate,setEndDate] = useState('');
   const [address,setAddress] = useState('');
   const[city,setCity] = useState('');
+  const [passengerNames, setPassengerNames] = useState(['']);
+  const [startingAddress, setStartingAddress] = useState(['']);
+  const [destinationAddress,setDestinationAddress] = useState(['']);
   const [vehicleDetails,setvehicleDetails]= useState('');
     const [dutyInstructions,setDutyInstructions] =useState('');
+    const [views, setViews] = useState([{}]);
+
+    const addView = () => {
+      setViews([...views, {}]);
+      setPassengerNames([...passengerNames, '']);
+      setStartingAddress([...startingAddress, '']);
+      setDestinationAddress([...destinationAddress, '']);
+    };
+    const removeView = () => {
+      if (views.length > 1) {
+        setViews(views.slice(0, -1));
+        setPassengerNames(passengerNames.filter((_, i) => i !== index));
+        setStartingAddress(startingAddress.filter((_, i) => i !== index));
+        setDestinationAddress(destinationAddress.filter((_, i) => i !== index));  
+      }
+
+    };
+    const handlePassengerNameChange = (index, value) => {
+      const newPassengerNames = [...passengerNames];
+      newPassengerNames[index] = value;
+      setPassengerNames(newPassengerNames);
+    };
+    const handleStartingAddressChange = (index, value) => {
+      const newStartingAddresses = [...startingAddress];
+      newStartingAddresses[index] = value;
+      setStartingAddress(newStartingAddresses);
+    };
+
+    const handleDestinationAddressChange = (index, value) => {
+      const newDestinationAddresses = [...destinationAddress];
+      newDestinationAddresses[index] = value;
+      setDestinationAddress(newDestinationAddresses);
+    };
 
     const getUserData = async(userId)=>{
         try {
@@ -41,7 +78,7 @@ const InfoPage = ({route}) => {
           return null; // Handle errors
         }
     }
-    useEffect(() => {
+    /*useEffect(() => {
         if(id!==undefined){
             console.log("id is " + id);
             const newid = id;
@@ -64,22 +101,54 @@ const InfoPage = ({route}) => {
 
             fetchData();
         }
-    }, [id])
+    }, [id]) **/
     
 
     const storeData = async (userId,userData)=>{
         try {
     const userRef = firestore().collection('users').doc(userId); // Reference user document
-    await userRef.set(userData); // Set user data in the document
+    await userRef.set(userData,{merge:true}); // Set user data in the document
   } catch (error) {
     console.error('Error storing user data:', error);
   }
     }
+    function validatePassengers(passengers) {
+      for (const passenger in passengers) {
+        const passengerObject = passengers[passenger];
+        if (
+          passengerObject.DestinationAddress === '' ||
+          passengerObject.PassengerName === '' ||
+          passengerObject.StartingAddress === ''
+        ) {
+          return false;
+        }
+      }
+      return true;
+    }
+    const passengerData = useMemo(() => {
+      const data = {};
+      passengerNames.forEach((name, index) => {
+        data[`Passenger ${index + 1}`] = {  
+          PassengerName: name,
+          StartingAddress: startingAddress[index],
+          DestinationAddress: destinationAddress[index],
+        };
+      });
+      return data;
+    }, [passengerNames, startingAddress, destinationAddress]);
+
+    console.log(passengerData);
   const afteraccept =async () => {
-    if(name === '' || number === '' || Rprtdate === '' || endDate === '' || address === '' || city === '' || vehicleDetails === '' || dutyInstructions === '' ){
+    if(name === '' || number === '' || Rprtdate === '' || endDate === '' || address === '' || city === '' || vehicleDetails === ''){
         alert("Please fill all the Fields")
         return;
-    }
+    } 
+    if(!validatePassengers(passengerData)){
+      alert('Please fill all the Passenger Fields');
+      return;
+    };
+    
+    console.log(passengerData);
     console.log("id is" + id);
     const data = {
         name:name,
@@ -90,25 +159,29 @@ const InfoPage = ({route}) => {
         city:city,
         vehicleDetails:vehicleDetails,
         dutyInstructions:dutyInstructions,
+        PassengerData:passengerData,
     }   
-        console.log(data);
-        await storeData(id,data);
+    const mainData = {}
+    mainData[Rprtdate] = data;
+
+        console.log(mainData);
+        await storeData(id,mainData);
         navigate.navigate('Home', {
           id,
-          name,
+         name,
           number,
           Rprtdate,
-          endDate,
+         endDate,
           address,
           city,
           vehicleDetails,
           dutyInstructions,
+          mainData
         });
     
   };
   return (
     <View style={styles.outerContainer}>
-      
       <ScrollView style={styles.container}>
         <View style={styles.buttonContainer}>
           <Text style={styles.headerText}>Your Details</Text>
@@ -141,9 +214,10 @@ const InfoPage = ({route}) => {
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>Reporting Date and Time</Text>
             <TextInput
+              inputMode="date"
               onChangeText={setRprDate}
               value={Rprtdate}
-              placeholder="Enter reporting date and time"
+              placeholder="Enter in yyyy-mm-dd 00:00"
               style={styles.textInput}
             />
           </View>
@@ -215,6 +289,65 @@ const InfoPage = ({route}) => {
             />
           </View>
         </View>
+        <View style={styles.container}>
+          <Text style={styles.sectionTitle}>Passengers Information</Text>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginHorizontal: 10,
+              marginVertical: 10,
+            }}>
+            <TouchableOpacity
+              onPress={removeView}
+              style={styles.removeViewButton}>
+              <Text>Remove</Text>
+              <Icon3 name="minus" size={26} color="#000000" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={addView} style={styles.addViewButton}>
+              <Text>Add</Text>
+              <Icon3 name="plus" size={26} color="#000000" />
+            </TouchableOpacity>
+          </View>
+          {views.map((view, index) => (
+            <View key={index} style={styles.cardContainer}>
+              <Text style={styles.sectionTitle}>Passenger {index + 1}</Text>
+              <View style={styles.card}>
+                <Text style={styles.sectionTitle}>Name Of Passenger</Text>
+                <TextInput
+                  value={passengerNames[index]}
+                  onChangeText={value =>
+                    handlePassengerNameChange(index, value)
+                  }
+                  placeholder="Enter Name of passenger"
+                  style={styles.textInput}
+                />
+              </View>
+              <View style={styles.card}>
+                <Text style={styles.sectionTitle}>Starting Address</Text>
+                <TextInput
+                  value={startingAddress[index]}
+                  onChangeText={value =>
+                    handleStartingAddressChange(index, value)
+                  }
+                  placeholder="Enter Starting address"
+                  style={styles.textInput}
+                />
+              </View>
+              <View style={styles.card}>
+                <Text style={styles.sectionTitle}>Drop Address</Text>
+                <TextInput
+                  value={destinationAddress[index]}
+                  onChangeText={value =>
+                    handleDestinationAddressChange(index, value)
+                  }
+                  placeholder="Enter Drop Address"
+                  style={styles.textInput}
+                />
+              </View>
+            </View>
+          ))}
+        </View>
       </ScrollView>
 
       <View style={styles.buttonContainer}>
@@ -233,6 +366,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#d3d3d3',
   },
+  removeViewButton: {
+    marginLeft: 10,
+  },
   headerContainer: {
     backgroundColor: '#007bff',
     padding: 20,
@@ -248,6 +384,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  addViewButton: {
+    position: 'absolute',
+    top:5,
+    right: 10,
+    zIndex: 1,
+  },
   cardContainer: {
     marginVertical: 10,
     marginHorizontal: 20,
@@ -256,6 +398,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#C9E4CA',
     borderRadius: 10,
     padding: 20,
+    marginTop:5,
     shadowColor: '#000000',
     shadowOpacity: 0.2,
     shadowRadius: 5,
