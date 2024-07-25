@@ -11,20 +11,51 @@ const Login = ({route}) => {
   const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
   const [verificationId, setVerificationId] = useState(null);
-  const [restPassword,setresetPassword] = useState(false);
+  //const [restPassword,setresetPassword] = useState(false);
+   const [showConfirmation, setShowConfirmation] = useState(false);
+
+   const handleResetPassword = () => {
+     
+     Alert.alert('Are you sure you want to reset your Password',"", [
+       {
+         text: 'Cancel',
+         onPress: () => console.log('Cancel Pressed'),
+         style: 'cancel',
+       },
+       {text: 'OK', onPress: () => ResetPassword()},
+     ]);
+   };
+
+   const handleConfirmReset = () => {
+     // Reset password logic goes here
+     console.log('Password reset successfully!');
+     setShowConfirmation(false);
+     
+     ResetPassword();
+   };
+
+   const handleCancelReset = () => {
+     setShowConfirmation(false);
+   };
   const navigation = useNavigation();
-  const handleResetPassword =async ()=>{
-    if (emailId === '') {
-      Alert.alert('Please enter your email address');
+  const ResetPassword =async ()=>{
+    if (emailId === '' ) {
+      Alert.alert('Please enter valid email address');
       return;
     }
-    try {
-      await auth().sendPasswordResetEmail(emailId);
-      Alert.alert('Password reset email sent!', 'Please check your email to reset your password.');
-    } catch (error) {
-      console.error('Error sending password reset email:', error);
-      Alert.alert('Error', error.message);
+    if (!validateEmail(emailId)){
+      return;
     }
+      try {
+        await auth().sendPasswordResetEmail(emailId);
+        Alert.alert(
+          'Password reset email sent!',
+          'Please check your email to reset your password.',
+        );
+      } catch (error) {
+        console.error('Error sending password reset email:', error);
+        Alert.alert('Error', error.message);
+      }
   }
   const handleRegister = async () => {
     if(emailId==='' || password ===''){
@@ -66,6 +97,7 @@ const Login = ({route}) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
       <View style={styles.innerContainer}>
+        
         <Image
           source={require('../icon_ph1.png')}
           style={{alignSelf: 'center', margin: 10}}
@@ -87,13 +119,12 @@ const Login = ({route}) => {
         <Button mode="contained" onPress={handleRegister} style={styles.button}>
           Login
         </Button>
-          <Button
-            mode="contained"
-            onPress={handleResetPassword}
-            style={styles.button}>
-            Reset Password
-          </Button>
-        
+        <Button
+          mode="contained"
+          onPress={handleResetPassword}
+          style={styles.button}>
+          Reset Password
+        </Button>
       </View>
     </KeyboardAvoidingView>
   );

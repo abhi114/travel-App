@@ -10,6 +10,7 @@ import {TextInput, Button, Title} from 'react-native-paper';
 import {OtpInput} from 'react-native-otp-entry';
 import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
+import { validateEmail } from './helpers/helpers';
 
 const Register = () => {
   const [emailId, setEmailId] = useState('');
@@ -19,6 +20,9 @@ const Register = () => {
   const handleRegister = async () => {
     if (emailId === '' || password === '') {
       alert('please fill email id and password');
+      return;
+    }
+    if(!validateEmail(emailId)){
       return;
     }
     try {
