@@ -3,18 +3,18 @@ import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
 const ButtonPage = ({route}) => {
-    const {id} = route.params;
+    const {emailId, id, data} = route.params;
     const navigation = useNavigation()
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("InfoPage",{id})}>
+        onPress={() => navigation.navigate('InfoPage', {emailId, id, data})}>
         <Text style={styles.buttonText}>Create New Duty</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate("ReportsScreen",{id})}>
+        onPress={() => navigation.navigate('ReportsScreen', {id})}>
         <Text style={styles.buttonText}>Check Reports</Text>
       </TouchableOpacity>
     </View>
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
   },
   button: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#000C66',
     borderRadius: 25,
     padding: 15,
     margin: 20,
@@ -41,9 +41,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#fff',
     fontWeight: 'bold',
-    
   },
-  
 });
 
 export default ButtonPage;

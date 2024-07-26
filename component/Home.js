@@ -275,7 +275,7 @@ const Home = ({route}) => {
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
-    backgroundColor: '#d3d3d3',
+    backgroundColor: '#FFFF',
   },
   container: {
     flex: 1,
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   card: {
-    backgroundColor: '#C9E4CA',
+    backgroundColor: '#E0FFFF',
     borderRadius: 10,
     padding: 20,
     shadowColor: '#000000',
@@ -345,8 +345,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     padding: 5,
-    marginBottom:10,
-    backgroundColor: '#d3d3d3',
+    marginBottom: 10,
+    backgroundColor: '#F5FFFA',
   },
   button: {
     width: 100,
@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   noShowButton: {
-    backgroundColor: '#808080',
+    backgroundColor: '#FF0000',
   },
   startButton: {
     backgroundColor: '#0000FF',

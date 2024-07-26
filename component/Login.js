@@ -13,6 +13,15 @@ const Login = ({route}) => {
   const [verificationId, setVerificationId] = useState(null);
   //const [restPassword,setresetPassword] = useState(false);
    const [showConfirmation, setShowConfirmation] = useState(false);
+   const getUserData = async (id) => {
+     try {
+       const userRef = firestore().collection('userInfo').doc(id);
+       const userData = await userRef.get();
+       return userData.data();
+     } catch (error) {
+       console.error('Error fetching user data:', error);
+     }
+   };
 
    const handleResetPassword = () => {
      
@@ -72,11 +81,18 @@ const Login = ({route}) => {
         if(user){
             console.log(user);
               const id = user.user.uid;
-              //const userRef = firestore().collection('users').doc(id);
-              //console.log(userRef);
-              //const userData = { name: 'John Doe', address: '123 Main St' };
-              //await userRef.set(userData);
-              navigation.navigate('ButtonPage',{emailId,id});
+              console.log("id is" + id);
+              const data = await getUserData(id)
+              console.log("dta is " + JSON.stringify(data));
+              if(data){
+                navigation.navigate("ButtonPage",{emailId,id,data});
+                
+              }else{
+              console.log("final data is" + JSON.stringify(data));
+              console.log("display name set to" + user.user.displayName);
+              console.log('display name set to' + user.user.phoneNumber);
+              navigation.navigate('PersonalInfo',{emailId,id});
+              }
         }
       })
     } catch (error) {

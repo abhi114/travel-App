@@ -14,11 +14,9 @@ import firestore from '@react-native-firebase/firestore';
 import Icon3 from 'react-native-vector-icons/AntDesign';
 
 const InfoPage = ({route}) => {
-    const {id} = route.params;
+    const {id,data:driversdta} = route.params;
     
   const navigate = useNavigation();
-  const [name,setName] = useState('');
-  const [number,enterNumber] = useState('');
   const [Rprtdate,setRprDate] = useState('');
   const [endDate,setEndDate] = useState('');
   const [address,setAddress] = useState('');
@@ -139,7 +137,7 @@ const InfoPage = ({route}) => {
 
     console.log(passengerData);
   const afteraccept =async () => {
-    if(name === '' || number === '' || Rprtdate === '' || endDate === '' || address === '' || city === '' || vehicleDetails === ''){
+    if( Rprtdate === '' || endDate === '' || address === '' || city === '' || vehicleDetails === ''){
         alert("Please fill all the Fields")
         return;
     } 
@@ -151,8 +149,8 @@ const InfoPage = ({route}) => {
     console.log(passengerData);
     console.log("id is" + id);
     const data = {
-        name:name,
-        number:number,
+        name:driversdta.name,
+        number:driversdta.MobileNumber,
         ReportingDate:Rprtdate,
         endDate:endDate,
         address:address,
@@ -168,8 +166,8 @@ const InfoPage = ({route}) => {
         await storeData(id,mainData);
         navigate.navigate('Home', {
           id,
-         name,
-          number,
+          name:driversdta.name,
+          number:driversdta.MobileNumber,
           Rprtdate,
          endDate,
           address,
@@ -189,24 +187,17 @@ const InfoPage = ({route}) => {
         <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>Full Name</Text>
-            <TextInput
-              onChangeText={setName}
-              value={name}
-              placeholder="Enter Name"
-              style={styles.textInput}
-            />
+            <Text style={styles.textInput}>{driversdta.name}</Text>
           </View>
         </View>
 
         <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>Number</Text>
-            <TextInput
-              onChangeText={enterNumber}
-              value={number}
-              placeholder="Enter Number"
-              style={styles.textInput}
-            />
+            <Text
+              style={styles.textInput}>
+              {driversdta.MobileNumber}
+            </Text>
           </View>
         </View>
 
@@ -361,16 +352,16 @@ const InfoPage = ({route}) => {
   );
 };
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
-    backgroundColor: '#d3d3d3',
+    backgroundColor: '#FFFFFF',
   },
   removeViewButton: {
     marginLeft: 10,
   },
   headerContainer: {
-    backgroundColor: '#007bff',
+    backgroundColor: '#00000',
     padding: 20,
     alignItems: 'center',
     justifyContent: 'center',
@@ -386,7 +377,7 @@ const styles = StyleSheet.create({
   },
   addViewButton: {
     position: 'absolute',
-    top:5,
+    top: 5,
     right: 10,
     zIndex: 1,
   },
@@ -395,10 +386,10 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   card: {
-    backgroundColor: '#C9E4CA',
+    backgroundColor: '#E0FFFF',
     borderRadius: 10,
     padding: 20,
-    marginTop:5,
+    marginTop: 5,
     shadowColor: '#000000',
     shadowOpacity: 0.2,
     shadowRadius: 5,

@@ -15,11 +15,13 @@ import { validateEmail } from './helpers/helpers';
 const Register = () => {
   const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
+  const [name,setName] = useState('');
+  const [number,setNumber] = useState('');
   const [verificationId, setVerificationId] = useState(null);
   const navigation = useNavigation();
   const handleRegister = async () => {
     if (emailId === '' || password === '') {
-      alert('please fill email id and password');
+      alert('please fill The Required Details');
       return;
     }
     if(!validateEmail(emailId)){
@@ -32,6 +34,21 @@ const Register = () => {
           console.log('registered successfully');
           if (user) {
             console.log(user);
+            user.user
+              .updateProfile({
+                displayName: "name",
+              })
+              .then(() => {
+                // Reload the user profile to get the updated displayName
+                return user.user.reload();
+              })
+              .then(() => {
+                // After the display name has been reloaded
+                console.log('Display name set to: ' + user.user.displayName);
+              })
+              .catch(error => {
+                console.error('Error updating profile: ', error);
+              });
             
             const id = user.user.uid;
             navigation.navigate('Login',{id});
@@ -56,6 +73,7 @@ const Register = () => {
           style={{alignSelf: 'center', margin: 10}}
         />
         <Title style={styles.title}>Register</Title>
+        
         <TextInput
           label="Email Id"
           value={emailId}
@@ -72,8 +90,13 @@ const Register = () => {
         <Button mode="contained" onPress={handleRegister} style={styles.button}>
           Register
         </Button>
-        <Button mode="contained" onPress={()=>{navigation.navigate("Login")}} style={styles.button}>
-            Go To Login
+        <Button
+          mode="contained"
+          onPress={() => {
+            navigation.navigate('Login');
+          }}
+          style={styles.button}>
+          Go To Login
         </Button>
       </View>
     </KeyboardAvoidingView>

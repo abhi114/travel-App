@@ -9,6 +9,7 @@ import InfoPage from '../component/InfoPage';
 import FeedbackScreen from '../component/Feedback';
 import ReportsScreen from '../component/ReportsScreen';
 import ButtonPage from '../component/ButtonPage';
+import PersonalInfo from '../component/PersonalInfo';
 
 
 
@@ -44,6 +45,7 @@ const StackNavigator = () => {
       <Stack.Screen options={{headerShown:false}} name='Feedback' component={FeedbackScreen}/>
       <Stack.Screen options={{headerShown:false}} name='ReportsScreen' component={ReportsScreen}/>
       <Stack.Screen options={{headerShown:false}} name='ButtonPage' component={ButtonPage}/>
+      <Stack.Screen options={{headerShown:false}} name='PersonalInfo' component={PersonalInfo}/>
     </Stack.Navigator>
   );
 }
