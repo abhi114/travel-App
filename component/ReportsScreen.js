@@ -12,7 +12,9 @@ const UserDataScreen = ({route}) => {
       try {
         const userRef = firestore().collection('users').doc(id);
         const userData = await userRef.get();
+        if(userData.exists){
         setUserData(userData.data());
+        }
       } catch (error) {
         console.error('Error fetching user data:', error);
       }

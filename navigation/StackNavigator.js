@@ -10,6 +10,8 @@ import FeedbackScreen from '../component/Feedback';
 import ReportsScreen from '../component/ReportsScreen';
 import ButtonPage from '../component/ButtonPage';
 import PersonalInfo from '../component/PersonalInfo';
+import AdminLogin from '../component/AdminLogin';
+import AdminPortal from '../component/AdminPortal';
 
 
 
@@ -46,6 +48,8 @@ const StackNavigator = () => {
       <Stack.Screen options={{headerShown:false}} name='ReportsScreen' component={ReportsScreen}/>
       <Stack.Screen options={{headerShown:false}} name='ButtonPage' component={ButtonPage}/>
       <Stack.Screen options={{headerShown:false}} name='PersonalInfo' component={PersonalInfo}/>
+      <Stack.Screen options={{headerShown:false}} name='AdminLogin' component={AdminLogin}/>
+      <Stack.Screen options={{headerShown:false}} name='AdminPortal' component={AdminPortal}/>
     </Stack.Navigator>
   );
 }

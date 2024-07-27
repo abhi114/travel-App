@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Image,
+  Alert,
 } from 'react-native';
 import {TextInput, Button, Title} from 'react-native-paper';
 import {OtpInput} from 'react-native-otp-entry';
@@ -24,40 +25,51 @@ const Register = () => {
       alert('please fill The Required Details');
       return;
     }
-    if(!validateEmail(emailId)){
+    if (!validateEmail(emailId)) {
       return;
     }
     try {
-      const email = auth()
-        .createUserWithEmailAndPassword(emailId, password)
-        .then(user => {
-          console.log('registered successfully');
-          if (user) {
-            console.log(user);
-            user.user
-              .updateProfile({
-                displayName: "name",
-              })
-              .then(() => {
-                // Reload the user profile to get the updated displayName
-                return user.user.reload();
-              })
-              .then(() => {
-                // After the display name has been reloaded
-                console.log('Display name set to: ' + user.user.displayName);
-              })
-              .catch(error => {
-                console.error('Error updating profile: ', error);
-              });
-            
-            const id = user.user.uid;
-            navigation.navigate('Login',{id});
+      const user = await auth().createUserWithEmailAndPassword(
+        emailId,
+        password,
+      );
+      console.log('registered successfully');
+      if (user) {
+        console.log(user);
+        try {
+          await user.user.updateProfile({
+            displayName: 'name',
+          });
+          await user.user.reload();
+          console.log('Display name set to: ' + user.user.displayName);
+        } catch (error) {
+          console.error('Error updating profile: ', error);
+          if (error.code === 'auth/email-already-in-use') {
+            Alert.alert('email already in use');
+          } else if (error.code === 'auth/weak-password') {
+            Alert.alert(
+              'Password is Too weak',
+              'Please enter a strong password',
+            );
           }
-        });
+        }
+        const id = user.user.uid;
+         Alert.alert('Successfully Registered Please Proceed To Login Page', 'Press Ok to Continue', [
+           {
+             text: 'Cancel',
+             onPress: () => console.log('Cancel Pressed'),
+             style: 'cancel',
+           },
+           {text: 'OK', onPress: async () => {navigation.navigate('Login', {id})}},
+         ]);
+        
+      }
     } catch (error) {
       console.log(error);
       if (error.code === 'auth/email-already-in-use') {
-        setErrortext('That email address is already in use!');
+        Alert.alert('email already in use');
+      } else if (error.code === 'auth/weak-password') {
+        Alert.alert('Password is Too weak', 'Please enter a strong password');
       }
     }
   };

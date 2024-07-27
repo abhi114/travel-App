@@ -386,7 +386,7 @@ export const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   card: {
-    backgroundColor: '#E0FFFF',
+    backgroundColor: '#f0f0f0',
     borderRadius: 10,
     padding: 20,
     marginTop: 5,
