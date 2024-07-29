@@ -14,6 +14,7 @@ import { Picker } from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Icon1 from 'react-native-vector-icons/Fontisto';
+import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LineChart } from 'react-native-chart-kit';
 import Linecharts from './helpers/charts';
 import { LineView } from './helpers/helpers';
@@ -162,7 +163,8 @@ const UserDataScreen = ({route}) => {
                             </Text>
                           </View>
                           <View style={styles.line}></View>
-                          <View style={{flexDirection: 'row',marginVertical:10}}>
+                          <View
+                            style={{flexDirection: 'row', marginVertical: 10}}>
                             <View style={{flexDirection: 'row'}}>
                               <Icon1 name="date" size={20} color={'#0000FF'} />
                               <Text
@@ -183,8 +185,7 @@ const UserDataScreen = ({route}) => {
                                 {userData[item].ReportingDate}
                               </Text>
                             </View>
-                            <View
-                              style={{flexDirection: 'row', marginLeft: 10}}>
+                            <View style={{flexDirection: 'row', marginLeft: 8}}>
                               <Icon1 name="date" size={20} color={'#0000FF'} />
                               <Text
                                 style={{
@@ -205,76 +206,127 @@ const UserDataScreen = ({route}) => {
                               </Text>
                             </View>
                           </View>
-                          <LineView/>
-                          <View style={{flexDirection: 'row',marginVertical:10}}>
+                          <LineView />
+                          <Text
+                            style={{
+                              fontSize: 18,
+                              fontWeight: 'bold',
+                              color: '#000000',
+                              marginVertical: 5,
+                            }}>
+                            Distance Travelled in Km -
+                          </Text>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              marginVertical: 10,
+                              justifyContent: 'space-around',
+                            }}>
                             <View style={{flexDirection: 'row'}}>
-                          <Text
-                            style={{
-                              fontSize: 18,
-                              fontWeight: 'bold',
-                              color: '#000000',
-                            }}>
-                            Start Km:
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 18,
+                              <Icon
+                                name="location"
+                                size={20}
+                                color={'#0000FF'}
+                              />
+                              <Text
+                                style={{
+                                  fontSize: 18,
+                                  fontWeight: 'bold',
+                                  color: '#000000',
+                                }}>
+                                Start Km:
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 18,
 
-                              color: '#000000',
-                            }}>
-                            {userData[item].startKm}
-                          </Text>
+                                  color: '#000000',
+                                }}>
+                                {userData[item].startKm}
+                              </Text>
+                            </View>
+                            <View style={{flexDirection: 'row'}}>
+                              <Icon
+                                name="location"
+                                size={20}
+                                color={'#0000FF'}
+                              />
+                              <Text
+                                style={{
+                                  fontSize: 18,
+                                  fontWeight: 'bold',
+                                  color: '#000000',
+                                }}>
+                                End Km:
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 18,
+
+                                  color: '#000000',
+                                }}>
+                                {userData[item].endKm}
+                              </Text>
+                            </View>
                           </View>
-                          <Text
-                            style={{
-                              fontSize: 18,
-                              fontWeight: 'bold',
-                              color: '#000000',
-                            }}>
-                            End Km:
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 18,
-
-                              color: '#000000',
-                            }}>
-                            {userData[item].endKm}
-                          </Text>
+                          <LineView />
+                          <View style={{flexDirection: 'row'}}>
+                            <Icon3 name="fuel" size={26} color={'#0000FF'} />
+                            <Text
+                              style={{
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                color: '#000000',
+                                marginVertical: 5,
+                              }}>
+                              Fuel Usages {`(in litres)-`}
+                            </Text>
                           </View>
-                          <Text
+                          <View
                             style={{
-                              fontSize: 18,
-                              fontWeight: 'bold',
-                              color: '#000000',
+                              flexDirection: 'row',
+                              marginVertical: 10,
+                              justifyContent: 'space-around',
                             }}>
-                            Start Fuel:
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 18,
+                            <View style={{flexDirection: 'row'}}>
+                              <Text
+                                style={{
+                                  fontSize: 18,
+                                  fontWeight: 'bold',
+                                  color: '#000000',
+                                }}>
+                                Start Fuel:
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 18,
 
-                              color: '#000000',
-                            }}>
-                            {userData[item].starFuel}
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 18,
-                              fontWeight: 'bold',
-                              color: '#000000',
-                            }}>
-                            End Fuel:
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 18,
+                                  color: '#000000',
+                                }}>
+                                {userData[item].starFuel}
+                              </Text>
+                            </View>
+                            <View style={{flexDirection: 'row'}}>
+                              <Text
+                                style={{
+                                  fontSize: 18,
+                                  fontWeight: 'bold',
+                                  color: '#000000',
+                                }}>
+                                End Fuel:
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 18,
 
-                              color: '#000000',
-                            }}>
-                            {userData[item].endFuel}
-                          </Text>
+                                  color: '#000000',
+                                }}>
+                                {userData[item].endFuel}
+                              </Text>
+                            </View>
+                          </View>
                           <View>
+                            <LineView />
                             <Text
                               style={{
                                 fontSize: 18,
@@ -309,50 +361,94 @@ const UserDataScreen = ({route}) => {
                             )}
                           </View>
                           <View style={styles.line}></View>
-                          <Text
-                            style={{
-                              fontSize: 18,
-                              fontWeight: 'bold',
-                              color: '#000000',
-                            }}>
-                            {passengerKey}:{' '}
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 15,
+                          <View style={{flexDirection: 'row'}}>
+                            <Icon
+                              name="person-circle"
+                              size={35}
+                              color={'#0000FF'}
+                            />
+                            <Text
+                              style={{
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                color: '#000000',
+                                marginVertical: 5,
+                              }}>
+                              {passengerKey}:{' '}
+                            </Text>
+                          </View>
+                          <LineView />
+                          <View style={{flexDirection: 'row'}}>
+                            <Text
+                              style={{
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                color: '#000000',
+                                marginVertical: 5,
+                              }}>
+                              Name:{' '}
+                            </Text>
+                            <Text
+                              style={{
+                                fontSize: 18,
 
-                              color: '#000000',
-                            }}>
-                            Name:{' '}
-                            {
-                              userData[item].PassengerData[passengerKey]
-                                .PassengerName
-                            }
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 15,
+                                color: '#000000',
+                                marginVertical: 5,
+                              }}>
+                              {
+                                userData[item].PassengerData[passengerKey]
+                                  .PassengerName
+                              }
+                            </Text>
+                          </View>
+                          <View style={{flexDirection: 'row'}}>
+                            <Text
+                              style={{
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                color: '#000000',
+                                marginVertical: 5,
+                              }}>
+                              Destination Address:{' '}
+                            </Text>
+                            <Text
+                              style={{
+                                fontSize: 18,
 
-                              color: '#000000',
-                            }}>
-                            Destination Address:{' '}
-                            {
-                              userData[item].PassengerData[passengerKey]
-                                .DestinationAddress
-                            }
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 15,
+                                color: '#000000',
+                                marginVertical: 5,
+                              }}>
+                              {
+                                userData[item].PassengerData[passengerKey]
+                                  .DestinationAddress
+                              }
+                            </Text>
+                          </View>
+                          <View style={{flexDirection: 'row'}}>
+                            <Text
+                              style={{
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                color: '#000000',
+                                marginVertical: 5,
+                              }}>
+                              Starting Address:{' '}
+                              
+                            </Text>
+                            <Text
+                              style={{
+                                fontSize: 18,
 
-                              color: '#000000',
-                            }}>
-                            Starting Address:{' '}
-                            {
-                              userData[item].PassengerData[passengerKey]
-                                .StartingAddress
-                            }
-                          </Text>
+                                color: '#000000',
+                                marginVertical: 5,
+                              }}>
+                              {
+                                userData[item].PassengerData[passengerKey]
+                                  .StartingAddress
+                              }
+                            </Text>
+                          </View>
+                          <LineView />
                         </View>
                       ),
                     )}
@@ -393,6 +489,7 @@ const UserDataScreen = ({route}) => {
                       {userData[item].vehicleDetails}
                     </Text>
                   </View>
+                  <LineView/>
                   <View>
                     <Text
                       style={{
@@ -424,6 +521,7 @@ const UserDataScreen = ({route}) => {
                       </View>
                     )}
                   </View>
+                  <LineView/>
                   <Text
                     style={{
                       margin: 8,
@@ -486,7 +584,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E5E5EA',
   },
   cardContainer: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#E5E5EA',
     borderRadius: 10,
     padding: 20,
     marginBottom: 20,
@@ -504,6 +602,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 10,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
   },
   image: {
     width: 200,
