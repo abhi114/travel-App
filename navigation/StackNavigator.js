@@ -12,6 +12,8 @@ import ButtonPage from '../component/ButtonPage';
 import PersonalInfo from '../component/PersonalInfo';
 import AdminLogin from '../component/AdminLogin';
 import AdminPortal from '../component/AdminPortal';
+import Stats from '../component/Stats';
+import ReportsScreenDetailed from '../component/ReportsScreenDetailed';
 
 
 
@@ -44,12 +46,46 @@ const StackNavigator = () => {
         name="Duty"
         component={Duty}
       />
-      <Stack.Screen options={{headerShown:false}} name='Feedback' component={FeedbackScreen}/>
-      <Stack.Screen options={{headerShown:false}} name='ReportsScreen' component={ReportsScreen}/>
-      <Stack.Screen options={{headerShown:false}} name='ButtonPage' component={ButtonPage}/>
-      <Stack.Screen options={{headerShown:false}} name='PersonalInfo' component={PersonalInfo}/>
-      <Stack.Screen options={{headerShown:false}} name='AdminLogin' component={AdminLogin}/>
-      <Stack.Screen options={{headerShown:false}} name='AdminPortal' component={AdminPortal}/>
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Feedback"
+        component={FeedbackScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="ReportsScreen"
+        component={ReportsScreen}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="ButtonPage"
+        component={ButtonPage}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="PersonalInfo"
+        component={PersonalInfo}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="AdminLogin"
+        component={AdminLogin}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="AdminPortal"
+        component={AdminPortal}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Stats"
+        component={Stats}
+      />
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="ReportsScreenDetailed"
+        component={ReportsScreenDetailed}
+      />
     </Stack.Navigator>
   );
 }

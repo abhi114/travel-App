@@ -128,7 +128,11 @@ const Login = ({route}) => {
       style={styles.container}>
       <View style={styles.innerContainer}>
         <Image
-          source={require('../icon_ph1.png')}
+          source={{
+            uri: `https://firebasestorage.googleapis.com/v0/b/travelinfo-6a043.appspot.com/o/icon_ph1.png?alt=media&token=85da75e0-75c3-4064-a9dd-d71e6e3c18c0`,
+          }}
+          width={300}
+          height={300}
           style={{alignSelf: 'center', margin: 10}}
         />
         <Title style={styles.title}>Login</Title>
@@ -139,6 +143,7 @@ const Login = ({route}) => {
           style={styles.input}
         />
         <TextInput
+          secureTextEntry={true}
           label="Password"
           value={password}
           onChangeText={setPassword}
@@ -156,7 +161,11 @@ const Login = ({route}) => {
         </Button>
         <TouchableOpacity
           onPress={() => navigation.navigate('AdminLogin')}
-          style={{justifyContent: 'center', alignSelf: 'center',marginTop:40}}>
+          style={{
+            justifyContent: 'center',
+            alignSelf: 'center',
+            marginTop: 40,
+          }}>
           <Text style={styles.adminPortalText}>Admin portal</Text>
         </TouchableOpacity>
       </View>

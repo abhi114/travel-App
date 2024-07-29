@@ -43,6 +43,7 @@ const Login = ({route}) => {
 
   const navigation = useNavigation();
   
+  
   const handleRegister = async () => {
     if (emailId === '' || password === '') {
       alert('please fill email id and password');
@@ -105,7 +106,11 @@ const Login = ({route}) => {
       style={styles.container}>
       <View style={styles.innerContainer}>
         <Image
-          source={require('../icon_ph1.png')}
+          source={{
+            uri: `https://firebasestorage.googleapis.com/v0/b/travelinfo-6a043.appspot.com/o/icon_ph1.png?alt=media&token=85da75e0-75c3-4064-a9dd-d71e6e3c18c0`,
+          }}
+          width={300}
+          height={300}
           style={{alignSelf: 'center', margin: 10}}
         />
         <Title style={styles.title}>Admin Login</Title>
@@ -116,6 +121,7 @@ const Login = ({route}) => {
           style={styles.input}
         />
         <TextInput
+          secureTextEntry={true}
           label="Password"
           value={password}
           onChangeText={setPassword}
@@ -125,9 +131,7 @@ const Login = ({route}) => {
         <Button mode="contained" onPress={handleRegister} style={styles.button}>
           Login To Dashboard
         </Button>
-       
       </View>
-      
     </KeyboardAvoidingView>
   );
 };

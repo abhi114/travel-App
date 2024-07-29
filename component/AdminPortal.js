@@ -1,169 +1,464 @@
-import React, {useState, useEffect} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon1 from 'react-native-vector-icons/MaterialIcons';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  BackHandler,
+} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Linecharts from './helpers/charts';
+import { LineView } from './helpers/helpers';
+import UserDataScreen from './ReportsScreen';
+import AdminDriversPage from './AdminDriversPage';
 import { useNavigation } from '@react-navigation/native';
 
-const AdminDashboard = () => {
-  const [userInfo, setUserInfo] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigation = useNavigation();
+const Tab = createBottomTabNavigator();
 
-    const handleViewProfile = (id)=>{
-        if(id){
-            navigation.navigate("ReportsScreen",{id})
-        }
+const AdminPortal = ({route}) => {
+  const navigation = useNavigation();
+  
+  const [activeSection, setActiveSection] = useState('Home');
+  const {emailId, id, data} = route.params
+  const renderSection = () => {
+    switch (activeSection) {
+      case 'Profile':
+        return <ProfileSection />;
+      case 'Settings':
+        return <SettingsSection />;
+      case 'Analytics':
+        return <AnalyticsSection />;
+      case 'Messages':
+        return <MessagesSection />;
+      case 'Tasks':
+        return <TasksSection />;
+      case 'Calendar':
+        return <CalendarSection />;
+      default:
+        return <HomeSection />;
     }
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const response = firestore().collection('userInfo');
-      const data = await response.get();
-      const userInfoArray = data.docs.map(doc => ({
-        id: doc.id, // Get the document ID
-        ...doc.data(), // Get the document data
-      }));
-      setUserInfo(userInfoArray);
-      setLoading(false);
-    };
-    fetchUserInfo();
-  }, []);
+  };
+  
+  const renderBackButton = () => (
+    <TouchableOpacity
+      onPress={() => setActiveSection('Home')}
+      style={styles.backButton}>
+      <Icon name="arrow-back" size={30} color="#000000" />
+      <Text style={styles.backButtonText}>Back to Home</Text>
+    </TouchableOpacity>
+  );
+
+  const HomeSection = () => (
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerTitle}>Welcome to the Dashboard!</Text>
+        <View style={styles.buttonsContainer}>
+          <TouchableOpacity
+            onPress={() => setActiveSection('Profile')}
+            style={styles.button}>
+            <Icon name="person" size={30} color="white" />
+            <Text style={styles.buttonText}>Profile</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setActiveSection('Settings')}
+            style={styles.button}>
+            <Icon name="settings" size={30} color="white" />
+            <Text style={styles.buttonText}>Settings</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.featuresContainer}>
+        <PressableFeatureBox
+          name="Analytics"
+          icon="stats-chart"
+          onPress={() => setActiveSection('Analytics')}
+        />
+        <PressableFeatureBox
+          name="Users Information"
+          icon="people-outline"
+          onPress={() => setActiveSection('Messages')}
+        />
+        <PressableFeatureBox
+          name="Drivers Information"
+          icon="person-circle"
+          onPress={() => setActiveSection('Tasks')}
+        />
+        <PressableFeatureBox
+          name="Calendar"
+          icon="calendar"
+          onPress={() => setActiveSection('Calendar')}
+        />
+        
+        <PressableFeatureBox
+          name={`Top User \n \nAbhishek`}
+          icon="person-circle"
+          onPress={() => setActiveSection('Home')}
+        />
+      </View>
+      
+    </View>
+  );
+  const ProfileSection = () => {
+    useEffect(() => {
+      const handleBackPress = () => {
+        // Prevent the default back button behavior
+        return true;
+      };
+
+      // Register the back button handler
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+      // Clean up the event listener when the component unmounts
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+      };
+    }, []);
+    return(
+      
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        {renderBackButton()}
+        <Text style={styles.headerTitle}>Profile Section</Text>
+      </View>
+      <View style={styles.contentContainer}>
+        <Icon name="person" size={80} color="#3498db" />
+        <Text style={styles.contentText}>Username: {data.name}</Text>
+        <Text style={styles.contentText}>
+          Mobile Number: {data.MobileNumber}
+        </Text>
+        <Text style={styles.contentText}>Address: {data.driverAddress}</Text>
+      </View>
+    </View>
+    )
+  };
+
+  const SettingsSection = () => {
+    useEffect(() => {
+      const handleBackPress = () => {
+        // Prevent the default back button behavior
+        return true;
+      };
+
+      // Register the back button handler
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+      // Clean up the event listener when the component unmounts
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+      };
+    }, []);
+    return (
+      
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        {renderBackButton()}
+        <Text style={styles.headerTitle}>Settings Section</Text>
+      </View>
+      <View style={styles.contentContainer}>
+        <Icon name="settings" size={80} color="#3498db" />
+        <Text style={styles.contentText}>Notifications: On</Text>
+        <Text style={styles.contentText}>Theme: Light</Text>
+      </View>
+    </View>
+    )
+  };
+
+  const PressableFeatureBox = ({name, icon, onPress}) => (
+    <TouchableOpacity onPress={onPress} style={styles.featureBox}>
+      <Icon name={icon} size={50} color="#3498db" />
+      <Text style={styles.featureName}>{name}</Text>
+    </TouchableOpacity>
+  );
+
+  const AnalyticsSection = () => {
+    useEffect(() => {
+      const handleBackPress = () => {
+        // Prevent the default back button behavior
+        return true;
+      };
+
+      // Register the back button handler
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+      // Clean up the event listener when the component unmounts
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+      };
+    }, []);
+    return(
+    <View style={styles.container}>
+      <ScrollView>
+        <View style={styles.headerContainer}>
+          {renderBackButton()}
+          <Text style={styles.headerTitle}>Analytics Section</Text>
+        </View>
+        <View style={styles.contentContainer}>
+          <Text style={[styles.contentText, {fontWeight: 'bold'}]}>
+            Analysis Of User Data
+          </Text>
+          <LineView />
+          <Linecharts name={'User'} />
+        </View>
+        <View style={styles.contentContainer}>
+          <Text style={[styles.contentText, {fontWeight: 'bold'}]}>
+            Analysis Of Driver's Data
+          </Text>
+          <LineView />
+          <Linecharts name={'Driver'} />
+        </View>
+      </ScrollView>
+    </View>
+    )
+  };
+
+  const MessagesSection = () => {
+    useEffect(() => {
+      const handleBackPress = () => {
+        // Prevent the default back button behavior
+        return true;
+      };
+
+      // Register the back button handler
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+      // Clean up the event listener when the component unmounts
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+      };
+    }, []);
+    return (
+    <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        {renderBackButton()}
+        <Text style={styles.headerTitle}>Users Section</Text>
+      </View>
+      <View style={styles.contentContainer}>
+        <Text style={styles.contentText}>No User Infromation Available</Text>
+      </View>
+    </View>
+    )
+  };
+
+  const TasksSection = () => {
+    
+    return <View style={styles.container}>
+      <View style={styles.headerContainer}>
+        {renderBackButton()}
+        <Text style={styles.headerTitle}>Driver's Information</Text>
+      </View>
+      <View style={styles.contentContainer}>
+       
+        <AdminDriversPage/>
+      </View>
+    </View>
+  };
+  const CalendarSection = () => {
+    useEffect(() => {
+      const handleBackPress = () => {
+        // Prevent the default back button behavior
+        return true;
+      };
+
+      // Register the back button handler
+      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+      // Clean up the event listener when the component unmounts
+      return () => {
+        BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+      };
+    }, []);
+    return (
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          {renderBackButton()}
+          <Text style={styles.headerTitle}>Ride's Information</Text>
+        </View>
+        <View style={styles.contentContainer}>
+          <Text style={styles.contentTitle}>Events -  This Week</Text>
+          <EventItem
+            date="Mon, Jan 10"
+            time="3:00 PM - 5:00 PM"
+            title="Completed Ride"
+            location="HazjrantGanj - GomtiNagar"
+            km="Total Km Travelled - 5km"
+            Fuel={`Total Cost of Fuel - Rs100`}
+          />
+          <EventItem
+            date="Thu, Jan 13"
+            time="10:00 AM - 12:00 PM"
+            title="Ongoing Ride"
+            location="GomtiNagar - HazratGanj"
+            km="Total Km Travelled - 10km"
+            Fuel={`Total Cost of Fuel - Rs1000`}
+          />
+          <EventItem
+            date="Sat, Jan 15"
+            time="6:00 PM - 8:00 PM"
+            title="Ongoing Ride"
+            location="HazratGanj - Charbagh"
+            km="Total Km Travelled - 20km"
+            Fuel={`Total Cost of Fuel - Rs400`}
+          />
+        </View>
+      </View>
+    );
+  };
+
+  const TaskItem = ({title, description}) => (
+    <View style={styles.taskItem}>
+      <Text style={styles.taskTitle}>{title}</Text>
+      <Text style={styles.taskDescription}>{description}</Text>
+    </View>
+  );
+
+  const EventItem = ({date, time, title, location, km,Fuel}) => (
+    <View style={styles.eventItem}>
+      <View style={styles.eventDateTime}>
+        <Text style={styles.eventDate}>{date}</Text>
+        <Text style={styles.eventTime}>{time}</Text>
+      </View>
+      <Text style={styles.eventTitle}>{title}</Text>
+      <Text style={styles.eventLocation}>{location}</Text>
+      <Text style={styles.eventLocation}>{km}</Text>
+      <Text style={styles.eventLocation}>{Fuel}</Text>
+    </View>
+  );
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    headerContainer: {
+      backgroundColor: '#3498db',
+      padding: 20,
+      borderBottomLeftRadius: 20,
+      borderBottomRightRadius: 20,
+      elevation: 5,
+    },
+    headerTitle: {
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: 'white',
+      marginBottom: 20,
+    },
+    buttonsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+    button: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: '#2ecc71',
+      padding: 10,
+      borderRadius: 5,
+    },
+    buttonText: {
+      color: 'white',
+      fontSize: 16,
+      fontWeight: 'bold',
+      marginLeft: 10,
+    },
+    featuresContainer: {
+      flex: 1,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-around',
+      marginTop: 20,
+    },
+    featureBox: {
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '45%',
+      aspectRatio: 1,
+      backgroundColor: 'white',
+      borderRadius: 10,
+      marginVertical: 10,
+      elevation: 5,
+    },
+    featureName: {
+      marginTop: 10,
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: '#555',
+    },
+    backButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    backButtonText: {
+      color: '#3498db',
+      fontSize: 16,
+      marginLeft: 10,
+    },
+    contentContainer: {
+      flex: 1,
+      padding: 20,
+    },
+    contentText: {
+      fontSize: 16,
+      marginBottom: 10,
+      color: '#555',
+    },
+    contentTitle: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: '#333',
+      marginBottom: 10,
+    },
+    taskItem: {
+      backgroundColor: '#3498db',
+      borderRadius: 10,
+      padding: 15,
+      marginVertical: 10,
+    },
+    taskTitle: {
+      color: 'white',
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    taskDescription: {
+      color: 'white',
+      fontSize: 14,
+      marginTop: 5,
+    },
+    eventItem: {
+      backgroundColor: 'white',
+      borderRadius: 10,
+      padding: 15,
+      marginVertical: 10,
+      elevation: 5,
+    },
+    eventDateTime: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 10,
+    },
+    eventDate: {
+      color: '#3498db',
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    eventTime: {
+      color: '#555',
+      fontSize: 16,
+    },
+    eventTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: '#333',
+    },
+    eventLocation: {
+      fontSize: 14,
+      color: '#777',
+    },
+  });
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Welcome To Admin DashBoard</Text>
-        <Icon1 name="admin-panel-settings" size={30} color={'#000'} />
-      </View>
-      <View style={styles.cardHeader}>
-        <View style={styles.subcontainer}>
-          <Text style={styles.subheading}>All Drivers Information</Text>
-          <Icon name="drivers-license" size={30} color={'#000'} />
-        </View>
-      </View>
-      <ScrollView style={styles.scrollView}>
-        {loading ? (
-          <Text style={styles.loadingText}>Loading...</Text>
-        ) : (
-          userInfo.map((user, index) => (
-            <View
-              key={index}
-              style={styles.card}
-              onPress={() => console.log(`Card ${index} pressed`)}>
-              <View style={styles.cardBody}>
-                <Text style={styles.cardTitle}>
-                  Driver {index + 1} Information
-                </Text>
-                <Text style={styles.cardText}>Name: {user.name}</Text>
-                <Text style={styles.cardText}>
-                  Mobile Number: {user.MobileNumber}
-                </Text>
-                <Text style={styles.cardText}>
-                  Address: {user.driverAddress}
-                </Text>
-                
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => handleViewProfile(user.id)}>
-                  <Text style={styles.buttonText}>View Profile {`->`}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          ))
-        )}
-      </ScrollView>
+      {renderSection()}
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-  cardHeader: {
-    backgroundColor: '#fff',
-    padding: 11,
-    margin:9,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 1, height: 2},
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
-    marginBottom: 10,
-  },
-  subcontainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    margin: 12,
-    backgroundColor: 'white',
-  },
-  subheading: {
-    fontSize: 20, // Adjust the size as needed
-    fontWeight: 'bold',
-    color: 'black', // Black color for the text
-    textDecorationLine: 'underline',
-  },
-  header: {
-    backgroundColor: '#fff',
-    padding: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-  },
-  headerText: {
-    color: '#000',
-    fontSize: 20,
-    fontWeight: 'bold',
-    textDecorationLine: 'underline',
-  },
-  underline: {
-    height: 2,
-    backgroundColor: '#000',
-  },
-  scrollView: {
-    flex: 1,
-    padding: 20,
-  },
-  cardContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'pace-around',
-  },
-  card: {
-    backgroundColor: '#f0f0f0',
-    padding: 20,
-    margin: 10,
-    borderRadius: 10,
-  },
-  cardBody: {
-    padding: 20,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  cardText: {
-    fontSize: 16,
-    color:'#000',
-    padding:5
-  },
-  button: {
-    margin:5,
-    backgroundColor: '#03A9F4',
-    padding: 10,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-  },
-  loadingText: {
-    fontSize: 18,
-    textAlign: 'center',
-    padding: 20,
-  },
-});
-
-export default AdminDashboard;
+export default AdminPortal;
