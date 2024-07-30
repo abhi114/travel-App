@@ -92,7 +92,7 @@ const AdminPortal = ({route}) => {
         />
         
         <PressableFeatureBox
-          name={`Top User \n \nAbhishek`}
+          name={` Top User \n Abhishek\n\nTotal Rides\n       37`}
           icon="person-circle"
           onPress={() => setActiveSection('Home')}
         />

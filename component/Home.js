@@ -20,6 +20,7 @@ const Home = ({route}) => {
     const [endkm,setendKm] = useState('');
     const [startFuel,setStartFuel] = useState('');
     const [endFuel,setEndFuel] = useState('');
+    const [fuelcost,setfuelcost] = useState('');
     const {
       id,
       name,
@@ -43,8 +44,9 @@ const Home = ({route}) => {
         const userRef = firestore().collection('users').doc(id); // Reference user document
         mainData[Rprtdate].startKm=startkmvalue
         mainData[Rprtdate].endKm = endkmvalue
-        mainData[Rprtdate].starFuel = startfuelValue;
-        mainData[Rprtdate].endFuel = endfuelValue;
+        mainData[Rprtdate].starFuel = startfuelValue + `lit`;
+        mainData[Rprtdate].endFuel = endfuelValue + `lit`;
+         mainData[Rprtdate].FuelCost = `Rs `+fuelcost;
         
         const updatedUserData = mainData // Add new key-value pair
         console.log("updated data is" + JSON.stringify(updatedUserData));
@@ -61,7 +63,7 @@ const Home = ({route}) => {
         setaccept(true);
         return;
         }
-        if(startKm == '' || endkm == '' || startFuel== '' || endFuel == ''){
+        if(startKm == '' || endkm == '' || startFuel== '' || endFuel == '' || fuelcost == ''){
           Alert.alert("please enter the km and fuel values");
           return;
         }
@@ -76,7 +78,8 @@ const Home = ({route}) => {
           endFuel,
           Rprtdate,
           endDate,
-          mainData
+          mainData,
+          fuelcost
         });
 
     }
@@ -164,6 +167,7 @@ const Home = ({route}) => {
                   <Text style={styles.sectionTitle}>Start Km</Text>
                   <TextInput
                     value={startKm}
+                    keyboardType="numeric"
                     onChangeText={setStartkm}
                     placeholder="Enter Km"
                     style={styles.textInput}
@@ -177,6 +181,7 @@ const Home = ({route}) => {
                   <TextInput
                     value={endkm}
                     onChangeText={setendKm}
+                    keyboardType="numeric"
                     placeholder="Enter Km"
                     style={styles.textInput}
                   />
@@ -186,9 +191,23 @@ const Home = ({route}) => {
               <View style={styles.line}></View>
               <View style={[styles.card, {marginTop: 5}]}>
                 <View style={styles.section}>
+                  <Text style={styles.sectionTitle}>Fuel Cost In Rs</Text>
+                  <TextInput
+                    value={fuelcost}
+                    keyboardType="numeric"
+                    onChangeText={setfuelcost}
+                    placeholder="Enter Cost of Fuel"
+                    style={styles.textInput}
+                  />
+                </View>
+              </View>
+              <View style={styles.line}></View>
+              <View style={[styles.card, {marginTop: 5}]}>
+                <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Starting Fuel Reading</Text>
                   <TextInput
                     value={startFuel}
+                    keyboardType="numeric"
                     onChangeText={setStartFuel}
                     placeholder="Enter Start Fuel Reading"
                     style={styles.textInput}
@@ -201,6 +220,7 @@ const Home = ({route}) => {
                   <Text style={styles.sectionTitle}>End Fuel Reading</Text>
                   <TextInput
                     value={endFuel}
+                    keyboardType="numeric"
                     onChangeText={setEndFuel}
                     placeholder="Enter End Fuel Reading"
                     style={styles.textInput}

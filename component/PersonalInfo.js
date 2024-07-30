@@ -58,6 +58,7 @@ const PersonalInfo = ({route}) => {
             <TextInput
               onChangeText={enterNumber}
               value={number}
+              keyboardType="numeric"
               placeholder="Enter Mobile Number"
               style={styles.textInput}
             />

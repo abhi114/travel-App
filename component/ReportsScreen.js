@@ -21,8 +21,23 @@ import { LineView } from './helpers/helpers';
 
 const UserDataScreen = ({route}) => {
   const {id} = route.params;
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
   const [userData, setUserData] = useState({});
   const [expanded, setExpanded] = useState({});
+  const [mainuserData,setmainuserData] = useState({});
    const [selectedMonth, setSelectedMonth] = useState('');
    const [filteredData, setFilteredData] = useState({});
    const navigation = useNavigation();
@@ -41,26 +56,34 @@ const UserDataScreen = ({route}) => {
     useEffect(() => {
       const filterData = () => {
         if (selectedMonth === '') {
-          setFilteredData(userData);
+          setFilteredData(mainuserData);
+          setUserData(mainuserData);
         } else {
           const filteredData = {};
           Object.keys(userData).forEach(key => {
             const date = new Date(key);
-            if (date.getMonth() === selectedMonth) {
+              console.log("selected is " + monthNames[selectedMonth])
+              console.log('user month' + userData[key].ReportingMonth);
+            if (userData[key].ReportingMonth == monthNames[selectedMonth]) {
+              console.log("yes")
               filteredData[key] = userData[key];
+            }else{
+              console.log("no")
             }
           });
           setFilteredData(filteredData);
+          setUserData(filteredData);
         }
       };
       filterData();
-    }, [selectedMonth, userData]);
+    }, [selectedMonth]);
   useEffect(() => {
     const getUserData = async () => {
       try {
         const userRef = firestore().collection('users').doc(id);
         const userData = await userRef.get();
         if(userData.exists){
+          setmainuserData(userData.data());
         setUserData(userData.data());
         }
       } catch (error) {
@@ -164,7 +187,10 @@ const UserDataScreen = ({route}) => {
                           </View>
                           <View style={styles.line}></View>
                           <View
-                            style={{flexDirection: 'row', marginVertical: 10}}>
+                            style={{
+                              flexDirection: 'column',
+                              marginVertical: 10,
+                            }}>
                             <View style={{flexDirection: 'row'}}>
                               <Icon1 name="date" size={20} color={'#0000FF'} />
                               <Text
@@ -178,14 +204,15 @@ const UserDataScreen = ({route}) => {
                               </Text>
                               <Text
                                 style={{
-                                  fontSize: 15,
+                                  fontSize: 14,
 
                                   color: '#000000',
                                 }}>
                                 {userData[item].ReportingDate}
                               </Text>
                             </View>
-                            <View style={{flexDirection: 'row', marginLeft: 8}}>
+                            <View
+                              style={{flexDirection: 'row', marginVertical: 8}}>
                               <Icon1 name="date" size={20} color={'#0000FF'} />
                               <Text
                                 style={{
@@ -325,6 +352,24 @@ const UserDataScreen = ({route}) => {
                               </Text>
                             </View>
                           </View>
+                          <LineView />
+                          <View style={{flexDirection: 'row'}}>
+                            <Icon3
+                              name="currency-rupee"
+                              size={26}
+                              color={'#0000FF'}
+                            />
+                            <Text
+                              style={{
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                color: '#000000',
+                                marginVertical: 5,
+                              }}>
+                              Fuel Costs {`(in Rs)-`} {userData[item].FuelCost}
+                            </Text>
+                          </View>
+
                           <View>
                             <LineView />
                             <Text
@@ -433,7 +478,6 @@ const UserDataScreen = ({route}) => {
                                 marginVertical: 5,
                               }}>
                               Starting Address:{' '}
-                              
                             </Text>
                             <Text
                               style={{
@@ -489,7 +533,7 @@ const UserDataScreen = ({route}) => {
                       {userData[item].vehicleDetails}
                     </Text>
                   </View>
-                  <LineView/>
+                  <LineView />
                   <View>
                     <Text
                       style={{
@@ -521,7 +565,7 @@ const UserDataScreen = ({route}) => {
                       </View>
                     )}
                   </View>
-                  <LineView/>
+                  <LineView />
                   <Text
                     style={{
                       margin: 8,

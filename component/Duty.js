@@ -1,10 +1,11 @@
-import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity, Button, TouchableHighlight } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity, Button, TouchableHighlight, useAnimatedValue } from 'react-native'
 import React, { Component, useRef, useState } from 'react'
 
 import SignatureCapture from 'react-native-signature-capture';
 import { useNavigation } from '@react-navigation/native';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
+import { LineView } from './helpers/helpers';
 
 
 
@@ -12,6 +13,7 @@ const Sign = ({id, Rprtdate, mainData}) => {
   const signRef = useRef(null);
   const [currentSignature, setCurrentSignature] = useState('driversSignature');
   const [signatureSaved, setSignatureSaved] = useState(false);
+  const navigation = useNavigation();
   //console.log("id is" + id);
   const saveSign = () => {
     signRef.current.saveImage();
@@ -47,6 +49,9 @@ const Sign = ({id, Rprtdate, mainData}) => {
     const downloadURL = await imageRef.getDownloadURL();
     console.log('url is' + downloadURL);
     await storeData(downloadURL);
+    if (currentSignature === 'passengersSignature') {
+      navigation.navigate('Feedback', {id});
+    }
     resetSign();
   };
 
@@ -172,7 +177,6 @@ const Duty = ({route}) => {
               <View
                 style={{
                   flexDirection: 'row',
-                  justifyContent: 'space-evenly',
                 }}>
                 <Text
                   style={[
@@ -185,7 +189,10 @@ const Duty = ({route}) => {
                   ]}>
                   Driver's Name:
                 </Text>
-                <Text style={[styles.headerText, {fontSize: 20}]}>{name}</Text>
+                <Text
+                  style={[styles.headerText, {fontSize: 19, marginLeft: 6}]}>
+                  {name}
+                </Text>
               </View>
               <View style={{flexDirection: 'row'}}>
                 <Text
@@ -200,13 +207,14 @@ const Duty = ({route}) => {
                   Driver's Number:
                 </Text>
                 <Text
-                  style={[styles.headerText, {fontSize: 18, marginLeft: 5}]}>
+                  style={[styles.headerText, {fontSize: 18, marginLeft: 6}]}>
                   {number}
                 </Text>
               </View>
             </View>
           </View>
         </View>
+        <LineView/>
         <Text
           style={[
             styles.headerText,
@@ -232,7 +240,9 @@ const Duty = ({route}) => {
             <Text style={styles.buttonText}>Signature</Text>
           </TouchableOpacity>
         </View>
-        {signatureEnable && <Sign id={id} Rprtdate={Rprtdate} mainData={mainData}/>}
+        {signatureEnable && (
+          <Sign id={id} Rprtdate={Rprtdate} mainData={mainData} />
+        )}
       </ScrollView>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -332,8 +342,13 @@ const styles = StyleSheet.create({
     height: 80, // Fixed height for the header
   },
   headerTextContainer: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    width:'100%',
+    backgroundColor: '#f0f0f0',
+    borderRadius: 10,
+    shadowColor: '#000000',
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 5,
   },
   headerText: {
     marginBottom: 14,

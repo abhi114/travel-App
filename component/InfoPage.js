@@ -15,9 +15,25 @@ import Icon3 from 'react-native-vector-icons/AntDesign';
 
 const InfoPage = ({route}) => {
     const {id,data:driversdta} = route.params;
-    
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    const currentMonthName = monthNames[new Date().getMonth()];
   const navigate = useNavigation();
   const [Rprtdate,setRprDate] = useState('');
+  const [RprtTime,setRprtTime] = useState('');
+  const [month, setmonth] = useState(currentMonthName);
   const [endDate,setEndDate] = useState('');
   const [address,setAddress] = useState('');
   const[city,setCity] = useState('');
@@ -149,18 +165,20 @@ const InfoPage = ({route}) => {
     console.log(passengerData);
     console.log("id is" + id);
     const data = {
-        name:driversdta.name,
-        number:driversdta.MobileNumber,
-        ReportingDate:Rprtdate,
-        endDate:endDate,
-        address:address,
-        city:city,
-        vehicleDetails:vehicleDetails,
-        dutyInstructions:dutyInstructions,
-        PassengerData:passengerData,
-    }   
+      name: driversdta.name,
+      number: driversdta.MobileNumber,
+      ReportingDate: Rprtdate + ' ' + month + ' ' + RprtTime,
+      endDate: endDate,
+      address: address,
+      city: city,
+      vehicleDetails: vehicleDetails,
+      dutyInstructions: dutyInstructions,
+      PassengerData: passengerData,
+      ReportingTime: RprtTime,
+      ReportingMonth: month,
+    };  
     const mainData = {}
-    mainData[Rprtdate] = data;
+    mainData[`${Rprtdate + ' ' + month + ' ' + RprtTime}`] = data;
 
         console.log(mainData);
         await storeData(id,mainData);
@@ -168,7 +186,7 @@ const InfoPage = ({route}) => {
           id,
           name:driversdta.name,
           number:driversdta.MobileNumber,
-          Rprtdate,
+          Rprtdate:Rprtdate +" " + month +" "+  RprtTime,
          endDate,
           address,
           city,
@@ -194,21 +212,44 @@ const InfoPage = ({route}) => {
         <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>Number</Text>
-            <Text
-              style={styles.textInput}>
-              {driversdta.MobileNumber}
-            </Text>
+            <Text style={styles.textInput}>{driversdta.MobileNumber}</Text>
           </View>
         </View>
 
         <View style={styles.cardContainer}>
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Reporting Date and Time</Text>
+            <Text style={styles.sectionTitle}>Reporting Date </Text>
             <TextInput
+              keyboardType='numeric'
               inputMode="date"
               onChangeText={setRprDate}
               value={Rprtdate}
-              placeholder="Enter in yyyy-mm-dd 00:00"
+              placeholder="Enter in 00 th/st "
+              style={styles.textInput}
+            />
+          </View>
+        </View>
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Reporting Time</Text>
+            <TextInput
+              inputMode="date"
+              onChangeText={setRprtTime}
+              value={RprtTime}
+              placeholder="Enter in 00:00 am/pm"
+              style={styles.textInput}
+            />
+          </View>
+        </View>
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Reporting month</Text>
+            <TextInput
+              
+              inputMode="date"
+              onChangeText={setmonth}
+              value={month}
+              placeholder="Enter month"
               style={styles.textInput}
             />
           </View>
@@ -216,11 +257,11 @@ const InfoPage = ({route}) => {
 
         <View style={styles.cardContainer}>
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>End Date</Text>
+            <Text style={styles.sectionTitle}>End Time</Text>
             <TextInput
               value={endDate}
               onChangeText={setEndDate}
-              placeholder="Enter date"
+              placeholder="Enter Time in 00:00 am/pm"
               style={styles.textInput}
             />
           </View>
