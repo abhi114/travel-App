@@ -5,7 +5,7 @@ import {OtpInput} from 'react-native-otp-entry';
 import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { validateEmail } from './helpers/helpers';
+import { MainFooter, validateEmail } from './helpers/helpers';
 const Login = ({route}) => {
  
   const [emailId, setEmailId] = useState('');
@@ -169,6 +169,7 @@ const Login = ({route}) => {
           <Text style={styles.adminPortalText}>Admin portal</Text>
         </TouchableOpacity>
       </View>
+      <MainFooter/>
     </KeyboardAvoidingView>
   );
 };

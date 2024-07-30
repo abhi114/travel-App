@@ -11,11 +11,26 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
 import {useNavigation} from '@react-navigation/native';
 
-const AdminDriversPage = () => {
+const AdminDriversPage = ({renderbackButton}) => {
   const [userInfo, setUserInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
-
+   const monthNames = [
+     'January',
+     'February',
+     'March',
+     'April',
+     'May',
+     'June',
+     'July',
+     'August',
+     'September',
+     'October',
+     'November',
+     'December',
+   ];
+  const currentMonth = monthNames[new Date().getMonth()]
+  console.log(currentMonth)
   const handleViewProfile = id => {
     if (id) {
       navigation.navigate('ReportsScreen', {id});
@@ -30,6 +45,7 @@ const AdminDriversPage = () => {
         ...doc.data(), // Get the document data
       }));
       setUserInfo(userInfoArray);
+      console.log(JSON.stringify(userInfoArray));
       setLoading(false);
     };
     fetchUserInfo();
@@ -70,9 +86,9 @@ const AdminDriversPage = () => {
                   Address: {user.driverAddress}
                 </Text>
                 <Text style={styles.cardText}>
-                  Montly Spend On Petrol: {`\nRs 10,000`}
+                  {currentMonth} Spend On Petrol: {user.monthExpenditure?.[currentMonth] || 0}
                 </Text>
-
+                
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => handleViewProfile(user.id)}>

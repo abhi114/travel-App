@@ -55,7 +55,7 @@ const UserDataScreen = ({route}) => {
 
     useEffect(() => {
       const filterData = () => {
-        if (selectedMonth === '') {
+        if (selectedMonth === 66) {
           setFilteredData(mainuserData);
           setUserData(mainuserData);
         } else {
@@ -107,12 +107,13 @@ const UserDataScreen = ({route}) => {
       <View style={styles.buttonContainer}>
         <Text style={styles.headerText}>Report Details</Text>
       </View>
+
       <View style={styles.monthSelector}>
         <Picker
           selectedValue={selectedMonth}
           style={{height: 50, width: Dimensions.width}}
           onValueChange={itemValue => handleMonthChange(itemValue)}>
-          <Picker.Item label="Select Month" value="" />
+          <Picker.Item label="Select Month" value={66} />
           <Picker.Item label="January" value={0} />
           <Picker.Item label="February" value={1} />
           <Picker.Item label="March" value={2} />
@@ -127,6 +128,36 @@ const UserDataScreen = ({route}) => {
           <Picker.Item label="December" value={11} />
         </Picker>
       </View>
+      <LineView />
+      <View>
+        <Text style={styles.headerText}>Monthly Fuel Expenditure</Text>
+        <Text
+          style={{
+            color: '#000000',
+            fontSize: 12,
+            marginBottom: 1,
+            margin: 5,
+            textAlign: 'center',
+          }}>
+          Total Fuel Expenditure for the Month of{' '}
+          {selectedMonth !== ''
+            ? monthNames[selectedMonth]
+            : monthNames[new Date().getMonth()]}{' '}
+          -
+        </Text>
+        <Text
+          style={{
+            color: '#000000',
+            fontSize: 12,
+            marginBottom: 1,
+            margin: 5,
+            fontWeight:'bold',
+            textAlign: 'center',
+          }}>
+          Rs 250
+        </Text>
+      </View>
+      <LineView />
       <FlatList
         data={Object.keys(userData)}
         renderItem={({item}) => (
@@ -732,5 +763,26 @@ const styles = StyleSheet.create({
     color: '#777',
   },
 });
+
+const styles1 = StyleSheet.create({
+  headerText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  dayText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  valueText: {
+    fontSize: 18,
+  },
+});
+
 
 export default UserDataScreen;

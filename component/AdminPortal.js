@@ -22,6 +22,10 @@ const AdminPortal = ({route}) => {
   
   const [activeSection, setActiveSection] = useState('Home');
   const {emailId, id, data} = route.params
+  console.log("came back")
+  const gotoStats = ()=>{
+    navigation.navigate("Stats")
+  }
   const renderSection = () => {
     switch (activeSection) {
       case 'Profile':
@@ -32,8 +36,7 @@ const AdminPortal = ({route}) => {
         return <AnalyticsSection />;
       case 'Messages':
         return <MessagesSection />;
-      case 'Tasks':
-        return <TasksSection />;
+      case 'Tasks':return <TasksSection/>;
       case 'Calendar':
         return <CalendarSection />;
       default:
@@ -103,8 +106,12 @@ const AdminPortal = ({route}) => {
   const ProfileSection = () => {
     useEffect(() => {
       const handleBackPress = () => {
-        // Prevent the default back button behavior
-        return true;
+        if (activeSection !== 'Home') {
+          setActiveSection('Home');
+          return true; // Prevent default behavior (exit app)
+        } else {
+          return false; // Allow default behavior (exit app)
+        }
       };
 
       // Register the back button handler
@@ -114,7 +121,7 @@ const AdminPortal = ({route}) => {
       return () => {
         BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
       };
-    }, []);
+    }, [activeSection]);
     return(
       
     <View style={styles.container}>
@@ -135,20 +142,24 @@ const AdminPortal = ({route}) => {
   };
 
   const SettingsSection = () => {
-    useEffect(() => {
-      const handleBackPress = () => {
-        // Prevent the default back button behavior
-        return true;
-      };
+   useEffect(() => {
+     const handleBackPress = () => {
+       if (activeSection !== 'Home') {
+         setActiveSection('Home');
+         return true; // Prevent default behavior (exit app)
+       } else {
+         return false; // Allow default behavior (exit app)
+       }
+     };
 
-      // Register the back button handler
-      BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+     // Register the back button handler
+     BackHandler.addEventListener('hardwareBackPress', handleBackPress);
 
-      // Clean up the event listener when the component unmounts
-      return () => {
-        BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
-      };
-    }, []);
+     // Clean up the event listener when the component unmounts
+     return () => {
+       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+     };
+   }, [activeSection]);
     return (
       
     <View style={styles.container}>
@@ -175,8 +186,12 @@ const AdminPortal = ({route}) => {
   const AnalyticsSection = () => {
     useEffect(() => {
       const handleBackPress = () => {
-        // Prevent the default back button behavior
-        return true;
+        if (activeSection !== 'Home') {
+          setActiveSection('Home');
+          return true; // Prevent default behavior (exit app)
+        } else {
+          return false; // Allow default behavior (exit app)
+        }
       };
 
       // Register the back button handler
@@ -186,7 +201,7 @@ const AdminPortal = ({route}) => {
       return () => {
         BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
       };
-    }, []);
+    }, [activeSection]);
     return(
     <View style={styles.container}>
       <ScrollView>
@@ -216,8 +231,12 @@ const AdminPortal = ({route}) => {
   const MessagesSection = () => {
     useEffect(() => {
       const handleBackPress = () => {
-        // Prevent the default back button behavior
-        return true;
+        if (activeSection !== 'Home') {
+          setActiveSection('Home');
+          return true; // Prevent default behavior (exit app)
+        } else {
+          return false; // Allow default behavior (exit app)
+        }
       };
 
       // Register the back button handler
@@ -227,7 +246,7 @@ const AdminPortal = ({route}) => {
       return () => {
         BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
       };
-    }, []);
+    }, [activeSection]);
     return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
@@ -242,23 +261,45 @@ const AdminPortal = ({route}) => {
   };
 
   const TasksSection = () => {
-    
-    return <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        {renderBackButton()}
-        <Text style={styles.headerTitle}>Driver's Information</Text>
+   useEffect(() => {
+     const handleBackPress = () => {
+       if (activeSection !== 'Home') {
+         setActiveSection('Home');
+         return true; // Prevent default behavior (exit app)
+       } else {
+         return false; // Allow default behavior (exit app)
+       }
+     };
+
+     // Register the back button handler
+     BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+     // Clean up the event listener when the component unmounts
+     return () => {
+       BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+     };
+   }, [activeSection]);
+    return (
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          {renderBackButton()}
+          <Text style={styles.headerTitle}>Driver's Information</Text>
+        </View>
+        <View style={styles.contentContainer}>
+          <AdminDriversPage />
+        </View>
       </View>
-      <View style={styles.contentContainer}>
-       
-        <AdminDriversPage/>
-      </View>
-    </View>
+    );
   };
   const CalendarSection = () => {
     useEffect(() => {
       const handleBackPress = () => {
-        // Prevent the default back button behavior
-        return true;
+        if (activeSection !== 'Home') {
+          setActiveSection('Home');
+          return true; // Prevent default behavior (exit app)
+        } else {
+          return false; // Allow default behavior (exit app)
+        }
       };
 
       // Register the back button handler
@@ -268,7 +309,7 @@ const AdminPortal = ({route}) => {
       return () => {
         BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
       };
-    }, []);
+    }, [activeSection]);
     return (
       <View style={styles.container}>
         <View style={styles.headerContainer}>
@@ -276,7 +317,7 @@ const AdminPortal = ({route}) => {
           <Text style={styles.headerTitle}>Ride's Information</Text>
         </View>
         <View style={styles.contentContainer}>
-          <Text style={styles.contentTitle}>Events -  This Week</Text>
+          <Text style={styles.contentTitle}>Events -  Live</Text>
           <EventItem
             date="Mon, Jan 10"
             time="3:00 PM - 5:00 PM"
@@ -325,7 +366,7 @@ const AdminPortal = ({route}) => {
       <Text style={styles.eventLocation}>{Fuel}</Text>
     </View>
   );
-  const styles = StyleSheet.create({
+ const styles = StyleSheet.create({
     container: {
       flex: 1,
     },

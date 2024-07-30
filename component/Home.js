@@ -31,7 +31,7 @@ const Home = ({route}) => {
       city,
       vehicleDetails,
       dutyInstructions,
-      mainData
+      mainData,month
     } = route.params;
     const makecall = ()=>{
       const phoneUrl = `tel:${number}`;
@@ -39,6 +39,18 @@ const Home = ({route}) => {
         console.error('Failed to open URL:', err),
       );
     }
+    const storeFuelData = async () => {
+      fuelData = {
+        [`monthExpenditure.${month}`]: fuelcost,
+      };
+      try {
+        const userRef = firestore().collection('userInfo').doc(id); // Reference user document
+        await userRef.update(fuelData); // Set user data in the document
+        console.log("fuel data updated")
+      } catch (error) {
+        console.error('Error storing fuel data:', error);
+      }
+    };
     const storeData = async (startkmvalue,endkmvalue,startfuelValue,endfuelValue) => {
       try {
         const userRef = firestore().collection('users').doc(id); // Reference user document
@@ -68,6 +80,7 @@ const Home = ({route}) => {
           return;
         }
         await storeData(startKm,endkm,startFuel,endFuel);
+        await storeFuelData();
         navigate.navigate('Duty', {
           name,
           number,
@@ -365,7 +378,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     padding: 5,
-    marginBottom: 10,
+    marginBottom: 30,
     backgroundColor: '#F5FFFA',
   },
   button: {

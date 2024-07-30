@@ -11,6 +11,20 @@ const PersonalInfo = ({route}) => {
     const [number, enterNumber] = useState('');
     const [driversaddress,setdriversaddress] = useState('');
     const navigation = useNavigation();
+    const monthExpenditure = {
+      January: 0,
+      February: 0,
+      March: 0,
+      April: 0,
+      May: 0,
+      June: 0,
+      July: 0,
+      August: 0,
+      September: 0,
+      October: 0,
+      November: 0,
+      December: 0,
+    };
     const storeData = async (userId,userData)=>{
         try {
     const userRef = firestore().collection('userInfo').doc(userId); // Reference user document
@@ -29,6 +43,7 @@ const PersonalInfo = ({route}) => {
             name:name,
             MobileNumber:number,
             driverAddress:driversaddress,
+            monthExpenditure:monthExpenditure
         }
         console.log("data is" + JSON.stringify(data))
         await storeData(id,data)

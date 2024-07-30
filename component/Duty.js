@@ -274,6 +274,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     padding: 20,
     backgroundColor: '#ffffff',
+    marginBottom:15
   },
   button: {
     width: 100,

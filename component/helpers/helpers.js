@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import { Alert, StyleSheet } from "react-native";
 
 export const validateEmail = email => {
@@ -18,5 +18,30 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#000000',
     marginVertical: 10,
+  },
+});
+
+export const MainFooter = () => {
+  return (
+    <View style={styles1.footerContainer}>
+      <Text style={styles1.footerText}>Developed By:- CMP Techsseract LLP</Text>
+    </View>
+  );
+};
+
+const styles1 = StyleSheet.create({
+  footerContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#ffff', // Change to your preferred background color
+    padding: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  footerText: {
+    color: '#000', // Change to your preferred text color
+    fontSize: 8,
   },
 });

@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import { SafeAreaView, StyleSheet, Text } from 'react-native';
 import StackNavigator from './navigation/StackNavigator';
+import { MainFooter } from './component/helpers/helpers';
 
 
 const Stack = createNativeStackNavigator();
@@ -10,6 +11,7 @@ export default App = () => {
   return (
     <NavigationContainer>
       <StackNavigator/>
+      <MainFooter/>
     </NavigationContainer>
   );
 };

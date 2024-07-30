@@ -11,7 +11,7 @@ import {TextInput, Button, Title} from 'react-native-paper';
 import {OtpInput} from 'react-native-otp-entry';
 import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
-import { validateEmail } from './helpers/helpers';
+import { MainFooter, validateEmail } from './helpers/helpers';
 
 const Register = () => {
   const [emailId, setEmailId] = useState('');
@@ -114,6 +114,7 @@ const Register = () => {
           Go To Login
         </Button>
       </View>
+    <MainFooter/>
     </KeyboardAvoidingView>
   );
 };

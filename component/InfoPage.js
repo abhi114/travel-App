@@ -192,7 +192,8 @@ const InfoPage = ({route}) => {
           city,
           vehicleDetails,
           dutyInstructions,
-          mainData
+          mainData,
+          month
         });
     
   };
@@ -464,7 +465,7 @@ export const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    padding: 15,
+    padding: 10,
     backgroundColor: '#e6e6fa',
     borderRadius: 10, // Add a slight corner radius
     borderWidth: 1, // Add a thin border
@@ -473,6 +474,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 5,
+    marginBottom:25
   },
 
   proceedButton: {
