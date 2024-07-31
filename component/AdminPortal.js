@@ -12,6 +12,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Linecharts from './helpers/charts';
 import { LineView } from './helpers/helpers';
 import UserDataScreen from './ReportsScreen';
+import firestore from '@react-native-firebase/firestore';
 import AdminDriversPage from './AdminDriversPage';
 import { useNavigation } from '@react-navigation/native';
 
@@ -19,9 +20,10 @@ const Tab = createBottomTabNavigator();
 
 const AdminPortal = ({route}) => {
   const navigation = useNavigation();
-  
+  const [userInfo, setUserInfo] = useState([]);
   const [activeSection, setActiveSection] = useState('Home');
   const {emailId, id, data} = route.params
+  
   console.log("came back")
   const gotoStats = ()=>{
     navigation.navigate("Stats")
@@ -184,6 +186,7 @@ const AdminPortal = ({route}) => {
   );
 
   const AnalyticsSection = () => {
+    
     useEffect(() => {
       const handleBackPress = () => {
         if (activeSection !== 'Home') {
@@ -202,30 +205,31 @@ const AdminPortal = ({route}) => {
         BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
       };
     }, [activeSection]);
-    return(
-    <View style={styles.container}>
-      <ScrollView>
-        <View style={styles.headerContainer}>
-          {renderBackButton()}
-          <Text style={styles.headerTitle}>Analytics Section</Text>
-        </View>
-        <View style={styles.contentContainer}>
-          <Text style={[styles.contentText, {fontWeight: 'bold'}]}>
-            Analysis Of User Data
-          </Text>
-          <LineView />
-          <Linecharts name={'User'} />
-        </View>
-        <View style={styles.contentContainer}>
-          <Text style={[styles.contentText, {fontWeight: 'bold'}]}>
-            Analysis Of Driver's Data
-          </Text>
-          <LineView />
-          <Linecharts name={'Driver'} />
-        </View>
-      </ScrollView>
-    </View>
-    )
+    
+    return (
+      <View style={styles.container}>
+        <ScrollView>
+          <View style={styles.headerContainer}>
+            {renderBackButton()}
+            <Text style={styles.headerTitle}>Analytics Section</Text>
+          </View>
+          <View style={styles.contentContainer}>
+            <Text style={[styles.contentText, {fontWeight: 'bold'}]}>
+              Analysis Of User Data
+            </Text>
+            <LineView />
+            <Linecharts name={'User'} />
+          </View>
+          <View style={styles.contentContainer}>
+            <Text style={[styles.contentText, {fontWeight: 'bold'}]}>
+              Analysis Of Driver's Data
+            </Text>
+            <LineView />
+            {userInfo && <Linecharts name={'Driver'} userInfo={userInfo} />}
+          </View>
+        </ScrollView>
+      </View>
+    );
   };
 
   const MessagesSection = () => {

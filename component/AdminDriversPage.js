@@ -86,9 +86,14 @@ const AdminDriversPage = ({renderbackButton}) => {
                   Address: {user.driverAddress}
                 </Text>
                 <Text style={styles.cardText}>
-                  {currentMonth} Spend On Petrol: {user.monthExpenditure?.[currentMonth] || 0}
+                  Registration Month: {user.RegisterMonth}
                 </Text>
-                
+
+                <Text style={styles.cardText}>
+                  {currentMonth} Spend On Petrol:{' '}
+                  {user.monthExpenditure?.[currentMonth] || 0}
+                </Text>
+
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => handleViewProfile(user.id)}>

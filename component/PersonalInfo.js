@@ -25,6 +25,21 @@ const PersonalInfo = ({route}) => {
       November: 0,
       December: 0,
     };
+    const monthNames = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    const currentMonth = monthNames[new Date().getMonth()];
     const storeData = async (userId,userData)=>{
         try {
     const userRef = firestore().collection('userInfo').doc(userId); // Reference user document
@@ -43,7 +58,8 @@ const PersonalInfo = ({route}) => {
             name:name,
             MobileNumber:number,
             driverAddress:driversaddress,
-            monthExpenditure:monthExpenditure
+            monthExpenditure:monthExpenditure,
+            RegisterMonth:currentMonth
         }
         console.log("data is" + JSON.stringify(data))
         await storeData(id,data)

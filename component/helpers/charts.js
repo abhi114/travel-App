@@ -1,5 +1,5 @@
 import { View, Text, Dimensions } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   LineChart,
   BarChart,
@@ -8,16 +8,79 @@ import {
   ContributionGraph,
   StackedBarChart,
 } from 'react-native-chart-kit';
+import firestore from '@react-native-firebase/firestore';
 
 const Linecharts = ({name}) => {
+    const [userInfo,setUserInfo]= useState([])
+    const [mapMonths,setmapMonths] = useState([])
+    useEffect(() => {
+      const fetchUserInfo = async () => {
+        const response = firestore().collection('userInfo');
+        const data = await response.get();
+        const userInfoArray = data.docs.map(doc => ({
+          id: doc.id, // Get the document ID
+          ...doc.data(), // Get the document data
+        }));
+        setUserInfo(userInfoArray);
+        console.log(JSON.stringify(userInfo));
+      };
+      fetchUserInfo();
+    }, []);
+    const getCurrentMonthAndPastSixMonths = () => {
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth();
+      const currentYear = currentDate.getFullYear();
+
+      const months = [];
+
+      for (let i = 0; i <= 6; i++) {
+        let month = currentMonth - i;
+        let year = currentYear;
+
+        if (month < 0) {
+          month += 12;
+          year -= 1;
+        }
+
+        const monthName = getMonthName(month);
+        months.push(`${monthName}`);
+      }
+
+      return months.reverse();
+    };
+    
+    const getMonthName = monthIndex => {
+      const monthNames = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ];
+
+      return monthNames[monthIndex];
+    };
+    const mappedData = getCurrentMonthAndPastSixMonths().map(month => {
+      const count = userInfo.filter(item => item.RegisterMonth === month).length;
+      return count;
+    });
+    console.log(getCurrentMonthAndPastSixMonths());
     const data = {
-      labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      labels: getCurrentMonthAndPastSixMonths(),
       datasets: [
         {
-          data: [20, 45, 28, 80, 99, 43],
+          data: mappedData,
         },
       ],
     };
+    
   return (
     <View style={{justifyContent: 'center', alignSelf: 'center'}}>
       <Text style={{color: '#000000', fontWeight: 'bold', marginLeft: 15}}>
@@ -25,17 +88,10 @@ const Linecharts = ({name}) => {
       </Text>
       <LineChart
         data={{
-          labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+          labels: getCurrentMonthAndPastSixMonths(),
           datasets: [
             {
-              data: [
-                Math.floor(Math.random() * 10),
-                Math.floor(Math.random() * 10),
-                Math.floor(Math.random() * 10),
-                Math.floor(Math.random() * 10),
-                Math.floor(Math.random() * 10),
-                Math.floor(Math.random() * 10),
-              ],
+              data: mappedData
             },
           ],
         }}
@@ -67,7 +123,7 @@ const Linecharts = ({name}) => {
         }}
       />
       <Text style={{color: '#000000', fontWeight: 'bold', marginLeft: 15}}>
-       Bar Chart
+        Bar Chart
       </Text>
       <BarChart
         style={{

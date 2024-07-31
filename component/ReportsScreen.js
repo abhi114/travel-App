@@ -19,6 +19,7 @@ import { LineChart } from 'react-native-chart-kit';
 import Linecharts from './helpers/charts';
 import { LineView } from './helpers/helpers';
 
+
 const UserDataScreen = ({route}) => {
   const {id} = route.params;
   const monthNames = [
@@ -38,10 +39,11 @@ const UserDataScreen = ({route}) => {
   const [userData, setUserData] = useState({});
   const [expanded, setExpanded] = useState({});
   const [mainuserData,setmainuserData] = useState({});
-   const [selectedMonth, setSelectedMonth] = useState('');
+   const [selectedMonth, setSelectedMonth] = useState(13);
    const [filteredData, setFilteredData] = useState({});
+    const [userInfo, setUserInfo] = useState([]);
    const navigation = useNavigation();
-   
+   console.log(userInfo.monthExpenditure?.[monthNames[selectedMonth]]);
   const EventItem = ({date, time, title, location}) => (
     <View style={styles.eventItem}>
       <View style={styles.eventDateTime}>
@@ -52,31 +54,25 @@ const UserDataScreen = ({route}) => {
       <Text style={styles.eventLocation}>{location}</Text>
     </View>
   );
-
     useEffect(() => {
-      const filterData = () => {
-        if (selectedMonth === 66) {
-          setFilteredData(mainuserData);
-          setUserData(mainuserData);
+      const fetchUserInfo = async () => {
+        const response = firestore().collection('userInfo').doc(id);
+        const data = await response.get();
+        if (data.exists) {
+          const userInfo = {
+            id: data.id, // Get the document ID
+            ...data.data(), // Get the document data
+          };
+          setUserInfo(userInfo);
+          console.log('real value is' + JSON.stringify(userInfo));
+          
         } else {
-          const filteredData = {};
-          Object.keys(userData).forEach(key => {
-            const date = new Date(key);
-              console.log("selected is " + monthNames[selectedMonth])
-              console.log('user month' + userData[key].ReportingMonth);
-            if (userData[key].ReportingMonth == monthNames[selectedMonth]) {
-              console.log("yes")
-              filteredData[key] = userData[key];
-            }else{
-              console.log("no")
-            }
-          });
-          setFilteredData(filteredData);
-          setUserData(filteredData);
+          console.log('Document not found');
         }
       };
-      filterData();
-    }, [selectedMonth]);
+      fetchUserInfo();
+    }, []);
+    
   useEffect(() => {
     const getUserData = async () => {
       try {
@@ -92,7 +88,23 @@ const UserDataScreen = ({route}) => {
     };
     getUserData();
   }, [id]);
-
+  useEffect(() => {
+    const filterData = () => {
+      if (selectedMonth === 13) {
+        setFilteredData(mainuserData);
+      } else {
+        const filteredData = {};
+        Object.keys(mainuserData).forEach(key => {
+          const date = new Date(key);
+          if (mainuserData[key].ReportingMonth == monthNames[selectedMonth]) {
+            filteredData[key] = mainuserData[key];
+          }
+        });
+        setFilteredData(filteredData);
+      }
+    };
+    filterData();
+  }, [selectedMonth,mainuserData]);
   const handlePress = date => {
     setExpanded(prevExpanded => ({
       ...prevExpanded,
@@ -100,7 +112,9 @@ const UserDataScreen = ({route}) => {
     }));
   };
   const handleMonthChange = month => {
+    
     setSelectedMonth(month);
+    
   };
   return (
     <View style={styles.container}>
@@ -113,7 +127,7 @@ const UserDataScreen = ({route}) => {
           selectedValue={selectedMonth}
           style={{height: 50, width: Dimensions.width}}
           onValueChange={itemValue => handleMonthChange(itemValue)}>
-          <Picker.Item label="Select Month" value={66} />
+          <Picker.Item label="Select Month" value={13} />
           <Picker.Item label="January" value={0} />
           <Picker.Item label="February" value={1} />
           <Picker.Item label="March" value={2} />
@@ -140,9 +154,9 @@ const UserDataScreen = ({route}) => {
             textAlign: 'center',
           }}>
           Total Fuel Expenditure for the Month of{' '}
-          {selectedMonth !== ''
+          {selectedMonth !== 13
             ? monthNames[selectedMonth]
-            : monthNames[new Date().getMonth()]}{' '}
+            : " "}{' '}
           -
         </Text>
         <Text
@@ -151,15 +165,15 @@ const UserDataScreen = ({route}) => {
             fontSize: 12,
             marginBottom: 1,
             margin: 5,
-            fontWeight:'bold',
+            fontWeight: 'bold',
             textAlign: 'center',
           }}>
-          Rs 250
+          Rs {selectedMonth !== 13 ?userInfo.monthExpenditure?.[monthNames[selectedMonth]] : 0}
         </Text>
       </View>
       <LineView />
       <FlatList
-        data={Object.keys(userData)}
+        data={Object.keys(filteredData)}
         renderItem={({item}) => (
           <TouchableOpacity onPress={() => handlePress(item)}>
             <View style={styles.cardContainer}>
@@ -186,7 +200,7 @@ const UserDataScreen = ({route}) => {
                 <View>
                   <View style={styles.cardBody}>
                     <View></View>
-                    {Object.keys(userData[item].PassengerData).map(
+                    {Object.keys(filteredData[item].PassengerData).map(
                       passengerKey => (
                         <View key={passengerKey}>
                           <View
@@ -213,7 +227,7 @@ const UserDataScreen = ({route}) => {
                                 marginBottom: 1,
                                 textAlign: 'center',
                               }}>
-                              {userData[item].name}
+                              {filteredData[item].name}
                             </Text>
                           </View>
                           <View style={styles.line}></View>
@@ -239,7 +253,7 @@ const UserDataScreen = ({route}) => {
 
                                   color: '#000000',
                                 }}>
-                                {userData[item].ReportingDate}
+                                {filteredData[item].ReportingDate}
                               </Text>
                             </View>
                             <View
@@ -260,7 +274,7 @@ const UserDataScreen = ({route}) => {
 
                                   color: '#000000',
                                 }}>
-                                {userData[item].endDate}
+                                {filteredData[item].endDate}
                               </Text>
                             </View>
                           </View>
@@ -300,7 +314,7 @@ const UserDataScreen = ({route}) => {
 
                                   color: '#000000',
                                 }}>
-                                {userData[item].startKm}
+                                {filteredData[item].startKm}
                               </Text>
                             </View>
                             <View style={{flexDirection: 'row'}}>
@@ -323,7 +337,7 @@ const UserDataScreen = ({route}) => {
 
                                   color: '#000000',
                                 }}>
-                                {userData[item].endKm}
+                                {filteredData[item].endKm}
                               </Text>
                             </View>
                           </View>
@@ -361,7 +375,7 @@ const UserDataScreen = ({route}) => {
 
                                   color: '#000000',
                                 }}>
-                                {userData[item].starFuel}
+                                {filteredData[item].starFuel}
                               </Text>
                             </View>
                             <View style={{flexDirection: 'row'}}>
@@ -379,7 +393,7 @@ const UserDataScreen = ({route}) => {
 
                                   color: '#000000',
                                 }}>
-                                {userData[item].endFuel}
+                                {filteredData[item].endFuel}
                               </Text>
                             </View>
                           </View>
@@ -397,7 +411,7 @@ const UserDataScreen = ({route}) => {
                                 color: '#000000',
                                 marginVertical: 5,
                               }}>
-                              Fuel Costs {`(in Rs)-`} {userData[item].FuelCost}
+                              Fuel Costs {`(in Rs)-`} {filteredData[item].FuelCost}
                             </Text>
                           </View>
 
@@ -411,12 +425,12 @@ const UserDataScreen = ({route}) => {
                               }}>
                               Driver's Signature:
                             </Text>
-                            {userData[item].passengersSignature !==
+                            {filteredData[item].passengersSignature !==
                             undefined ? (
                               <View style={styles.Imagecontainer}>
                                 <Image
                                   source={{
-                                    uri: userData[item].driversSignature,
+                                    uri: filteredData[item].driversSignature,
                                   }}
                                   style={styles.image}
                                   resizeMode="contain"
@@ -472,7 +486,7 @@ const UserDataScreen = ({route}) => {
                                 marginVertical: 5,
                               }}>
                               {
-                                userData[item].PassengerData[passengerKey]
+                                filteredData[item].PassengerData[passengerKey]
                                   .PassengerName
                               }
                             </Text>
@@ -495,7 +509,7 @@ const UserDataScreen = ({route}) => {
                                 marginVertical: 5,
                               }}>
                               {
-                                userData[item].PassengerData[passengerKey]
+                                filteredData[item].PassengerData[passengerKey]
                                   .DestinationAddress
                               }
                             </Text>
@@ -518,7 +532,7 @@ const UserDataScreen = ({route}) => {
                                 marginVertical: 5,
                               }}>
                               {
-                                userData[item].PassengerData[passengerKey]
+                                filteredData[item].PassengerData[passengerKey]
                                   .StartingAddress
                               }
                             </Text>
@@ -534,7 +548,7 @@ const UserDataScreen = ({route}) => {
 
                         color: '#000000',
                       }}>
-                      {userData[item].address}
+                      {filteredData[item].address}
                     </Text>
                     <Text style={styles.heading}>City</Text>
                     <Text
@@ -543,7 +557,7 @@ const UserDataScreen = ({route}) => {
 
                         color: '#000000',
                       }}>
-                      {userData[item].city}
+                      {filteredData[item].city}
                     </Text>
                     <Text style={styles.heading}>Duty Instructions</Text>
                     <Text
@@ -552,7 +566,7 @@ const UserDataScreen = ({route}) => {
 
                         color: '#000000',
                       }}>
-                      {userData[item].dutyInstructions}
+                      {filteredData[item].dutyInstructions}
                     </Text>
                     <Text style={styles.heading}>Vehicle Details</Text>
                     <Text
@@ -561,7 +575,7 @@ const UserDataScreen = ({route}) => {
 
                         color: '#000000',
                       }}>
-                      {userData[item].vehicleDetails}
+                      {filteredData[item].vehicleDetails}
                     </Text>
                   </View>
                   <LineView />
@@ -574,10 +588,10 @@ const UserDataScreen = ({route}) => {
                       }}>
                       Passenger's Signature:
                     </Text>
-                    {userData[item].passengersSignature !== undefined ? (
+                    {filteredData[item].passengersSignature !== undefined ? (
                       <View style={styles.Imagecontainer}>
                         <Image
-                          source={{uri: userData[item].passengersSignature}}
+                          source={{uri: filteredData[item].passengersSignature}}
                           style={styles.image}
                           resizeMode="contain"
                         />
@@ -606,7 +620,7 @@ const UserDataScreen = ({route}) => {
                     }}>
                     Feedbacks -
                   </Text>
-                  {userData[item].Feedback !== undefined ? (
+                  {filteredData[item].Feedback !== undefined ? (
                     <View style={styles.feedbackcard}>
                       <Text
                         style={{
@@ -615,7 +629,7 @@ const UserDataScreen = ({route}) => {
 
                           color: '#000000',
                         }}>
-                        {userData[item].Feedback}
+                        {filteredData[item].Feedback}
                       </Text>
                     </View>
                   ) : (

@@ -40,16 +40,26 @@ const Home = ({route}) => {
       );
     }
     const storeFuelData = async () => {
-      fuelData = {
-        [`monthExpenditure.${month}`]: fuelcost,
-      };
-      try {
-        const userRef = firestore().collection('userInfo').doc(id); // Reference user document
-        await userRef.update(fuelData); // Set user data in the document
-        console.log("fuel data updated")
-      } catch (error) {
-        console.error('Error storing fuel data:', error);
-      }
+     try {
+       const userRef = firestore().collection('userInfo').doc(id); // Reference user document
+       const userDoc = await userRef.get(); // Get user document
+       const userData = userDoc.data(); // Convert user document to object
+
+       if (userData.monthExpenditure) {
+         const currentMonthData = userData.monthExpenditure[month];
+         const totalCost =
+           (parseFloat(currentMonthData) || 0) + parseFloat(fuelcost);
+         const fuelData = {
+           [`monthExpenditure.${month}`]: totalCost.toString(),
+         };
+         await userRef.update(fuelData); // Set user data in the document
+         console.log('fuel data updated');
+       } else {
+         console.log('Monthly expenditure data not found');
+       }
+     } catch (error) {
+       console.error('Error storing fuel data:', error);
+     }
     };
     const storeData = async (startkmvalue,endkmvalue,startfuelValue,endfuelValue) => {
       try {
