@@ -33,7 +33,7 @@ const Linecharts = ({name}) => {
 
       const months = [];
 
-      for (let i = 0; i <= 6; i++) {
+      for (let i = 0; i < 6; i++) {
         let month = currentMonth - i;
         let year = currentYear;
 

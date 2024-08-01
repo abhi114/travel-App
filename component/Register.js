@@ -6,20 +6,66 @@ import {
   Platform,
   Image,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {TextInput, Button, Title} from 'react-native-paper';
 import {OtpInput} from 'react-native-otp-entry';
 import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import { MainFooter, validateEmail } from './helpers/helpers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Register = () => {
   const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
   const [name,setName] = useState('');
   const [number,setNumber] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
   const [verificationId, setVerificationId] = useState(null);
   const navigation = useNavigation();
+  useEffect(() => {
+    const checkAdminLoginState = async () => {
+      try {
+        const loginState = await AsyncStorage.getItem('AdminloginState');
+        if (loginState) {
+          const {emailId, id, data} = JSON.parse(loginState);
+          navigation.reset({
+            index: 0,
+            routes: [{name: 'AdminPortal', params: {emailId, id, data}}],
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    checkAdminLoginState();
+  }, []);
+  useEffect(() => {
+    const checkLoginState = async () => {
+      try {
+        const loginState = await AsyncStorage.getItem('loginState');
+        if (loginState) {
+          const {emailId, id, data} = JSON.parse(loginState);
+          navigation.reset({
+            index: 0,
+            routes: [
+              {
+                name: data ? 'ButtonPage' : 'PersonalInfo',
+                params: {emailId, id, data},
+              },
+            ],
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    checkLoginState();
+  }, []);
   const handleRegister = async () => {
     if (emailId === '' || password === '') {
       alert('please fill The Required Details');
@@ -75,7 +121,15 @@ const Register = () => {
   };
 
   const handleVerifyOtp = async () => {};
+  if (isLoading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   return (
+    
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>

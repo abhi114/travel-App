@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   ScrollView,
   BackHandler,
+  TouchableNativeFeedback,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -15,6 +17,7 @@ import UserDataScreen from './ReportsScreen';
 import firestore from '@react-native-firebase/firestore';
 import AdminDriversPage from './AdminDriversPage';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createBottomTabNavigator();
 
@@ -162,20 +165,54 @@ const AdminPortal = ({route}) => {
        BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
      };
    }, [activeSection]);
+   const handleLogout = () => {
+     Alert.alert('Confirm Logout', 'Are you sure you want to log out?', [
+       {
+         text: 'Logout',
+         onPress: () => {
+          AsyncStorage.removeItem('AdminloginState');
+           navigation.reset({
+             index: 0,
+             routes: [{name: 'Register'}],
+           });
+         },
+       },
+     ]);
+   };
     return (
-      
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        {renderBackButton()}
-        <Text style={styles.headerTitle}>Settings Section</Text>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          {renderBackButton()}
+          <Text style={styles.headerTitle}>Settings Section</Text>
+        </View>
+        <View style={styles.contentContainer}>
+          <Icon name="settings" size={80} color="#3498db" />
+          <Text style={styles.contentText}>Notifications: On</Text>
+          <Text style={styles.contentText}>Theme: Light</Text>
+          <TouchableNativeFeedback
+            onPress={handleLogout}
+            background={TouchableNativeFeedback.Ripple('#fff', true)}>
+            <View
+              style={{
+                backgroundColor: '#007bff', // blue color
+                padding: 16,
+                borderRadius: 8,
+                borderColor: '#007bff',
+                borderWidth: 1,
+              }}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  color: '#fff', // white text color
+                  textAlign: 'center',
+                }}>
+                Logout
+              </Text>
+            </View>
+          </TouchableNativeFeedback>
+        </View>
       </View>
-      <View style={styles.contentContainer}>
-        <Icon name="settings" size={80} color="#3498db" />
-        <Text style={styles.contentText}>Notifications: On</Text>
-        <Text style={styles.contentText}>Theme: Light</Text>
-      </View>
-    </View>
-    )
+    );
   };
 
   const PressableFeatureBox = ({name, icon, onPress}) => (

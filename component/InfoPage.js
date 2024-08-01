@@ -6,12 +6,17 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  Button,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Replace with your icon library
 import Icon1 from 'react-native-vector-icons/Entypo'; // Replace with your icon library
 import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import Icon3 from 'react-native-vector-icons/AntDesign';
+import Icon4 from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const InfoPage = ({route}) => {
     const {id,data:driversdta} = route.params;
@@ -32,6 +37,9 @@ const InfoPage = ({route}) => {
     const currentMonthName = monthNames[new Date().getMonth()];
   const navigate = useNavigation();
   const [Rprtdate,setRprDate] = useState('');
+  const [isTimePickerVisible, setIsTimePickerVisible] = useState(false);
+  const [isEndTimePickerVisible, setIsEndTimePickerVisible] = useState(false);
+  const [isDatePickerVisible, setIsDatePickerVisible] = useState(false);
   const [RprtTime,setRprtTime] = useState('');
   const [month, setmonth] = useState(currentMonthName);
   const [endDate,setEndDate] = useState('');
@@ -43,13 +51,71 @@ const InfoPage = ({route}) => {
   const [vehicleDetails,setvehicleDetails]= useState('');
     const [dutyInstructions,setDutyInstructions] =useState('');
     const [views, setViews] = useState([{}]);
-
+    const logout = () => {
+      Alert.alert('Confirm Logout', 'Are you sure you want to log out?', [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Logout',
+          onPress: () => {
+            AsyncStorage.removeItem('loginState');
+            navigate.reset({
+              index: 0,
+              routes: [{name: 'Register'}],
+            });
+          },
+        },
+      ]);
+    };
     const addView = () => {
       setViews([...views, {}]);
       setPassengerNames([...passengerNames, '']);
       setStartingAddress([...startingAddress, '']);
       setDestinationAddress([...destinationAddress, '']);
     };
+    const handleTimePicker = () => {
+      setIsTimePickerVisible(true);
+    };
+    const handleendTimePicker = () => {
+      setIsEndTimePickerVisible(true);
+    };
+    const handleDatePicker = () => {
+      setIsDatePickerVisible(true);
+    };
+    const handleConfirmDate = date => {
+      const formattedDate = `${pad(
+        date.getDate(),
+      )}`;
+      setRprDate(formattedDate);
+      setIsDatePickerVisible(false);
+    };
+
+    const handleCancelDate = () => {
+      setIsDatePickerVisible(false);
+    };
+    const handleConfirm = time => {
+      const formattedTime = `${pad(time.getHours() % 12 || 12)}:${pad(
+        time.getMinutes(),
+      )} ${time.getHours() < 12 ? 'am' : 'pm'}`;
+      setRprtTime(formattedTime);
+      setIsTimePickerVisible(false);
+    };
+    const handleConfirmForEndDate = time => {
+      const formattedTime = `${pad(time.getHours() % 12 || 12)}:${pad(
+        time.getMinutes(),
+      )} ${time.getHours() < 12 ? 'am' : 'pm'}`;
+      setEndDate(formattedTime);
+      setIsEndTimePickerVisible(false);
+    };
+     const pad = n => (n < 10 ? `0${n}` : n);
+    const handleCancel = () => {
+      setIsTimePickerVisible(false);
+    };
+     const handleendCancel = () => {
+       setIsEndTimePickerVisible(false);
+     };
     const removeView = () => {
       if (views.length > 1) {
         setViews(views.slice(0, -1));
@@ -200,8 +266,16 @@ const InfoPage = ({route}) => {
   return (
     <View style={styles.outerContainer}>
       <ScrollView style={styles.container}>
-        <View style={styles.buttonContainer}>
+        <View
+          style={[
+            styles.buttonContainer,
+            {flexDirection: 'row', justifyContent: 'space-between'},
+          ]}>
           <Text style={styles.headerText}>Your Details</Text>
+          <TouchableOpacity onPress={logout} style={{justifyContent:'center',alignItems:'center'}}>
+            <Icon3 name="logout" size={20} color={'#a2b223'} />
+            <Text style={{marginRight:5}}>Logout</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.cardContainer}>
           <View style={styles.card}>
@@ -220,33 +294,102 @@ const InfoPage = ({route}) => {
         <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>Reporting Date </Text>
-            <TextInput
-              keyboardType='numeric'
-              inputMode="date"
-              onChangeText={setRprDate}
-              value={Rprtdate}
-              placeholder="Enter in 00 th/st "
-              style={styles.textInput}
-            />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderColor: 'gray',
+                borderWidth: 1,
+                padding: 10,
+                borderRadius: 5,
+                justifyContent: 'space-around',
+              }}>
+              <TextInput
+                keyboardType="numeric"
+                inputMode="date"
+                onChangeText={setRprDate}
+                value={Rprtdate}
+                placeholder="Enter in 00 th/st "
+                style={styles.textInput}
+              />
+              <TouchableOpacity
+                style={[
+                  {
+                    marginLeft: 10,
+                    width: 80,
+                    height: 40,
+                    borderRadius: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  },
+                ]}
+                onPress={handleDatePicker}>
+                <Icon3 name="calendar" size={30} color="#4F8EF7" />
+                <Text>Select Date </Text>
+              </TouchableOpacity>
+            </View>
+            {isDatePickerVisible && (
+              <DateTimePickerModal
+                isVisible={isDatePickerVisible}
+                mode="date"
+                onConfirm={handleConfirmDate}
+                onCancel={handleCancelDate}
+                is24Hour={false}
+              />
+            )}
           </View>
         </View>
         <View style={styles.cardContainer}>
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Reporting Time</Text>
-            <TextInput
-              inputMode="date"
-              onChangeText={setRprtTime}
-              value={RprtTime}
-              placeholder="Enter in 00:00 am/pm"
-              style={styles.textInput}
-            />
+            <Text style={styles.sectionTitle}>Reporting Time </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderColor: 'gray',
+                borderWidth: 1,
+                padding: 10,
+                borderRadius: 5,
+                justifyContent: 'space-around',
+              }}>
+              <TextInput
+                inputMode="date"
+                onChangeText={setRprtTime}
+                value={RprtTime}
+                placeholder="Enter in 00:00 am/pm"
+                style={styles.textInput}
+              />
+              <TouchableOpacity
+                style={[
+                  {
+                    marginLeft: 10,
+                    width: 80,
+                    height: 40,
+                    borderRadius: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  },
+                ]}
+                onPress={handleTimePicker}>
+                <Icon4 name="access-time" size={30} color="#4F8EF7" />
+                <Text>Select Time </Text>
+              </TouchableOpacity>
+            </View>
+            {isTimePickerVisible && (
+              <DateTimePickerModal
+                isVisible={isTimePickerVisible}
+                mode="time"
+                onConfirm={handleConfirm}
+                onCancel={handleCancel}
+                is24Hour={false}
+              />
+            )}
           </View>
         </View>
         <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>Reporting month</Text>
             <TextInput
-              
               inputMode="date"
               onChangeText={setmonth}
               value={month}
@@ -259,12 +402,48 @@ const InfoPage = ({route}) => {
         <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>End Time</Text>
-            <TextInput
-              value={endDate}
-              onChangeText={setEndDate}
-              placeholder="Enter Time in 00:00 am/pm"
-              style={styles.textInput}
-            />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                borderColor: 'gray',
+                borderWidth: 1,
+                padding: 10,
+                borderRadius: 5,
+                justifyContent: 'space-around',
+              }}>
+              <TextInput
+                inputMode="date"
+                onChangeText={setEndDate}
+                value={endDate}
+                placeholder="Enter in 00:00 am/pm"
+                style={styles.textInput}
+              />
+              <TouchableOpacity
+                style={[
+                  {
+                    marginLeft: 10,
+                    width: 80,
+                    height: 40,
+                    borderRadius: 20,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  },
+                ]}
+                onPress={handleendTimePicker}>
+                <Icon4 name="access-time" size={30} color="#4F8EF7" />
+                <Text>Select Time</Text>
+              </TouchableOpacity>
+            </View>
+            {isEndTimePickerVisible && (
+              <DateTimePickerModal
+                isVisible={isEndTimePickerVisible}
+                mode="time"
+                onConfirm={handleConfirmForEndDate}
+                onCancel={handleendCancel}
+                is24Hour={false}
+              />
+            )}
           </View>
         </View>
 

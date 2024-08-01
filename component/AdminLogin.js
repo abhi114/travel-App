@@ -15,6 +15,8 @@ import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {validateEmail} from './helpers/helpers';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Login = ({route}) => {
   const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
@@ -68,7 +70,14 @@ const Login = ({route}) => {
           const data = await getUserData(id);
           console.log('dta is ' + JSON.stringify(data));
           if (data) {
-            navigation.navigate('AdminPortal', {emailId, id, data});
+            await AsyncStorage.setItem(
+              'AdminloginState',
+              JSON.stringify({emailId, id,data}),
+            );
+            navigation.reset({
+              index: 0,
+              routes: [{name: 'AdminPortal', params: {emailId, id, data}}],
+            });
           } else {
             console.log('final data is' + JSON.stringify(data));
             console.log('display name set to' + user.user.displayName);

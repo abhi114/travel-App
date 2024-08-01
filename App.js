@@ -9,10 +9,12 @@ import { MainFooter } from './component/helpers/helpers';
 const Stack = createNativeStackNavigator();
 export default App = () => {
   return (
-    <NavigationContainer>
-      <StackNavigator/>
-      <MainFooter/>
-    </NavigationContainer>
+    
+      <NavigationContainer>
+        <StackNavigator />
+        <MainFooter />
+      </NavigationContainer>
+    
   );
 };
 

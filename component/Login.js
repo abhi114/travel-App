@@ -6,10 +6,14 @@ import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { MainFooter, validateEmail } from './helpers/helpers';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Login = ({route}) => {
  
   const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
+   const [showPassword, setShowPassword] = useState(false);
   const [verificationId, setVerificationId] = useState(null);
   //const [restPassword,setresetPassword] = useState(false);
    const [showConfirmation, setShowConfirmation] = useState(false);
@@ -90,18 +94,35 @@ const Login = ({route}) => {
               const data = await getUserData(id)
               console.log("dta is " + JSON.stringify(data));
               if(data){
-                navigation.navigate("ButtonPage",{emailId,id,data});
+                await AsyncStorage.setItem(
+                  'loginState',
+                  JSON.stringify({emailId, id, data}),
+                );
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: 'ButtonPage', params: {emailId, id, data}}],
+                });
+                 
                 
               }else{
               console.log("final data is" + JSON.stringify(data));
               console.log("display name set to" + user.user.displayName);
               console.log('display name set to' + user.user.phoneNumber);
-              navigation.navigate('PersonalInfo',{emailId,id});
+              await AsyncStorage.setItem(
+                'loginState',
+                JSON.stringify({emailId, id}),
+              );
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'PersonalInfo', params: {emailId, id}}],
+              });
               }
         }
       }).catch((error)=>{
         if(error.code === "auth/invalid-credential"){
           Alert.alert("id password does not match","Please enter a valid id and password");
+        }else{
+          console.log(error);
         }
       })
     } catch (error) {
@@ -142,13 +163,24 @@ const Login = ({route}) => {
           onChangeText={setEmailId}
           style={styles.input}
         />
-        <TextInput
-          secureTextEntry={true}
-          label="Password"
-          value={password}
-          onChangeText={setPassword}
-          style={styles.input}
-        />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <TextInput
+            secureTextEntry={!showPassword}
+            label="Password"
+            value={password}
+            onChangeText={setPassword}
+            style={[styles.input, {flex: 0.9}]}
+          />
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            style={{justifyContent: 'center', alignItems: 'center', flex: 0.1}}>
+            {showPassword ? (
+              <Icon name="eye" size={24} color="gray" />
+            ) : (
+              <Icon name="eye-slash" size={24} color="gray" />
+            )}
+          </TouchableOpacity>
+        </View>
 
         <Button mode="contained" onPress={handleRegister} style={styles.button}>
           Login
@@ -169,7 +201,7 @@ const Login = ({route}) => {
           <Text style={styles.adminPortalText}>Admin portal</Text>
         </TouchableOpacity>
       </View>
-      <MainFooter/>
+      <MainFooter />
     </KeyboardAvoidingView>
   );
 };
