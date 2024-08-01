@@ -18,6 +18,7 @@ import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { LineChart } from 'react-native-chart-kit';
 import Linecharts from './helpers/charts';
 import { LineView } from './helpers/helpers';
+import Widget from './ReportsScreenDetailed';
 
 
 const UserDataScreen = ({route}) => {
@@ -118,10 +119,12 @@ const UserDataScreen = ({route}) => {
   };
   return (
     <View style={styles.container}>
+      
       <View style={styles.buttonContainer}>
         <Text style={styles.headerText}>Report Details</Text>
+        
       </View>
-
+      
       <View style={styles.monthSelector}>
         <Picker
           selectedValue={selectedMonth}

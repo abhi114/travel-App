@@ -1,152 +1,86 @@
 import React from 'react';
-import {StyleSheet, Image, Text, View,TouchableOpacity} from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Icon1 from 'react-native-vector-icons/Feather';
-import { useNavigation } from '@react-navigation/native';
-import { ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 
-
-const ReportsScreenDetailed = props => {
-  const navigation = useNavigation();
+export default function Widget() {
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>Maxx Scooter</Text>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon1 name="chevron-left" color="#FFF" size={25} />
-        </TouchableOpacity>
-      </View>
-      
-        <Image
-          source={require('../assets/car_photo1.png')}
-          style={styles.img}
+      <View style={styles.feedbackContainer}>
+        <Text style={styles.title}>Leave your feedback</Text>
+        <TextInput
+          style={styles.textInput}
+          placeholder="Enter your feedback here"
+          multiline={true}
+          numberOfLines={5}
         />
-    
-      <ScrollView style={styles.cont3}>
-        <Text style={styles.title}>Maxx Scooter</Text>
-        <Text style={styles.subtitle}>Model S1</Text>
-        <View style={styles.cont2}>
-          <Text style={{...styles.title, flex: 2, marginTop: 0}}>Colors</Text>
-          <View style={styles.selected}>
-            <View style={styles.c1} />
-          </View>
-          <View style={styles.c2} />
-          <View style={styles.c3} />
-        </View>
-        <Text style={styles.text}>
-          Lorem ipsum dolor sit amet, consectutur adipsing elit, sed do eiusmod
-          tempor inciduent ut labore et dolore magna
-        </Text>
-        <View style={styles.cont1}>
-          <Icon name="heart-o" color="#000" size={25} />
-          <TouchableOpacity
-            style={styles.btn}
-            onPress={() => navigation.navigate('Home')}>
-            <Text style={styles.btnText}>Next</Text>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.submitButton}>
+            <Text style={styles.submitButtonText}>Submit</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.cancelButton}>
+            <Text style={styles.cancelButtonText}>Cancel</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
-};
-
-export default ReportsScreenDetailed;
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#121212',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  feedbackContainer: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   title: {
-    fontSize: 25,
-    fontFamily: 'Montserrat_700Bold',
-    marginTop: 30,
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
-  subtitle: {
-    fontSize: 20,
-    color: '#474747',
-    marginTop: 10,
-    fontFamily: 'Montserrat_400Regular',
+  textInput: {
+    height: 100,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    padding: 10,
+    marginBottom: 10,
   },
-  text: {
-    fontFamily: 'Montserrat_400Regular',
-    fontSize: 18,
-    paddingRight: 80,
-    lineHeight: 25,
-  },
-  btn: {
-    backgroundColor: '#E2443B',
-    paddingHorizontal: 60,
-    borderRadius: 30,
-  },
-  btnText: {
-    fontFamily: 'Montserrat_600SemiBold',
-    fontSize: 20,
-    color: '#FFF',
-  },
-  cont1: {
+  buttonContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    justifyContent: 'space-between',
-    marginTop: 30,
+    justifyContent: 'flex-end',
   },
-  c3: {
-    height: 20,
-    width: 20,
-    borderRadius: 15,
-    backgroundColor: '#529CC0',
+  submitButton: {
+    backgroundColor: '#007bff',
+    padding: 10,
+    borderRadius: 5,
+    marginRight: 10,
   },
-  c2: {
-    height: 20,
-    width: 20,
-    borderRadius: 15,
-    backgroundColor: '#529C47',
-    marginHorizontal: 10,
+  submitButtonText: {
+    color: '#fff',
+    fontSize: 16,
   },
-  c1: {
-    height: 20,
-    width: 20,
-    borderRadius: 15,
-    backgroundColor: '#E2443B',
+  cancelButton: {
+    backgroundColor: '#6c757d',
+    padding: 10,
+    borderRadius: 5,
   },
-  selected: {
-    borderColor: '#E2443B',
-    height: 30,
-    width: 30,
-    borderRadius: 24,
-    borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cont2: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-    marginVertical: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    paddingHorizontal: 20,
-    paddingTop: 50,
-  },
-  img: {
-    height: '40%',
-    width: '100%',
-    resizeMode:'contain',
-    borderRadius:15,
-  },
-  cont3: {
-    marginBottom:5,
-    flex: 1,
-    backgroundColor: '#FFF',
-    width: '100%',
-    borderRadius: 50,
-    paddingHorizontal: 20,
+  cancelButtonText: {
+    color: '#fff',
+    fontSize: 16,
   },
 });

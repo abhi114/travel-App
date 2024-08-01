@@ -269,31 +269,31 @@ const InfoPage = ({route}) => {
         <View
           style={[
             styles.buttonContainer,
-            {flexDirection: 'row', justifyContent: 'space-between'},
+            {flexDirection: 'row', justifyContent: 'space-between',},
           ]}>
           <Text style={styles.headerText}>Your Details</Text>
-          <TouchableOpacity onPress={logout} style={{justifyContent:'center',alignItems:'center'}}>
+          <TouchableOpacity onPress={logout} style={{justifyContent:'center',alignItems:'center',}}>
             <Icon3 name="logout" size={20} color={'#a2b223'} />
             <Text style={{marginRight:5}}>Logout</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.cardContainer}>
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Full Name</Text>
+            <Text style={styles.sectionTitle}>Full Name *</Text>
             <Text style={styles.textInput}>{driversdta.name}</Text>
           </View>
         </View>
 
         <View style={styles.cardContainer}>
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Number</Text>
+            <Text style={styles.sectionTitle}>Number *</Text>
             <Text style={styles.textInput}>{driversdta.MobileNumber}</Text>
           </View>
         </View>
 
         <View style={styles.cardContainer}>
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Reporting Date </Text>
+            <Text style={styles.sectionTitle}>Reporting Date * </Text>
             <View
               style={{
                 flexDirection: 'row',
@@ -341,7 +341,7 @@ const InfoPage = ({route}) => {
         </View>
         <View style={styles.cardContainer}>
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Reporting Time </Text>
+            <Text style={styles.sectionTitle}>Reporting Time *</Text>
             <View
               style={{
                 flexDirection: 'row',
@@ -388,7 +388,7 @@ const InfoPage = ({route}) => {
         </View>
         <View style={styles.cardContainer}>
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Reporting month</Text>
+            <Text style={styles.sectionTitle}>Reporting month*</Text>
             <TextInput
               inputMode="date"
               onChangeText={setmonth}
@@ -401,7 +401,7 @@ const InfoPage = ({route}) => {
 
         <View style={styles.cardContainer}>
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>End Time</Text>
+            <Text style={styles.sectionTitle}>End Time *</Text>
             <View
               style={{
                 flexDirection: 'row',
@@ -451,7 +451,7 @@ const InfoPage = ({route}) => {
           <View style={styles.card}>
             <View style={styles.sectionRow}>
               <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Reporting Address</Text>
+                <Text style={styles.sectionTitle}>Reporting Address *</Text>
                 <TextInput
                   value={address}
                   onChangeText={setAddress}
@@ -468,7 +468,7 @@ const InfoPage = ({route}) => {
 
         <View style={styles.cardContainer}>
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Serving city</Text>
+            <Text style={styles.sectionTitle}>Serving city *</Text>
             <TextInput
               value={city}
               onChangeText={setCity}
@@ -480,7 +480,7 @@ const InfoPage = ({route}) => {
 
         <View style={styles.cardContainer}>
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Vehicle Details</Text>
+            <Text style={styles.sectionTitle}>Vehicle Details *</Text>
             <TextInput
               value={vehicleDetails}
               onChangeText={setvehicleDetails}
@@ -492,7 +492,7 @@ const InfoPage = ({route}) => {
 
         <View style={styles.cardContainer}>
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Duty Instructions</Text>
+            <Text style={styles.sectionTitle}>Duty Instructions *</Text>
             <TextInput
               value={dutyInstructions}
               onChangeText={setDutyInstructions}
@@ -502,7 +502,7 @@ const InfoPage = ({route}) => {
           </View>
         </View>
         <View style={styles.container}>
-          <Text style={styles.sectionTitle}>Passengers Information</Text>
+          <Text style={styles.sectionTitle}>Passengers Information *</Text>
           <View
             style={{
               flexDirection: 'row',
@@ -525,7 +525,7 @@ const InfoPage = ({route}) => {
             <View key={index} style={styles.cardContainer}>
               <Text style={styles.sectionTitle}>Passenger {index + 1}</Text>
               <View style={styles.card}>
-                <Text style={styles.sectionTitle}>Name Of Passenger</Text>
+                <Text style={styles.sectionTitle}>Name Of Passenger *</Text>
                 <TextInput
                   value={passengerNames[index]}
                   onChangeText={value =>
@@ -536,7 +536,7 @@ const InfoPage = ({route}) => {
                 />
               </View>
               <View style={styles.card}>
-                <Text style={styles.sectionTitle}>Starting Address</Text>
+                <Text style={styles.sectionTitle}>Starting Address *</Text>
                 <TextInput
                   value={startingAddress[index]}
                   onChangeText={value =>
@@ -547,7 +547,7 @@ const InfoPage = ({route}) => {
                 />
               </View>
               <View style={styles.card}>
-                <Text style={styles.sectionTitle}>Drop Address</Text>
+                <Text style={styles.sectionTitle}>Drop Address *</Text>
                 <TextInput
                   value={destinationAddress[index]}
                   onChangeText={value =>
@@ -592,6 +592,8 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#252F40',
     textAlign: 'center',
+    justifyContent:'center',
+    alignSelf:'center'
   },
   container: {
     flex: 1,
@@ -610,7 +612,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     borderRadius: 10,
     padding: 20,
-    marginTop: 5,
+    marginTop: 10,
     shadowColor: '#000000',
     shadowOpacity: 0.2,
     shadowRadius: 5,
