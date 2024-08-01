@@ -16,10 +16,11 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {validateEmail} from './helpers/helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 const Login = ({route}) => {
   const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const getUserData = async id => {
     try {
       const userRef = firestore().collection('userInfo').doc(id);
@@ -129,13 +130,24 @@ const Login = ({route}) => {
           onChangeText={setEmailId}
           style={styles.input}
         />
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
         <TextInput
-          secureTextEntry={true}
+          secureTextEntry={!showPassword}
           label="Password"
           value={password}
-          onChangeText={setPassword}
-          style={styles.input}
+          onChangeText={setPassword}  
+           style={[styles.input, {flex: 0.9}]}
         />
+        <TouchableOpacity
+          onPress={() => setShowPassword(!showPassword)}
+          style={{justifyContent: 'center', alignItems: 'center', flex: 0.1}}>
+          {showPassword ? (
+            <Icon name="eye" size={24} color="gray" />
+          ) : (
+            <Icon name="eye-slash" size={24} color="gray" />
+          )}
+        </TouchableOpacity>
+        </View>
 
         <Button mode="contained" onPress={handleRegister} style={styles.button}>
           Login To Dashboard
