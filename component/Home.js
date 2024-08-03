@@ -137,7 +137,7 @@ const Home = ({route}) => {
 
           <View style={styles.card}>
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>End Date</Text>
+              <Text style={styles.sectionTitle}>End Time</Text>
               <Text style={styles.sectionText}>{endDate}</Text>
             </View>
           </View>

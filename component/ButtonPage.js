@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Alert} from 'react-native';
@@ -16,7 +17,7 @@ const ButtonPage = ({route}) => {
           text: 'Logout',
           onPress: () => {
             AsyncStorage.removeItem('loginState');
-            navigate.reset({
+            navigation.reset({
               index: 0,
               routes: [{name: 'Register'}],
             });
