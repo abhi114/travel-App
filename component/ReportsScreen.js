@@ -36,6 +36,7 @@ const UserDataScreen = ({route}) => {
     'October',
     'November',
     'December',
+    'January',
   ];
   const [userData, setUserData] = useState({});
   const [expanded, setExpanded] = useState({});
@@ -113,9 +114,9 @@ const UserDataScreen = ({route}) => {
     }));
   };
   const handleMonthChange = month => {
-    
+     console.log(monthNames[month]);
     setSelectedMonth(month);
-    
+   
   };
   return (
     <View style={styles.container}>
@@ -131,7 +132,7 @@ const UserDataScreen = ({route}) => {
           style={{height: 50, width: Dimensions.width}}
           onValueChange={itemValue => handleMonthChange(itemValue)}>
           <Picker.Item label="Select Month" value={13} />
-          <Picker.Item label="January" value={0} />
+          <Picker.Item label="January" value={12} />
           <Picker.Item label="February" value={1} />
           <Picker.Item label="March" value={2} />
           <Picker.Item label="April" value={3} />
