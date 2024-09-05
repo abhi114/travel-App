@@ -21,7 +21,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 **/.xcode.env.local
-
+app\google-services.json
 # Android/IntelliJ
 #
 build/
