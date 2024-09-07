@@ -42,7 +42,7 @@ const StackNavigator = () => {
         component={Home}
       />
       <Stack.Screen
-        options={{headerShown: true}}
+        options={{headerShown: false}}
         name="Duty"
         component={Duty}
       />

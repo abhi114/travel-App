@@ -121,7 +121,10 @@ const Login = ({route}) => {
       }).catch((error)=>{
         if(error.code === "auth/invalid-credential"){
           Alert.alert("id password does not match","Please enter a valid id and password");
-        }else{
+        }else if (error.code === 'auth/too-many-requests') {
+          Alert.alert("Too many attempts","Please try again after some time");
+        } else {
+          Alert.alert('Login Failed','Please Try Again Later');
           console.log(error);
         }
       })

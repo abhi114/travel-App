@@ -8,6 +8,7 @@ import {
   Image,
   Dimensions,
   BackHandler,
+  ActivityIndicator,
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { Picker } from '@react-native-picker/picker';
@@ -120,12 +121,10 @@ const UserDataScreen = ({route}) => {
   };
   return (
     <View style={styles.container}>
-      
       <View style={styles.buttonContainer}>
         <Text style={styles.headerText}>Report Details</Text>
-        
       </View>
-      
+
       <View style={styles.monthSelector}>
         <Picker
           selectedValue={selectedMonth}
@@ -158,10 +157,7 @@ const UserDataScreen = ({route}) => {
             textAlign: 'center',
           }}>
           Total Fuel Expenditure for the Month of{' '}
-          {selectedMonth !== 13
-            ? monthNames[selectedMonth]
-            : " "}{' '}
-          -
+          {selectedMonth !== 13 ? monthNames[selectedMonth] : ' '} -
         </Text>
         <Text
           style={{
@@ -172,436 +168,480 @@ const UserDataScreen = ({route}) => {
             fontWeight: 'bold',
             textAlign: 'center',
           }}>
-          Rs {selectedMonth !== 13 ?userInfo.monthExpenditure?.[monthNames[selectedMonth]] : 0}
+          Rs{' '}
+          {selectedMonth !== 13
+            ? userInfo.monthExpenditure?.[monthNames[selectedMonth]]
+            : 0}
         </Text>
       </View>
       <LineView />
-      <FlatList
-        data={Object.keys(filteredData)}
-        renderItem={({item}) => (
-          <TouchableOpacity onPress={() => handlePress(item)}>
-            <View style={styles.cardContainer}>
-              <View style={styles.cardHeader}>
-                <Text
-                  style={{
-                    fontSize: 18,
-                    fontWeight: 'bold',
-                    color: '#000000',
-                  }}>
-                  Date of Journey - {item}
-                </Text>
-                {!expanded[item] ? (
-                  <Text style={{fontSize: 14, color: '#0000FF'}}>
-                    Click for detailed View
+      {Object.keys(filteredData).length === 0 ? (
+        <Text style={{flex:1,justifyContent:'center',alignSelf:'center',fontWeight:'bold'}}>No Data Available</Text>
+      ) : (
+        <FlatList
+          data={Object.keys(filteredData)}
+          renderItem={({item}) => (
+            <TouchableOpacity onPress={() => handlePress(item)}>
+              <View style={styles.cardContainer}>
+                <View style={styles.cardHeader}>
+                  <Text
+                    style={{
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                      color: '#000000',
+                    }}>
+                    Date of Journey - {item}
                   </Text>
-                ) : (
-                  <Text style={{fontSize: 14, color: '#0000FF'}}>
-                    Click for normal view
-                  </Text>
-                )}
-              </View>
-              {expanded[item] && (
-                <View>
-                  <View style={styles.cardBody}>
-                    <View></View>
-                    {Object.keys(filteredData[item].PassengerData).map(
-                      passengerKey => (
-                        <View key={passengerKey}>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              justifyContent: 'space-evenly',
-                              alignItems: 'center',
-                            }}>
-                            <Icon name="person-circle" size={50} />
-                            <Text
-                              style={{
-                                color: '#000000',
-                                fontSize: 20,
-                                marginBottom: 1,
-                                fontWeight: 'bold',
-                                textAlign: 'center',
-                              }}>
-                              Driver's Name:
-                            </Text>
-                            <Text
-                              style={{
-                                color: '#0000FF',
-                                fontSize: 20,
-                                marginBottom: 1,
-                                textAlign: 'center',
-                              }}>
-                              {filteredData[item].name}
-                            </Text>
-                          </View>
-                          <View style={styles.line}></View>
-                          <View
-                            style={{
-                              flexDirection: 'column',
-                              marginVertical: 10,
-                            }}>
-                            <View style={{flexDirection: 'row'}}>
-                              <Icon1 name="date" size={20} color={'#0000FF'} />
-                              <Text
-                                style={{
-                                  fontSize: 15,
-                                  fontWeight: 'bold',
-                                  color: '#000000',
-                                  marginLeft: 5,
-                                }}>
-                                Start Date:
-                              </Text>
-                              <Text
-                                style={{
-                                  fontSize: 14,
-
-                                  color: '#000000',
-                                }}>
-                                {filteredData[item].ReportingDate}
-                              </Text>
-                            </View>
+                  {!expanded[item] ? (
+                    <Text style={{fontSize: 14, color: '#0000FF'}}>
+                      Click for detailed View
+                    </Text>
+                  ) : (
+                    <Text style={{fontSize: 14, color: '#0000FF'}}>
+                      Click for normal view
+                    </Text>
+                  )}
+                </View>
+                {expanded[item] && (
+                  <View>
+                    <View style={styles.cardBody}>
+                      <View></View>
+                      {Object.keys(filteredData[item].PassengerData).map(
+                        passengerKey => (
+                          <View key={passengerKey}>
                             <View
-                              style={{flexDirection: 'row', marginVertical: 8}}>
-                              <Icon1 name="date" size={20} color={'#0000FF'} />
-                              <Text
-                                style={{
-                                  fontSize: 15,
-                                  fontWeight: 'bold',
-                                  color: '#000000',
-                                  marginLeft: 5,
-                                }}>
-                                End Date:
-                              </Text>
-                              <Text
-                                style={{
-                                  fontSize: 15,
-
-                                  color: '#000000',
-                                }}>
-                                {filteredData[item].endDate}
-                              </Text>
-                            </View>
-                          </View>
-                          <LineView />
-                          <Text
-                            style={{
-                              fontSize: 18,
-                              fontWeight: 'bold',
-                              color: '#000000',
-                              marginVertical: 5,
-                            }}>
-                            Distance Travelled in Km -
-                          </Text>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              marginVertical: 10,
-                              justifyContent: 'space-around',
-                            }}>
-                            <View style={{flexDirection: 'row'}}>
-                              <Icon
-                                name="location"
-                                size={20}
-                                color={'#0000FF'}
-                              />
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  fontWeight: 'bold',
-                                  color: '#000000',
-                                }}>
-                                Start Km:
-                              </Text>
-                              <Text
-                                style={{
-                                  fontSize: 18,
-
-                                  color: '#000000',
-                                }}>
-                                {filteredData[item].startKm}
-                              </Text>
-                            </View>
-                            <View style={{flexDirection: 'row'}}>
-                              <Icon
-                                name="location"
-                                size={20}
-                                color={'#0000FF'}
-                              />
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  fontWeight: 'bold',
-                                  color: '#000000',
-                                }}>
-                                End Km:
-                              </Text>
-                              <Text
-                                style={{
-                                  fontSize: 18,
-
-                                  color: '#000000',
-                                }}>
-                                {filteredData[item].endKm}
-                              </Text>
-                            </View>
-                          </View>
-                          <LineView />
-                          <View style={{flexDirection: 'row'}}>
-                            <Icon3 name="fuel" size={26} color={'#0000FF'} />
-                            <Text
                               style={{
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: '#000000',
-                                marginVertical: 5,
+                                flexDirection: 'row',
+                                justifyContent: 'space-evenly',
+                                alignItems: 'center',
                               }}>
-                              Fuel Usages {`(in litres)-`}
-                            </Text>
-                          </View>
-                          <View
-                            style={{
-                              flexDirection: 'row',
-                              marginVertical: 10,
-                              justifyContent: 'space-around',
-                            }}>
-                            <View style={{flexDirection: 'row'}}>
+                              <Icon name="person-circle" size={50} />
                               <Text
                                 style={{
-                                  fontSize: 18,
-                                  fontWeight: 'bold',
                                   color: '#000000',
+                                  fontSize: 20,
+                                  marginBottom: 1,
+                                  fontWeight: 'bold',
+                                  textAlign: 'center',
                                 }}>
-                                Start Fuel:
+                                Driver's Name:
                               </Text>
                               <Text
                                 style={{
-                                  fontSize: 18,
-
-                                  color: '#000000',
+                                  color: '#0000FF',
+                                  fontSize: 20,
+                                  marginBottom: 1,
+                                  textAlign: 'center',
                                 }}>
-                                {filteredData[item].starFuel}
+                                {filteredData[item].name}
                               </Text>
                             </View>
-                            <View style={{flexDirection: 'row'}}>
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  fontWeight: 'bold',
-                                  color: '#000000',
-                                }}>
-                                End Fuel:
-                              </Text>
-                              <Text
-                                style={{
-                                  fontSize: 18,
-
-                                  color: '#000000',
-                                }}>
-                                {filteredData[item].endFuel}
-                              </Text>
-                            </View>
-                          </View>
-                          <LineView />
-                          <View style={{flexDirection: 'row'}}>
-                            <Icon3
-                              name="currency-rupee"
-                              size={26}
-                              color={'#0000FF'}
-                            />
-                            <Text
+                            <View style={styles.line}></View>
+                            <View
                               style={{
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: '#000000',
-                                marginVertical: 5,
+                                flexDirection: 'column',
+                                marginVertical: 10,
                               }}>
-                              Fuel Costs {`(in Rs)-`} {filteredData[item].FuelCost}
-                            </Text>
-                          </View>
+                              <View style={{flexDirection: 'row'}}>
+                                <Icon1
+                                  name="date"
+                                  size={20}
+                                  color={'#0000FF'}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: 15,
+                                    fontWeight: 'bold',
+                                    color: '#000000',
+                                    marginLeft: 5,
+                                  }}>
+                                  Start Date:
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontSize: 14,
 
-                          <View>
+                                    color: '#000000',
+                                  }}>
+                                  {filteredData[item].ReportingDate}
+                                </Text>
+                              </View>
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  marginVertical: 8,
+                                }}>
+                                <Icon1
+                                  name="date"
+                                  size={20}
+                                  color={'#0000FF'}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: 15,
+                                    fontWeight: 'bold',
+                                    color: '#000000',
+                                    marginLeft: 5,
+                                  }}>
+                                  End Date:
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontSize: 15,
+
+                                    color: '#000000',
+                                  }}>
+                                  {filteredData[item].endDate}
+                                </Text>
+                              </View>
+                            </View>
                             <LineView />
                             <Text
                               style={{
                                 fontSize: 18,
                                 fontWeight: 'bold',
                                 color: '#000000',
+                                marginVertical: 5,
                               }}>
-                              Driver's Signature:
+                              Distance Travelled in Km -
                             </Text>
-                            {filteredData[item].passengersSignature !==
-                            undefined ? (
-                              <View style={styles.Imagecontainer}>
-                                <Image
-                                  source={{
-                                    uri: filteredData[item].driversSignature,
-                                  }}
-                                  style={styles.image}
-                                  resizeMode="contain"
+                            <View
+                              style={{
+                                flexDirection: 'row',
+                                marginVertical: 10,
+                                justifyContent: 'space-around',
+                              }}>
+                              <View style={{flexDirection: 'row'}}>
+                                <Icon
+                                  name="location"
+                                  size={20}
+                                  color={'#0000FF'}
                                 />
-                              </View>
-                            ) : (
-                              <View style={styles.Imagecontainer}>
                                 <Text
                                   style={{
-                                    margin: 8,
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    color: '#000000',
+                                  }}>
+                                  Start Km:
+                                </Text>
+                                <Text
+                                  style={{
                                     fontSize: 18,
 
                                     color: '#000000',
                                   }}>
-                                  No signature available
+                                  {filteredData[item].startKm}
                                 </Text>
                               </View>
-                            )}
-                          </View>
-                          <View style={styles.line}></View>
-                          <View style={{flexDirection: 'row'}}>
-                            <Icon
-                              name="person-circle"
-                              size={35}
-                              color={'#0000FF'}
-                            />
-                            <Text
-                              style={{
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: '#000000',
-                                marginVertical: 5,
-                              }}>
-                              {passengerKey}:{' '}
-                            </Text>
-                          </View>
-                          <LineView />
-                          <View style={{flexDirection: 'row'}}>
-                            <Text
-                              style={{
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: '#000000',
-                                marginVertical: 5,
-                              }}>
-                              Name:{' '}
-                            </Text>
-                            <Text
-                              style={{
-                                fontSize: 18,
+                              <View style={{flexDirection: 'row'}}>
+                                <Icon
+                                  name="location"
+                                  size={20}
+                                  color={'#0000FF'}
+                                />
+                                <Text
+                                  style={{
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    color: '#000000',
+                                  }}>
+                                  End Km:
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontSize: 18,
 
-                                color: '#000000',
-                                marginVertical: 5,
-                              }}>
-                              {
-                                filteredData[item].PassengerData[passengerKey]
-                                  .PassengerName
-                              }
-                            </Text>
-                          </View>
-                          <View style={{flexDirection: 'row'}}>
-                            <Text
+                                    color: '#000000',
+                                  }}>
+                                  {filteredData[item].endKm}
+                                </Text>
+                              </View>
+                            </View>
+                            <LineView />
+                            <View style={{flexDirection: 'row'}}>
+                              <Icon3 name="fuel" size={26} color={'#0000FF'} />
+                              <Text
+                                style={{
+                                  fontSize: 18,
+                                  fontWeight: 'bold',
+                                  color: '#000000',
+                                  marginVertical: 5,
+                                }}>
+                                Fuel Usages {`(in litres)-`}
+                              </Text>
+                            </View>
+                            <View
                               style={{
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: '#000000',
-                                marginVertical: 5,
+                                flexDirection: 'row',
+                                marginVertical: 10,
+                                justifyContent: 'space-around',
                               }}>
-                              Destination Address:{' '}
-                            </Text>
-                            <Text
-                              style={{
-                                fontSize: 18,
+                              <View style={{flexDirection: 'row'}}>
+                                <Text
+                                  style={{
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    color: '#000000',
+                                  }}>
+                                  Start Fuel:
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontSize: 18,
 
-                                color: '#000000',
-                                marginVertical: 5,
-                              }}>
-                              {
-                                filteredData[item].PassengerData[passengerKey]
-                                  .DestinationAddress
-                              }
-                            </Text>
-                          </View>
-                          <View style={{flexDirection: 'row'}}>
-                            <Text
-                              style={{
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: '#000000',
-                                marginVertical: 5,
-                              }}>
-                              Starting Address:{' '}
-                            </Text>
-                            <Text
-                              style={{
-                                fontSize: 18,
+                                    color: '#000000',
+                                  }}>
+                                  {filteredData[item].starFuel}
+                                </Text>
+                              </View>
+                              <View style={{flexDirection: 'row'}}>
+                                <Text
+                                  style={{
+                                    fontSize: 18,
+                                    fontWeight: 'bold',
+                                    color: '#000000',
+                                  }}>
+                                  End Fuel:
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontSize: 18,
 
-                                color: '#000000',
-                                marginVertical: 5,
-                              }}>
-                              {
-                                filteredData[item].PassengerData[passengerKey]
-                                  .StartingAddress
-                              }
-                            </Text>
+                                    color: '#000000',
+                                  }}>
+                                  {filteredData[item].endFuel}
+                                </Text>
+                              </View>
+                            </View>
+                            <LineView />
+                            <View style={{flexDirection: 'row'}}>
+                              <Icon3
+                                name="currency-rupee"
+                                size={26}
+                                color={'#0000FF'}
+                              />
+                              <Text
+                                style={{
+                                  fontSize: 18,
+                                  fontWeight: 'bold',
+                                  color: '#000000',
+                                  marginVertical: 5,
+                                }}>
+                                Fuel Costs {`(in Rs)-`}{' '}
+                                {filteredData[item].FuelCost}
+                              </Text>
+                            </View>
+
+                            <View>
+                              <LineView />
+                              <Text
+                                style={{
+                                  fontSize: 18,
+                                  fontWeight: 'bold',
+                                  color: '#000000',
+                                }}>
+                                Driver's Signature:
+                              </Text>
+                              {filteredData[item].passengersSignature !==
+                              undefined ? (
+                                <View style={styles.Imagecontainer}>
+                                  <Image
+                                    source={{
+                                      uri: filteredData[item].driversSignature,
+                                    }}
+                                    style={styles.image}
+                                    resizeMode="contain"
+                                  />
+                                </View>
+                              ) : (
+                                <View style={styles.Imagecontainer}>
+                                  <Text
+                                    style={{
+                                      margin: 8,
+                                      fontSize: 18,
+
+                                      color: '#000000',
+                                    }}>
+                                    No signature available
+                                  </Text>
+                                </View>
+                              )}
+                            </View>
+                            <View style={styles.line}></View>
+                            <View style={{flexDirection: 'row'}}>
+                              <Icon
+                                name="person-circle"
+                                size={35}
+                                color={'#0000FF'}
+                              />
+                              <Text
+                                style={{
+                                  fontSize: 18,
+                                  fontWeight: 'bold',
+                                  color: '#000000',
+                                  marginVertical: 5,
+                                }}>
+                                {passengerKey}:{' '}
+                              </Text>
+                            </View>
+                            <LineView />
+                            <View style={{flexDirection: 'row'}}>
+                              <Text
+                                style={{
+                                  fontSize: 18,
+                                  fontWeight: 'bold',
+                                  color: '#000000',
+                                  marginVertical: 5,
+                                }}>
+                                Name:{' '}
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 18,
+
+                                  color: '#000000',
+                                  marginVertical: 5,
+                                }}>
+                                {
+                                  filteredData[item].PassengerData[passengerKey]
+                                    .PassengerName
+                                }
+                              </Text>
+                            </View>
+                            <View style={{flexDirection: 'row'}}>
+                              <Text
+                                style={{
+                                  fontSize: 18,
+                                  fontWeight: 'bold',
+                                  color: '#000000',
+                                  marginVertical: 5,
+                                }}>
+                                Destination Address:{' '}
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 18,
+
+                                  color: '#000000',
+                                  marginVertical: 5,
+                                }}>
+                                {
+                                  filteredData[item].PassengerData[passengerKey]
+                                    .DestinationAddress
+                                }
+                              </Text>
+                            </View>
+                            <View style={{flexDirection: 'row'}}>
+                              <Text
+                                style={{
+                                  fontSize: 18,
+                                  fontWeight: 'bold',
+                                  color: '#000000',
+                                  marginVertical: 5,
+                                }}>
+                                Starting Address:{' '}
+                              </Text>
+                              <Text
+                                style={{
+                                  fontSize: 18,
+
+                                  color: '#000000',
+                                  marginVertical: 5,
+                                }}>
+                                {
+                                  filteredData[item].PassengerData[passengerKey]
+                                    .StartingAddress
+                                }
+                              </Text>
+                            </View>
+                            <LineView />
                           </View>
-                          <LineView />
+                        ),
+                      )}
+                      <Text style={styles.heading}>Address</Text>
+                      <Text
+                        style={{
+                          fontSize: 15,
+
+                          color: '#000000',
+                        }}>
+                        {filteredData[item].address}
+                      </Text>
+                      <Text style={styles.heading}>City</Text>
+                      <Text
+                        style={{
+                          fontSize: 15,
+
+                          color: '#000000',
+                        }}>
+                        {filteredData[item].city}
+                      </Text>
+                      <Text style={styles.heading}>Duty Instructions</Text>
+                      <Text
+                        style={{
+                          fontSize: 15,
+
+                          color: '#000000',
+                        }}>
+                        {filteredData[item].dutyInstructions}
+                      </Text>
+                      <Text style={styles.heading}>Vehicle Details</Text>
+                      <Text
+                        style={{
+                          fontSize: 15,
+
+                          color: '#000000',
+                        }}>
+                        {filteredData[item].vehicleDetails}
+                      </Text>
+                    </View>
+                    <LineView />
+                    <View>
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                          color: '#000000',
+                        }}>
+                        Passenger's Signature:
+                      </Text>
+                      {filteredData[item].passengersSignature !== undefined ? (
+                        <View style={styles.Imagecontainer}>
+                          <Image
+                            source={{
+                              uri: filteredData[item].passengersSignature,
+                            }}
+                            style={styles.image}
+                            resizeMode="contain"
+                          />
                         </View>
-                      ),
-                    )}
-                    <Text style={styles.heading}>Address</Text>
-                    <Text
-                      style={{
-                        fontSize: 15,
+                      ) : (
+                        <View style={styles.Imagecontainer}>
+                          <Text
+                            style={{
+                              margin: 8,
+                              fontSize: 18,
 
-                        color: '#000000',
-                      }}>
-                      {filteredData[item].address}
-                    </Text>
-                    <Text style={styles.heading}>City</Text>
+                              color: '#000000',
+                            }}>
+                            No signature available
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                    <LineView />
                     <Text
                       style={{
-                        fontSize: 15,
-
-                        color: '#000000',
-                      }}>
-                      {filteredData[item].city}
-                    </Text>
-                    <Text style={styles.heading}>Duty Instructions</Text>
-                    <Text
-                      style={{
-                        fontSize: 15,
-
-                        color: '#000000',
-                      }}>
-                      {filteredData[item].dutyInstructions}
-                    </Text>
-                    <Text style={styles.heading}>Vehicle Details</Text>
-                    <Text
-                      style={{
-                        fontSize: 15,
-
-                        color: '#000000',
-                      }}>
-                      {filteredData[item].vehicleDetails}
-                    </Text>
-                  </View>
-                  <LineView />
-                  <View>
-                    <Text
-                      style={{
+                        margin: 8,
                         fontSize: 18,
                         fontWeight: 'bold',
                         color: '#000000',
                       }}>
-                      Passenger's Signature:
+                      Feedbacks -
                     </Text>
-                    {filteredData[item].passengersSignature !== undefined ? (
-                      <View style={styles.Imagecontainer}>
-                        <Image
-                          source={{uri: filteredData[item].passengersSignature}}
-                          style={styles.image}
-                          resizeMode="contain"
-                        />
-                      </View>
-                    ) : (
-                      <View style={styles.Imagecontainer}>
+                    {filteredData[item].Feedback !== undefined ? (
+                      <View style={styles.feedbackcard}>
                         <Text
                           style={{
                             margin: 8,
@@ -609,43 +649,20 @@ const UserDataScreen = ({route}) => {
 
                             color: '#000000',
                           }}>
-                          No signature available
+                          {filteredData[item].Feedback}
                         </Text>
                       </View>
+                    ) : (
+                      <Text>Feedbacks Not available</Text>
                     )}
                   </View>
-                  <LineView />
-                  <Text
-                    style={{
-                      margin: 8,
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                      color: '#000000',
-                    }}>
-                    Feedbacks -
-                  </Text>
-                  {filteredData[item].Feedback !== undefined ? (
-                    <View style={styles.feedbackcard}>
-                      <Text
-                        style={{
-                          margin: 8,
-                          fontSize: 18,
-
-                          color: '#000000',
-                        }}>
-                        {filteredData[item].Feedback}
-                      </Text>
-                    </View>
-                  ) : (
-                    <Text>Feedbacks Not available</Text>
-                  )}
-                </View>
-              )}
-            </View>
-          </TouchableOpacity>
-        )}
-        keyExtractor={item => item}
-      />
+                )}
+              </View>
+            </TouchableOpacity>
+          )}
+          keyExtractor={item => item}
+        />
+      )}
     </View>
   );
 };

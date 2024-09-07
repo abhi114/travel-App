@@ -17,6 +17,7 @@ import Icon3 from 'react-native-vector-icons/AntDesign';
 import Icon4 from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { LineView } from './helpers/helpers';
 
 const InfoPage = ({route}) => {
     const {id,data:driversdta} = route.params;
@@ -269,12 +270,19 @@ const InfoPage = ({route}) => {
         <View
           style={[
             styles.buttonContainer,
-            {flexDirection: 'row', justifyContent: 'space-between',},
+            {flexDirection: 'row', justifyContent: 'space-between'},
           ]}>
           <Text style={styles.headerText}>Your Details</Text>
-          <TouchableOpacity onPress={logout} style={{justifyContent:'center',alignItems:'center',}}>
+          <TouchableOpacity
+            onPress={logout}
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: 2,
+              borderColor: '#0000FF',
+            }}>
             <Icon3 name="logout" size={20} color={'#a2b223'} />
-            <Text style={{marginRight:5}}>Logout</Text>
+            <Text style={[{marginRight: 5}]}>Logout</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.cardContainer}>
@@ -317,7 +325,7 @@ const InfoPage = ({route}) => {
                   {
                     marginLeft: 10,
                     width: 80,
-                    height: 40,
+                    height: 30,
                     borderRadius: 20,
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -501,6 +509,7 @@ const InfoPage = ({route}) => {
             />
           </View>
         </View>
+        <LineView />
         <View style={styles.container}>
           <Text style={styles.sectionTitle}>Passengers Information *</Text>
           <View
@@ -508,7 +517,7 @@ const InfoPage = ({route}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
               marginHorizontal: 10,
-              marginVertical: 10,
+              marginVertical: 15,
             }}>
             <TouchableOpacity
               onPress={removeView}
@@ -612,7 +621,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#f0f0f0',
     borderRadius: 10,
     padding: 20,
-    marginTop: 10,
+    marginTop: 15,
     shadowColor: '#000000',
     shadowOpacity: 0.2,
     shadowRadius: 5,

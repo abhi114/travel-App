@@ -177,6 +177,7 @@ const Duty = ({route}) => {
               <View
                 style={{
                   flexDirection: 'row',
+                  justifyContent: 'space-between',
                 }}>
                 <Text
                   style={[
@@ -190,11 +191,24 @@ const Duty = ({route}) => {
                   Driver's Name:
                 </Text>
                 <Text
-                  style={[styles.headerText, {fontSize: 19, marginLeft: 6}]}>
+                  style={[
+                    styles.headerText,
+                    {
+                      fontSize: 19,
+                      marginRight: 10,
+                      color: '#000000',
+                      fontWeight: 'normal',
+                    },
+                  ]}>
                   {name}
                 </Text>
               </View>
-              <View style={{flexDirection: 'row'}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginRight: 7,
+                }}>
                 <Text
                   style={[
                     styles.headerText,
@@ -207,14 +221,22 @@ const Duty = ({route}) => {
                   Driver's Number:
                 </Text>
                 <Text
-                  style={[styles.headerText, {fontSize: 18, marginLeft: 6}]}>
+                  style={[
+                    styles.headerText,
+                    {
+                      fontSize: 18,
+                      marginLeft: 6,
+                      color: '#000000',
+                      fontWeight: 'normal',
+                    },
+                  ]}>
                   {number}
                 </Text>
               </View>
             </View>
           </View>
         </View>
-        <LineView/>
+        <LineView />
         <Text
           style={[
             styles.headerText,
@@ -333,6 +355,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    marginVertical:10
   },
   header: {
     paddingTop: 5,
@@ -344,12 +367,7 @@ const styles = StyleSheet.create({
   },
   headerTextContainer: {
     width:'100%',
-    backgroundColor: '#f0f0f0',
-    borderRadius: 10,
-    shadowColor: '#000000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
+    
   },
   headerText: {
     marginBottom: 14,
