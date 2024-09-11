@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity, Button, TouchableHighlight, useAnimatedValue } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, FlatList, TouchableOpacity, Button, TouchableHighlight, useAnimatedValue, Alert, ActivityIndicator } from 'react-native'
 import React, { Component, useRef, useState } from 'react'
 
 import SignatureCapture from 'react-native-signature-capture';
@@ -14,6 +14,7 @@ const Sign = ({id, Rprtdate, mainData}) => {
   const signRef = useRef(null);
   const [currentSignature, setCurrentSignature] = useState('driversSignature');
   const [signatureSaved, setSignatureSaved] = useState(false);
+  const [signSaveStart,setSignSaveStart] = useState(false);
   const navigation = useNavigation();
   //console.log("id is" + id);
   const saveSign = () => {
@@ -27,7 +28,9 @@ const Sign = ({id, Rprtdate, mainData}) => {
       const updatedUserData = mainData; // Add new key-value pair
       console.log('updated data is' + JSON.stringify(updatedUserData));
       await userRef.set(updatedUserData, {merge: true}); // Set user data in the document
+      setSignSaveStart(false);
     } catch (error) {
+      setSignSaveStart(false);
       console.error('Error storing user data:', error);
     }
   };
@@ -39,7 +42,7 @@ const Sign = ({id, Rprtdate, mainData}) => {
     //result.encoded - for the base64 encoded png
     //result.pathName - for the file path name
     console.log(result);
-    setSignatureSaved(true);
+    setSignSaveStart(true);
     const storageref = storage().ref();
     const imageRef = storageref.child(
       `signatures/${id}/${currentSignature}.png`,
@@ -50,8 +53,16 @@ const Sign = ({id, Rprtdate, mainData}) => {
     const downloadURL = await imageRef.getDownloadURL();
     console.log('url is' + downloadURL);
     await storeData(downloadURL);
+    setSignatureSaved(true);
+    setSignSaveStart(false);
     if (currentSignature === 'passengersSignature') {
-      navigation.navigate('Feedback', {id});
+      Alert.alert("Passenger's Signature Saved");
+       navigation.reset({
+         index: 0,
+         routes: [{name: 'Feedback', params: {id}}],
+       });
+    }else{
+      Alert.alert(" Driver's Signature Saved");
     }
     resetSign();
   };
@@ -70,31 +81,40 @@ const Sign = ({id, Rprtdate, mainData}) => {
             justifyContent: 'center',
             fontSize: 15,
           }}>
-          Signature Capture Driver's Signature
+          Signature - Driver's Signature
         </Text>
-        <SignatureCapture
-          style={[{flex: 1, width: 500, height: 300}, styles.signature]}
-          ref={signRef}
-          onSaveEvent={_onSaveEvent}
-          onDragEvent={_onDragEvent}
-          saveImageFileInExtStorage={false}
-          showNativeButtons={false}
-          showTitleLabel={false}
-          backgroundColor="#2f4f4f"
-          strokeColor="#ffffff"
-          minStrokeWidth={4}
-          maxStrokeWidth={4}
-          viewMode={'portrait'}
-        />
-        <View style={{flex: 1, flexDirection: 'row'}}>
-          <TouchableHighlight style={styles.buttonStyle} onPress={saveSign}>
-            <Text style={styles.buttonText}>Save</Text>
-          </TouchableHighlight>
+        {signSaveStart ? (
+          <ActivityIndicator />
+        ) : (
+          <View>
+            <SignatureCapture
+              style={[{flex: 1, width: 350, height: 300}, styles.signature]}
+              ref={signRef}
+              onSaveEvent={_onSaveEvent}
+              onDragEvent={_onDragEvent}
+              saveImageFileInExtStorage={false}
+              showNativeButtons={false}
+              showTitleLabel={false}
+              backgroundColor="#2f4f4f"
+              strokeColor="#ffffff"
+              minStrokeWidth={4}
+              maxStrokeWidth={4}
+              viewMode={'portrait'}
+            />
 
-          <TouchableHighlight style={styles.buttonStyle} onPress={resetSign}>
-            <Text style={styles.buttonText}>Reset</Text>
-          </TouchableHighlight>
-        </View>
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <TouchableHighlight style={styles.buttonStyle} onPress={saveSign}>
+                <Text style={styles.buttonText}>Save</Text>
+              </TouchableHighlight>
+
+              <TouchableHighlight
+                style={styles.buttonStyle}
+                onPress={resetSign}>
+                <Text style={styles.buttonText}>Reset</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        )}
       </View>
     );
   } else if (currentSignature === 'driversSignature' && signatureSaved) {
@@ -109,31 +129,40 @@ const Sign = ({id, Rprtdate, mainData}) => {
             justifyContent: 'center',
             fontSize: 15,
           }}>
-          Signature Capture Passenger's Signature
+          Signature - Passenger's Signature
         </Text>
-        <SignatureCapture
-          style={[{flex: 1, width: 500, height: 300}, styles.signature]}
-          ref={signRef}
-          onSaveEvent={_onSaveEvent}
-          onDragEvent={_onDragEvent}
-          saveImageFileInExtStorage={false}
-          showNativeButtons={false}
-          showTitleLabel={false}
-          backgroundColor="#2f4f4f"
-          strokeColor="#ffffff"
-          minStrokeWidth={4}
-          maxStrokeWidth={4}
-          viewMode={'portrait'}
-        />
-        <View style={{flex: 1, flexDirection: 'row'}}>
-          <TouchableHighlight style={styles.buttonStyle} onPress={saveSign}>
-            <Text style={styles.buttonText}>Save</Text>
-          </TouchableHighlight>
+        {signSaveStart ? (
+          <ActivityIndicator />
+        ) : (
+          <View>
+            <SignatureCapture
+              style={[{flex: 1, width: 350, height: 300}, styles.signature]}
+              ref={signRef}
+              onSaveEvent={_onSaveEvent}
+              onDragEvent={_onDragEvent}
+              saveImageFileInExtStorage={false}
+              showNativeButtons={false}
+              showTitleLabel={false}
+              backgroundColor="#2f4f4f"
+              strokeColor="#ffffff"
+              minStrokeWidth={4}
+              maxStrokeWidth={4}
+              viewMode={'portrait'}
+            />
+            
+            <View style={{flex: 1, flexDirection: 'row'}}>
+              <TouchableHighlight style={styles.buttonStyle} onPress={saveSign}>
+                <Text style={styles.buttonText}>Save And Exit</Text>
+              </TouchableHighlight>
 
-          <TouchableHighlight style={styles.buttonStyle} onPress={resetSign}>
-            <Text style={styles.buttonText}>Reset</Text>
-          </TouchableHighlight>
-        </View>
+              <TouchableHighlight
+                style={styles.buttonStyle}
+                onPress={resetSign}>
+                <Text style={styles.buttonText}>Reset</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        )}
       </View>
     );
   }
@@ -173,6 +202,7 @@ const Duty = ({route}) => {
     <View style={styles.outerContainer}>
       <ScrollView style={styles.container}>
         {/* Driver Information */}
+        <Text style={[styles.title,{alignSelf:'center',marginVertical:10}]}>Journey Information</Text>
         <View style={styles.card}>
           <View style={styles.row}>
             <Icon name="person-circle-outline" size={30} color="#333" />
@@ -211,7 +241,7 @@ const Duty = ({route}) => {
         <TouchableOpacity
           onPress={() => setSignatureEnable(true)}
           style={styles.signatureButton}>
-          <Icon name="create-outline" size={24} color="#fff" />
+          <Icon name="create-outline" size={22} color="#fff" />
           <Text style={styles.buttonText}>Add Signature</Text>
         </TouchableOpacity>
 
@@ -222,9 +252,7 @@ const Duty = ({route}) => {
         )}
 
         {/* End Duty Button */}
-        <View style={styles.footerButtonContainer}>
-          
-        </View>
+        <View style={styles.footerButtonContainer}></View>
       </ScrollView>
     </View>
   );
@@ -289,11 +317,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: '#007BFF',
     borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 10,
+    paddingHorizontal:2,
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf:'center',
     marginBottom: 16,
+    width:'50%'
   },
   signatureContainer: {
     marginTop: 16,

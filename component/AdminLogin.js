@@ -124,7 +124,23 @@ const Login = ({route}) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
       {LoginActivityIndicator ? (
-        <ActivityIndicator size={'large'} />
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: 20,
+          }}>
+          <ActivityIndicator size="large" />
+          <Text
+            style={{
+              marginTop: 10, // Space between indicator and text
+              fontSize: 16,
+              color: '#FFFFFF',
+            }}>
+            Please Wait, While We Log You In
+          </Text>
+        </View>
       ) : (
         <View style={styles.innerContainer}>
           <Image

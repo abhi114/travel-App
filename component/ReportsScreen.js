@@ -20,6 +20,7 @@ import { LineChart } from 'react-native-chart-kit';
 import Linecharts from './helpers/charts';
 import { LineView } from './helpers/helpers';
 import Widget from './ReportsScreenDetailed';
+import WeeklyStats from './WeeklyStats';
 
 
 const UserDataScreen = ({route}) => {
@@ -173,6 +174,7 @@ const UserDataScreen = ({route}) => {
             ? userInfo.monthExpenditure?.[monthNames[selectedMonth]]
             : 0}
         </Text>
+       
       </View>
       <LineView />
       {Object.keys(filteredData).length === 0 ? (
