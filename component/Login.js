@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet, KeyboardAvoidingView, Platform, Image, TouchableOpacity, Text, Alert} from 'react-native';
+import {View, StyleSheet, KeyboardAvoidingView, Platform, Image, TouchableOpacity, Text, Alert, ActivityIndicator} from 'react-native';
 import {TextInput, Button, Title} from 'react-native-paper';
 import {OtpInput} from 'react-native-otp-entry';
 import {useNavigation} from '@react-navigation/native';
@@ -17,6 +17,7 @@ const Login = ({route}) => {
   const [verificationId, setVerificationId] = useState(null);
   //const [restPassword,setresetPassword] = useState(false);
    const [showConfirmation, setShowConfirmation] = useState(false);
+   const [LoginActivityIndicator,setLoginActivityIndicator] = useState(false);
    const getUserData = async (id) => {
      try {
        const userRef = firestore().collection('userInfo').doc(id);
@@ -84,7 +85,7 @@ const Login = ({route}) => {
       return;
     }
     try {
-      
+      setLoginActivityIndicator(true);
       const email = auth().signInWithEmailAndPassword(emailId,password).then(async (user)=>{
         console.log("sign in");
         if(user){
@@ -98,6 +99,7 @@ const Login = ({route}) => {
                   'loginState',
                   JSON.stringify({emailId, id, data}),
                 );
+                setLoginActivityIndicator(false);
                 navigation.reset({
                   index: 0,
                   routes: [{name: 'ButtonPage', params: {emailId, id, data}}],
@@ -112,6 +114,7 @@ const Login = ({route}) => {
                 'loginState',
                 JSON.stringify({emailId, id}),
               );
+              setLoginActivityIndicator(false);
               navigation.reset({
                 index: 0,
                 routes: [{name: 'PersonalInfo', params: {emailId, id}}],
@@ -119,6 +122,7 @@ const Login = ({route}) => {
               }
         }
       }).catch((error)=>{
+        setLoginActivityIndicator(false);
         if(error.code === "auth/invalid-credential"){
           Alert.alert("id password does not match","Please enter a valid id and password");
         }else if (error.code === 'auth/too-many-requests') {
@@ -129,6 +133,7 @@ const Login = ({route}) => {
         }
       })
     } catch (error) {
+      setLoginActivityIndicator(false);
      console.log(error);
     if (error.code === "auth/email-already-in-use") {
       setErrortext("That email address is already in use!");
@@ -150,106 +155,173 @@ const Login = ({route}) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
-      <View style={styles.innerContainer}>
-        <Image
-          source={{
-            uri: `https://firebasestorage.googleapis.com/v0/b/travelinfo-6a043.appspot.com/o/icon_ph1.png?alt=media&token=85da75e0-75c3-4064-a9dd-d71e6e3c18c0`,
-          }}
-          width={300}
-          height={300}
-          style={{alignSelf: 'center', margin: 10}}
-        />
-        <Title style={styles.title}>Login</Title>
-        <TextInput
-          label="Email Id"
-          value={emailId}
-          onChangeText={setEmailId}
-          style={styles.input}
-        />
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <TextInput
-            secureTextEntry={!showPassword}
-            label="Password"
-            value={password}
-            onChangeText={setPassword}
-            style={[styles.input, {flex: 0.9}]}
-          />
-          <TouchableOpacity
-            onPress={() => setShowPassword(!showPassword)}
-            style={{justifyContent: 'center', alignItems: 'center', flex: 0.1}}>
-            {showPassword ? (
-              <Icon name="eye" size={24} color="gray" />
-            ) : (
-              <Icon name="eye-slash" size={24} color="gray" />
-            )}
-          </TouchableOpacity>
-        </View>
-
-        <Button mode="contained" onPress={handleRegister} style={styles.button}>
-          Login
-        </Button>
-        <Button
-          mode="contained"
-          onPress={handleResetPassword}
-          style={styles.button}>
-          Reset Password
-        </Button>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('AdminLogin')}
+      {LoginActivityIndicator ? (
+        <View
           style={{
+            flexDirection: 'column',
             justifyContent: 'center',
-            alignSelf: 'center',
-            marginTop: 40,
+            alignItems: 'center',
+            marginTop: 20,
           }}>
-          <Text style={styles.adminPortalText}>Admin portal</Text>
-        </TouchableOpacity>
-      </View>
-      <MainFooter />
+          <ActivityIndicator size="large" />
+          <Text
+            style={{
+              marginTop: 10, // Space between indicator and text
+              fontSize: 16,
+              color: '#FFFFFF',
+            }}>
+            Please Wait, While We Log You In
+          </Text>
+        </View>
+      ) : (
+        <View style={styles.innerContainer}>
+          {/* Logo */}
+          <Image
+            source={require('../assets/taxicar.png')}
+            style={styles.logo}
+            resizeMode="contain"
+          />
+          <Text style={styles.tagline}>Happy Journey, Forever!</Text>
+
+          {/* Input Fields */}
+          <TextInput
+            label="Email Id"
+            value={emailId}
+            onChangeText={setEmailId}
+            style={styles.input}
+          />
+          <View style={styles.passwordContainer}>
+            <TextInput
+              secureTextEntry={!showPassword}
+              label="Password"
+              value={password}
+              onChangeText={setPassword}
+              style={styles.passwordInput}
+            />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.showPasswordButton}>
+              {showPassword ? (
+                <Icon name="eye" size={24} color="gray" />
+              ) : (
+                <Icon name="eye-slash" size={24} color="gray" />
+              )}
+            </TouchableOpacity>
+          </View>
+
+          {/* Buttons */}
+          <Button
+            mode="contained"
+            onPress={handleRegister}
+            style={styles.button}
+            textColor="#000000">
+            Login
+          </Button>
+          <Button
+            mode="contained"
+            onPress={handleResetPassword}
+            style={styles.button}
+            textColor="#000000">
+            Reset Password
+          </Button>
+
+          {/* Admin Portal */}
+          <TouchableOpacity
+            onPress={() => navigation.navigate('AdminLogin')}
+            style={styles.adminPortalButton}>
+            <Text style={styles.adminPortalText}>Admin portal</Text>
+          </TouchableOpacity>
+
+          {/* Social Icons */}
+        </View>
+      )}
+      {/* Add car image graphic at the bottom */}
     </KeyboardAvoidingView>
   );
-};
-
+}
+// Styles
 const styles = StyleSheet.create({
-  adminPortalText: {
-    textDecorationLine: 'underline',
-    textDecorationColor: '#007AFF', // blue color
-    color: '#007AFF', // blue color
-    fontSize: 16,
-  },
   container: {
     flex: 1,
     justifyContent: 'center',
     padding: 16,
+    backgroundColor: '#40096B', // light background
   },
   innerContainer: {
-    flex: 1,
     justifyContent: 'center',
+    backgroundColor: '#F8F8F8',
+    borderRadius: 20,
+    height: '95%',
   },
-  title: {
+  logo: {
+    width: 300,
+    height: 100,
+    alignSelf: 'center',
     marginBottom: 16,
-    fontSize: 24,
-    fontWeight: 'bold',
+  },
+  tagline: {
     textAlign: 'center',
+    fontSize: 18,
+    color: '#40096B',
+    marginBottom: 24,
   },
   input: {
     marginBottom: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: {width: 0, height: 2},
+    shadowRadius: 8,
+    marginHorizontal: 15,
   },
-  otpInput: {
-    marginBottom: 16,
+  passwordContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    marginBottom: 16,
   },
-  otpInputField: {
-    width: 40,
-    height: 40,
-    borderRadius: 4,
-    borderWidth: 2,
-    borderColor: 'gray',
-    marginHorizontal: 8,
+  passwordInput: {
+    flex: 0.9,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    marginLeft: 10,
+  },
+  showPasswordButton: {
+    flex: 0.1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
-    marginTop: 16,
+    backgroundColor: '#FFD600',
+    borderRadius: 24,
+    paddingVertical: 2,
+    marginVertical: 5,
+    marginHorizontal: 15,
+    
+  },
+  adminPortalButton: {
+    justifyContent: 'center',
+    alignSelf: 'center',
+    marginTop: 40,
+  },
+  adminPortalText: {
+    color: '#007AFF',
+    textDecorationLine: 'underline',
+    fontSize: 16,
+  },
+  socialIconsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    marginTop: 24,
+  },
+  carImage: {
+    width: '100%',
+    height: 120,
+    resizeMode: 'contain',
+    position: 'absolute',
+    bottom: 0,
   },
 });
+
 
 export default Login;

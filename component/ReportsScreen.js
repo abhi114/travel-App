@@ -460,7 +460,6 @@ const UserDataScreen = ({route}) => {
                                     style={{
                                       margin: 8,
                                       fontSize: 18,
-
                                       color: '#000000',
                                     }}>
                                     No signature available

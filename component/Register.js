@@ -129,19 +129,31 @@ const Register = () => {
     );
   }
   return (
-    
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}>
       <View style={styles.innerContainer}>
         <Image
-          source={{
-            uri: `https://firebasestorage.googleapis.com/v0/b/travelinfo-6a043.appspot.com/o/icon_ph1.png?alt=media&token=85da75e0-75c3-4064-a9dd-d71e6e3c18c0`,
+          source={require('../assets/hirelogo.png')}
+          style={{
+            width: 250,
+            height: 50,
+            alignSelf: 'center',
+            marginBottom: 16,
           }}
-          width={300}
-          height={300}
-          style={{alignSelf: 'center', margin: 10}}
+          resizeMode="contain"
         />
+        <Image
+          source={require('../assets/taxicar.png')}
+          style={{
+            width: 250,
+            height: 150,
+            alignSelf: 'center',
+            marginBottom: 16,
+          }}
+          resizeMode="contain"
+        />
+
         <Title style={styles.title}>Register</Title>
 
         <TextInput
@@ -158,17 +170,22 @@ const Register = () => {
           style={styles.input}
         />
 
-        <Button mode="contained" onPress={handleRegister} style={styles.button}>
+        <Button
+          mode="contained"
+          onPress={handleRegister}
+          style={styles.button}
+          textColor="#000000">
           Register
         </Button>
         <Button
           mode="contained"
           onPress={() => navigation.navigate('Login')}
-          style={styles.button}>
+          style={styles.button}
+          textColor="#000000">
           Go To Login
         </Button>
       </View>
-    <MainFooter/>
+      <MainFooter />
     </KeyboardAvoidingView>
   );
 };
@@ -178,10 +195,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 16,
+    backgroundColor: '#40096B',
   },
   innerContainer: {
-    flex: 1,
     justifyContent: 'center',
+    backgroundColor: '#F8F8F8',
+    borderRadius: 20,
+    height: '95%',
   },
   title: {
     marginBottom: 16,
@@ -191,6 +211,8 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 16,
+    marginHorizontal:15,
+    borderRadius:15
   },
   otpInput: {
     marginBottom: 16,
@@ -207,6 +229,8 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 16,
+    marginHorizontal: 10,
+    backgroundColor: '#FFD600',
   },
 });
 

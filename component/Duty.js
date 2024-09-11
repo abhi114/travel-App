@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import { LineView } from './helpers/helpers';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 
 
@@ -171,108 +172,60 @@ const Duty = ({route}) => {
   return (
     <View style={styles.outerContainer}>
       <ScrollView style={styles.container}>
-        <View style={styles.container}>
-          <View style={styles.header}>
-            <View style={styles.headerTextContainer}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                }}>
-                <Text
-                  style={[
-                    styles.headerText,
-                    {
-                      textDecorationLine: 'underline',
-                      fontSize: 20,
-                      color: '#000000',
-                    },
-                  ]}>
-                  Driver's Name:
-                </Text>
-                <Text
-                  style={[
-                    styles.headerText,
-                    {
-                      fontSize: 19,
-                      marginRight: 10,
-                      color: '#000000',
-                      fontWeight: 'normal',
-                    },
-                  ]}>
-                  {name}
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginRight: 7,
-                }}>
-                <Text
-                  style={[
-                    styles.headerText,
-                    {
-                      textDecorationLine: 'underline',
-                      fontSize: 18,
-                      color: '#000000',
-                    },
-                  ]}>
-                  Driver's Number:
-                </Text>
-                <Text
-                  style={[
-                    styles.headerText,
-                    {
-                      fontSize: 18,
-                      marginLeft: 6,
-                      color: '#000000',
-                      fontWeight: 'normal',
-                    },
-                  ]}>
-                  {number}
-                </Text>
-              </View>
+        {/* Driver Information */}
+        <View style={styles.card}>
+          <View style={styles.row}>
+            <Icon name="person-circle-outline" size={30} color="#333" />
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>Driver's Name</Text>
+              <Text style={styles.detail}>{name}</Text>
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <Icon name="call-outline" size={30} color="#333" />
+            <View style={styles.textContainer}>
+              <Text style={styles.title}>Driver's Number</Text>
+              <Text style={styles.detail}>{number}</Text>
             </View>
           </View>
         </View>
-        <LineView />
-        <Text
-          style={[
-            styles.headerText,
-            {textDecorationLine: 'underline', fontSize: 20},
-          ]}>
-          Summary Report
-        </Text>
-        <View style={styles.table}>
-          {tableData.map((row, rowIndex) => (
-            <View key={rowIndex} style={styles.row}>
-              {row.map((cell, colIndex) => (
-                <View key={`${rowIndex}-${colIndex}`} style={styles.cell}>
-                  <Text>{cell}</Text>
-                </View>
-              ))}
-            </View>
-          ))}
+
+        {/* Summary Report */}
+        <View style={styles.card}>
+          <Text style={styles.sectionTitle}>Summary Report</Text>
+          <View style={styles.table}>
+            {tableData.map((row, rowIndex) => (
+              <View key={rowIndex} style={styles.row}>
+                {row.map((cell, colIndex) => (
+                  <View key={`${rowIndex}-${colIndex}`} style={styles.cell}>
+                    <Text>{cell}</Text>
+                  </View>
+                ))}
+              </View>
+            ))}
+          </View>
         </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            onPress={() => setSignatureEnable(true)}
-            style={[styles.button, styles.noShowButton]}>
-            <Text style={styles.buttonText}>Signature</Text>
-          </TouchableOpacity>
-        </View>
-        {signatureEnable && (
-          <Sign id={id} Rprtdate={Rprtdate} mainData={mainData} />
-        )}
-      </ScrollView>
-      <View style={styles.buttonContainer}>
+
+        {/* Signature Button */}
         <TouchableOpacity
-          onPress={() => handleCloseDuty()}
-          style={[styles.button, styles.noShowButton]}>
-          <Text style={styles.buttonText}>End Duty</Text>
+          onPress={() => setSignatureEnable(true)}
+          style={styles.signatureButton}>
+          <Icon name="create-outline" size={24} color="#fff" />
+          <Text style={styles.buttonText}>Add Signature</Text>
         </TouchableOpacity>
-      </View>
+
+        {signatureEnable && (
+          <View style={styles.signatureContainer}>
+            <Sign id={id} Rprtdate={Rprtdate} mainData={mainData} />
+          </View>
+        )}
+
+        {/* End Duty Button */}
+        <View style={styles.footerButtonContainer}>
+          
+        </View>
+      </ScrollView>
     </View>
   );
 }
@@ -296,7 +249,59 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     padding: 20,
     backgroundColor: '#ffffff',
-    marginBottom:15
+    marginBottom: 15,
+  },
+  footerButtonContainer: {
+    padding: 16,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderColor: '#eee',
+  },
+  footerButton: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FF5733',
+    borderRadius: 8,
+    paddingVertical: 12,
+  },
+  footerButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    marginLeft: 8,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 16,
+    color: '#333',
+    fontWeight: '600',
+  },
+  detail: {
+    fontSize: 14,
+    color: '#666',
+  },
+  signatureButton: {
+    flexDirection: 'row',
+    backgroundColor: '#007BFF',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  signatureContainer: {
+    marginTop: 16,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    backgroundColor: '#fff',
   },
   button: {
     width: 100,
@@ -327,8 +332,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#808080',
   },
   buttonText: {
-    color: '#f8f8ff',
-    alignSelf: 'center',
+    color: '#fff',
+    fontSize: 16,
+    marginLeft: 8,
   },
   textInput: {
     borderColor: 'black',
@@ -339,23 +345,26 @@ const styles = StyleSheet.create({
   },
   outerContainer: {
     flex: 1,
-    backgroundColor: '#f0f8ff',
+    backgroundColor: '#F0F8FF',
   },
   table: {
-    // Set table styles here (optional)
+    marginTop: 10,
   },
   row: {
     flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
   },
   cell: {
-    flex: 1, // Makes cells share available space equally
-    borderWidth: 1, // Optional border for cells
-    borderColor: 'gray', // Optional border color
-    padding: 5, // Optional padding for cells
+    flex: 1,
+    borderWidth: 1,
+    borderColor: 'gray',
+    padding: 8,
+    margin: 2,
+    borderRadius: 5,
   },
   container: {
-    flex: 1,
-    marginVertical:10
+    
   },
   header: {
     paddingTop: 5,
@@ -365,9 +374,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffff',
     height: 80, // Fixed height for the header
   },
-  headerTextContainer: {
-    width:'100%',
-    
+  textContainer: {
+    marginLeft: 10,
   },
   headerText: {
     marginBottom: 14,
@@ -379,6 +387,16 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     marginRight: 12,
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 16,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 2,
   },
 });
 export default Duty
