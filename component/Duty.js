@@ -182,7 +182,9 @@ const Duty = ({route}) => {
        endFuel,
        Rprtdate,
        endDate,
-       mainData
+       mainData,
+       vehicleDetails,
+       address,
      } = route.params;
      const tableData = [
        ['', 'Start', 'End '],
@@ -202,21 +204,41 @@ const Duty = ({route}) => {
     <View style={styles.outerContainer}>
       <ScrollView style={styles.container}>
         {/* Driver Information */}
-        <Text style={[styles.title,{alignSelf:'center',marginVertical:10}]}>Journey Information</Text>
+        <Text style={[styles.title, {alignSelf: 'center', marginVertical: 10}]}>
+          Journey Information
+        </Text>
         <View style={styles.card}>
-          <View style={styles.row}>
-            <Icon name="person-circle-outline" size={30} color="#333" />
-            <View style={styles.textContainer}>
-              <Text style={styles.title}>Driver's Name</Text>
-              <Text style={styles.detail}>{name}</Text>
+          <View style={[styles.row, {justifyContent: 'space-between'}]}>
+            <View style={styles.row}>
+              <Icon name="person-circle-outline" size={30} color="#333" />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>Driver's Name</Text>
+                <Text style={styles.detail}>{name}</Text>
+              </View>
+            </View>
+            <View style={styles.row}>
+              <Icon name="car-outline" size={30} color="#333" />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>Car Details</Text>
+                <Text style={styles.detail}>{vehicleDetails}</Text>
+              </View>
             </View>
           </View>
 
-          <View style={styles.row}>
-            <Icon name="call-outline" size={30} color="#333" />
-            <View style={styles.textContainer}>
-              <Text style={styles.title}>Driver's Number</Text>
-              <Text style={styles.detail}>{number}</Text>
+          <View style={[styles.row, {justifyContent: 'space-between'}]}>
+            <View style={styles.row}>
+              <Icon name="person-circle-outline" size={30} color="#333" />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>Driver's Number</Text>
+                <Text style={styles.detail}>{number}</Text>
+              </View>
+            </View>
+            <View style={styles.row}>
+              <Icon name="home-outline" size={30} color="#333" />
+              <View style={styles.textContainer}>
+                <Text style={styles.title}>Address</Text>
+                <Text style={[styles.detail,]}>{address}</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -229,7 +251,7 @@ const Duty = ({route}) => {
               <View key={rowIndex} style={styles.row}>
                 {row.map((cell, colIndex) => (
                   <View key={`${rowIndex}-${colIndex}`} style={styles.cell}>
-                    <Text>{cell}</Text>
+                    <Text style={{color: '#000000'}}>{cell}</Text>
                   </View>
                 ))}
               </View>
@@ -384,6 +406,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
+    
   },
   cell: {
     flex: 1,

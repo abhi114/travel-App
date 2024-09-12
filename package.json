@@ -10,6 +10,8 @@
     "test": "jest"
   },
   "dependencies": {
+    "@dotlottie/react-player": "^1.6.19",
+    "@lottiefiles/react-lottie-player": "^3.5.4",
     "@react-native-async-storage/async-storage": "^1.24.0",
     "@react-native-community/datetimepicker": "^8.2.0",
     "@react-native-firebase/app": "^20.3.0",
@@ -22,6 +24,7 @@
     "@react-navigation/native-stack": "^6.10.1",
     "d3-shape": "^3.2.0",
     "galio-framework": "^0.8.0",
+    "lottie-react-native": "^6.7.2",
     "react": "18.2.0",
     "react-native": "0.74.3",
     "react-native-chart-kit": "^6.12.0",

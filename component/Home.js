@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Replace with your icon library
 import Icon1 from 'react-native-vector-icons/Entypo'; // Replace with your icon library
+import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons'; 
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import {Linking} from 'react-native';
@@ -102,7 +103,9 @@ const Home = ({route}) => {
           Rprtdate,
           endDate,
           mainData,
-          fuelcost
+          fuelcost,
+          vehicleDetails,
+          address
         });
 
     }
@@ -127,18 +130,36 @@ const Home = ({route}) => {
           </View>
 
           <View style={styles.card}>
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Reporting Date and Time</Text>
-              <Text style={styles.sectionText}>{Rprtdate}</Text>
+            <View style={styles.sectionRow}>
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Reporting Date And Time</Text>
+                <Text style={styles.sectionText}>{Rprtdate}</Text>
+              </View>
+              <TouchableOpacity style={styles.sectionIconContainer}>
+                <Icon3
+                  name="clock-time-five-outline"
+                  size={32}
+                  color={'#000000'}
+                />
+              </TouchableOpacity>
             </View>
           </View>
 
           <View style={styles.line}></View>
 
           <View style={styles.card}>
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>End Time</Text>
-              <Text style={styles.sectionText}>{endDate}</Text>
+            <View style={styles.sectionRow}>
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>End Time</Text>
+                <Text style={styles.sectionText}>{endDate}</Text>
+              </View>
+              <TouchableOpacity style={styles.sectionIconContainer}>
+                <Icon3
+                  name="clock-time-ten-outline"
+                  size={32}
+                  color={'#000000'}
+                />
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -159,32 +180,65 @@ const Home = ({route}) => {
           <View style={styles.line}></View>
 
           <View style={styles.card}>
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Serving city</Text>
-              <Text style={styles.sectionText}>{city}</Text>
+            <View style={styles.sectionRow}>
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>City</Text>
+                <Text style={styles.sectionText}>{city}</Text>
+              </View>
+              <TouchableOpacity style={styles.sectionIconContainer}>
+                <Icon3 name="home-city-outline" size={32} color={'#000000'} />
+              </TouchableOpacity>
             </View>
           </View>
 
           <View style={styles.line}></View>
 
           <View style={styles.card}>
-            <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Vehicle Details</Text>
-              <Text style={styles.sectionText}>{vehicleDetails}</Text>
+            <View style={styles.sectionRow}>
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Vehicle Details</Text>
+                <Text style={styles.sectionText}>{vehicleDetails}</Text>
+              </View>
+              <TouchableOpacity style={styles.sectionIconContainer}>
+                <Icon3 name="car" size={32} color={'#000000'} />
+              </TouchableOpacity>
             </View>
           </View>
 
           <View style={styles.line}></View>
 
           <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Duty Instructions</Text>
-            <Text style={styles.sectionText}>{dutyInstructions}</Text>
+            <View style={styles.sectionRow}>
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Instructions</Text>
+                <Text style={styles.sectionText}>{dutyInstructions}</Text>
+              </View>
+              <TouchableOpacity style={styles.sectionIconContainer}>
+                <Icon3 name="information-outline" size={32} color={'#000000'} />
+              </TouchableOpacity>
+            </View>
           </View>
 
           <View style={styles.line}></View>
 
           {accept && (
             <View>
+              <Text style={{margin: 8, color: '#000', fontWeight: 'bold',fontSize:18,alignSelf:'center'}}>
+                Final Readings
+              </Text>
+              <View
+                style={{
+                  borderRadius: 10,
+                  margin: 7,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Text style={{margin: 8, color: '#0000FF', fontWeight: 'bold'}}>
+                  To Be Filled By The Driver
+                </Text>
+                <Icon3 name="car-info" size={22} color={'#0000FF'} />
+              </View>
+
               <View style={styles.card}>
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Start Km</Text>
@@ -250,9 +304,8 @@ const Home = ({route}) => {
                   />
                 </View>
               </View>
-              <View style={styles.line}></View>
 
-              <View style={styles.card}>
+              {/**<View style={styles.card}>
                 <View style={styles.section}>
                   <Text style={styles.sectionTitle}>Send OTP</Text>
                   <Text style={styles.sectionText}>
@@ -294,7 +347,7 @@ const Home = ({route}) => {
                     </View>
                   </View>
                 </View>
-              </View>
+              </View> **/}
             </View>
           )}
         </View>
@@ -308,7 +361,7 @@ const Home = ({route}) => {
         <TouchableOpacity
           onPress={() => afteraccept()}
           style={[styles.button, styles.startButton]}>
-          <Text style={styles.buttonText}>{accept ? 'accept' : 'start'}</Text>
+          <Text style={styles.buttonText}>{accept ? 'Finish' : 'start'}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -358,20 +411,24 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   section: {
-    marginBottom: 10,
+    
+    
   },
   sectionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems:'center'
+    
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#000000',
+    marginVertical:5
   },
   sectionText: {
     fontSize: 14,
-    fontWeight: 'bold',
+    
     color: '#000000',
   },
   sectionIconContainer: {
@@ -412,7 +469,7 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     borderRadius: 10,
-    padding: 10,
+    padding: 8,
     margin: 5,
   },
 });

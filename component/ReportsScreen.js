@@ -214,14 +214,15 @@ const UserDataScreen = ({route}) => {
                             <View
                               style={{
                                 flexDirection: 'row',
-                                justifyContent: 'space-evenly',
+                                justifyContent: 'center',
                                 alignItems: 'center',
+                                alignSelf:'flex-start'
                               }}>
                               <Icon name="person-circle" size={50} />
                               <Text
                                 style={{
                                   color: '#000000',
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   marginBottom: 1,
                                   fontWeight: 'bold',
                                   textAlign: 'center',
@@ -231,9 +232,10 @@ const UserDataScreen = ({route}) => {
                               <Text
                                 style={{
                                   color: '#0000FF',
-                                  fontSize: 20,
+                                  fontSize: 18,
                                   marginBottom: 1,
                                   textAlign: 'center',
+                                  marginLeft:4,
                                 }}>
                                 {filteredData[item].name}
                               </Text>
