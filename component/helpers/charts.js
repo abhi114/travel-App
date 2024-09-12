@@ -1,4 +1,4 @@
-import { View, Text, Dimensions } from 'react-native'
+import { View, Text, Dimensions, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import {
   LineChart,
@@ -13,6 +13,7 @@ import firestore from '@react-native-firebase/firestore';
 const Linecharts = ({name}) => {
     const [userInfo,setUserInfo]= useState([])
     const [mapMonths,setmapMonths] = useState([])
+    const [MapLoading,setMapLoading] = useState(true);
     useEffect(() => {
       const fetchUserInfo = async () => {
         const response = firestore().collection('userInfo');
@@ -22,6 +23,7 @@ const Linecharts = ({name}) => {
           ...doc.data(), // Get the document data
         }));
         setUserInfo(userInfoArray);
+        setMapLoading(false);
         console.log(JSON.stringify(userInfo));
       };
       fetchUserInfo();
@@ -83,6 +85,8 @@ const Linecharts = ({name}) => {
     
   return (
     <View style={{justifyContent: 'center', alignSelf: 'center'}}>
+      {MapLoading ? <ActivityIndicator/>:(
+        <View>
       <Text style={{color: '#000000', fontWeight: 'bold', marginLeft: 15}}>
         {name}'s data {`(Shows Data for the Past 6 Months)`}
       </Text>
@@ -151,6 +155,8 @@ const Linecharts = ({name}) => {
           },
         }}
       />
+      </View>
+      )}
     </View>
   );
 }
