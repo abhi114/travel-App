@@ -80,6 +80,18 @@ const Sign = ({id, Rprtdate, mainData}) => {
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: 15,
+            alignSelf: 'center',
+            color: '#000000',
+            fontWeight:'bold',
+            margin:5
+          }}>
+          Verification Signature
+        </Text>
+        <Text
+          style={{
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: 15,
           }}>
           Signature - Driver's Signature
         </Text>
@@ -190,7 +202,7 @@ const Duty = ({route}) => {
        ['', 'Start', 'End '],
        ['Km', startKm, endkm],
        ['Duration', Rprtdate, endDate],
-       ['Fuel',startFuel,endFuel]
+       ['Fuel', `${startFuel}lit`, `${endFuel}lit`],
      ];
      
      const [signatureEnable,setSignatureEnable] = useState(false);
@@ -203,55 +215,84 @@ const Duty = ({route}) => {
   return (
     <View style={styles.outerContainer}>
       <ScrollView style={styles.container}>
-        {/* Driver Information */}
-        <Text style={[styles.title, {alignSelf: 'center', marginVertical: 10}]}>
-          Journey Information
-        </Text>
-        <View style={styles.card}>
-          <View style={[styles.row, {justifyContent: 'space-between'}]}>
-            <View style={styles.row}>
-              <Icon name="person-circle-outline" size={30} color="#333" />
-              <View style={styles.textContainer}>
-                <Text style={styles.title}>Driver's Name</Text>
-                <Text style={styles.detail}>{name}</Text>
-              </View>
-            </View>
-            <View style={styles.row}>
-              <Icon name="car-outline" size={30} color="#333" />
-              <View style={styles.textContainer}>
-                <Text style={styles.title}>Car Details</Text>
-                <Text style={styles.detail}>{vehicleDetails}</Text>
-              </View>
-            </View>
-          </View>
+        <View style={styles.headerSection}>
+          <Text style={styles.mainTitle}>Journey Information</Text>
+        </View>
 
-          <View style={[styles.row, {justifyContent: 'space-between'}]}>
-            <View style={styles.row}>
-              <Icon name="person-circle-outline" size={30} color="#333" />
-              <View style={styles.textContainer}>
-                <Text style={styles.title}>Driver's Number</Text>
-                <Text style={styles.detail}>{number}</Text>
+        {/* Driver and Vehicle Information Card */}
+        <View style={styles.card}>
+          <View style={styles.cardSection}>
+            <View style={styles.infoRow}>
+              <View style={styles.infoItem}>
+                <View style={styles.iconWrapper}>
+                  <Icon
+                    name="person-circle-outline"
+                    size={28}
+                    color="#2196F3"
+                  />
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.labelText}>Driver's Name</Text>
+                  <Text style={styles.valueText}>{name}</Text>
+                </View>
+              </View>
+              <View style={styles.infoItem}>
+                <View style={styles.iconWrapper}>
+                  <Icon name="car-outline" size={28} color="#2196F3" />
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.labelText}>Car Details</Text>
+                  <Text style={styles.valueText}>{vehicleDetails}</Text>
+                </View>
               </View>
             </View>
-            <View style={styles.row}>
-              <Icon name="home-outline" size={30} color="#333" />
-              <View style={styles.textContainer}>
-                <Text style={styles.title}>Address</Text>
-                <Text style={[styles.detail,]}>{address}</Text>
+
+            <View style={[styles.infoRow, styles.topMargin]}>
+              <View style={styles.infoItem}>
+                <View style={styles.iconWrapper}>
+                  <Icon name="call-outline" size={24} color="#2196F3" />
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.labelText}>Driver's Number</Text>
+                  <Text style={styles.valueText}>{number}</Text>
+                </View>
+              </View>
+              <View style={styles.infoItem}>
+                <View style={styles.iconWrapper}>
+                  <Icon name="home-outline" size={24} color="#2196F3" />
+                </View>
+                <View style={styles.textContainer}>
+                  <Text style={styles.labelText}>Address</Text>
+                  <Text style={styles.valueText} numberOfLines={2}>
+                    {address}
+                  </Text>
+                </View>
               </View>
             </View>
           </View>
         </View>
 
-        {/* Summary Report */}
+        {/* Summary Report Card */}
         <View style={styles.card}>
           <Text style={styles.sectionTitle}>Summary Report</Text>
-          <View style={styles.table}>
+          <View style={styles.tableContainer}>
             {tableData.map((row, rowIndex) => (
-              <View key={rowIndex} style={styles.row}>
+              <View key={rowIndex} style={styles.tableRow}>
                 {row.map((cell, colIndex) => (
-                  <View key={`${rowIndex}-${colIndex}`} style={styles.cell}>
-                    <Text style={{color: '#000000'}}>{cell}</Text>
+                  <View
+                    key={`${rowIndex}-${colIndex}`}
+                    style={[
+                      styles.tableCell,
+                      rowIndex === 0 && styles.headerCell,
+                      colIndex === row.length - 1 && styles.lastCell,
+                    ]}>
+                    <Text
+                      style={[
+                        styles.tableCellText,
+                        rowIndex === 0 && styles.headerCellText,
+                      ]}>
+                      {cell}
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -259,12 +300,12 @@ const Duty = ({route}) => {
           </View>
         </View>
 
-        {/* Signature Button */}
+        {/* Signature Section */}
         <TouchableOpacity
           onPress={() => setSignatureEnable(true)}
           style={styles.signatureButton}>
           <Icon name="create-outline" size={22} color="#fff" />
-          <Text style={styles.buttonText}>Add Signature</Text>
+          <Text style={styles.signatureButtonText}>Add Signature</Text>
         </TouchableOpacity>
 
         {signatureEnable && (
@@ -273,7 +314,6 @@ const Duty = ({route}) => {
           </View>
         )}
 
-        {/* End Duty Button */}
         <View style={styles.footerButtonContainer}></View>
       </ScrollView>
     </View>
@@ -281,175 +321,153 @@ const Duty = ({route}) => {
 }
 
 const styles = StyleSheet.create({
-  signature: `
-    .m-signature-pad {
-      box-shadow: none;
-      border: none;
-      background-color: #fff;
-    }
-    .m-signature-pad--body {
-      border: 1px solid #000;
-    }
-    .m-signature-pad--footer {
-      display: none;
-    }
-  `,
-  buttonContainer: {
+  outerContainer: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  container: {
+    flex: 1,
+  },
+  headerSection: {
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  mainTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1a1a1a',
+    textAlign: 'center',
+  },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    marginHorizontal: 16,
+    marginVertical: 8,
+    padding: 16,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  cardSection: {
+    paddingVertical: 8,
+  },
+  infoRow: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    padding: 20,
-    backgroundColor: '#ffffff',
-    marginBottom: 15,
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  topMargin: {
+    marginTop: 24,
+  },
+  infoItem: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginRight: 8,
+  },
+  iconWrapper: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#e3f2fd',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  textContainer: {
+    flex: 1,
+  },
+  labelText: {
+    fontSize: 13,
+    color: '#666',
+    marginBottom: 4,
+  },
+  valueText: {
+    fontSize: 15,
+    color: '#1a1a1a',
+    fontWeight: '500',
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1a1a1a',
+    marginBottom: 16,
+  },
+  tableContainer: {
+    borderRadius: 8,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  tableRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  tableCell: {
+    flex: 1,
+    padding: 12,
+    justifyContent: 'center',
+    borderRightWidth: 1,
+    borderRightColor: '#e0e0e0',
+    backgroundColor: '#fff',
+  },
+  headerCell: {
+    backgroundColor: '#f5f5f5',
+  },
+  lastCell: {
+    borderRightWidth: 0,
+  },
+  tableCellText: {
+    fontSize: 14,
+    color: '#333',
+    textAlign: 'center',
+  },
+  headerCellText: {
+    fontWeight: '600',
+    color: '#1a1a1a',
+  },
+  signatureButton: {
+    flexDirection: 'row',
+    backgroundColor: '#2196F3',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginVertical: 20,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+  },
+  signatureButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+  signatureContainer: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    borderRadius: 12,
+    backgroundColor: '#fff',
   },
   footerButtonContainer: {
     padding: 16,
     backgroundColor: '#fff',
     borderTopWidth: 1,
-    borderColor: '#eee',
-  },
-  footerButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FF5733',
-    borderRadius: 8,
-    paddingVertical: 12,
-  },
-  footerButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    marginLeft: 8,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 10,
-  },
-  title: {
-    fontSize: 16,
-    color: '#333',
-    fontWeight: '600',
-  },
-  detail: {
-    fontSize: 14,
-    color: '#666',
-  },
-  signatureButton: {
-    flexDirection: 'row',
-    backgroundColor: '#007BFF',
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal:2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    alignSelf:'center',
-    marginBottom: 16,
-    width:'50%'
-  },
-  signatureContainer: {
-    marginTop: 16,
-    padding: 12,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    backgroundColor: '#fff',
-  },
-  button: {
-    width: 100,
-    height: 40,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  noShowButton: {
-    backgroundColor: '#808080',
-  },
-  startButton: {
-    backgroundColor: '#0000FF',
-  },
-  signature: {
-    flex: 1,
-    borderColor: '#000033',
-    borderWidth: 3,
-  },
-  buttonStyle: {
-    flex: 1,
-    width: 100,
-    height: 40,
-    borderRadius: 10,
-    margin: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#808080',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    marginLeft: 8,
-  },
-  textInput: {
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 10, // Adjust corner curvature here
-    padding: 10,
-    margin: 5,
-  },
-  outerContainer: {
-    flex: 1,
-    backgroundColor: '#F0F8FF',
-  },
-  table: {
-    marginTop: 10,
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-    
-  },
-  cell: {
-    flex: 1,
-    borderWidth: 1,
-    borderColor: 'gray',
-    padding: 8,
-    margin: 2,
-    borderRadius: 5,
-  },
-  container: {
-    
-  },
-  header: {
-    paddingTop: 5,
-    paddingLeft: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    backgroundColor: '#ffff',
-    height: 80, // Fixed height for the header
-  },
-  textContainer: {
-    marginLeft: 10,
-  },
-  headerText: {
-    marginBottom: 14,
-    fontSize: 14,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  headerIconContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  card: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 16,
-    marginBottom: 16,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 2,
+    borderTopColor: '#e0e0e0',
   },
 });
 export default Duty

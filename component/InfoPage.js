@@ -220,7 +220,7 @@ const InfoPage = ({route}) => {
 
     console.log(passengerData);
   const afteraccept =async () => {
-    if( Rprtdate === '' || endDate === '' || address === '' || city === '' || vehicleDetails === ''){
+    if( Rprtdate === ''  || address === '' || city === '' || vehicleDetails === ''){
         alert("Please fill all the Fields")
         return;
     } 
@@ -235,11 +235,11 @@ const InfoPage = ({route}) => {
       name: driversdta.name,
       number: driversdta.MobileNumber,
       ReportingDate: Rprtdate + ' ' + month + ' ' + RprtTime,
-      endDate: endDate,
+      //endDate: endDate,
       address: address,
       city: city,
       vehicleDetails: vehicleDetails,
-      dutyInstructions: dutyInstructions,
+      //dutyInstructions: dutyInstructions,
       PassengerData: passengerData,
       ReportingTime: RprtTime,
       ReportingMonth: month,
@@ -254,11 +254,11 @@ const InfoPage = ({route}) => {
           name:driversdta.name,
           number:driversdta.MobileNumber,
           Rprtdate:Rprtdate +" " + month +" "+  RprtTime,
-         endDate,
+         //endDate,
           address,
           city,
           vehicleDetails,
-          dutyInstructions,
+          //dutyInstructions,
           mainData,
           month
         });
@@ -285,6 +285,7 @@ const InfoPage = ({route}) => {
             <Text style={[{marginRight: 5}]}>Logout</Text>
           </TouchableOpacity>
         </View>
+        <Text style={styles.headerText}>Journey Details</Text>
         <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>Full Name *</Text>
@@ -407,7 +408,7 @@ const InfoPage = ({route}) => {
           </View>
         </View>
 
-        <View style={styles.cardContainer}>
+        {/* <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>End Time *</Text>
             <View
@@ -453,7 +454,7 @@ const InfoPage = ({route}) => {
               />
             )}
           </View>
-        </View>
+        </View> */}
 
         <View style={styles.cardContainer}>
           <View style={styles.card}>
@@ -498,7 +499,7 @@ const InfoPage = ({route}) => {
           </View>
         </View>
 
-        <View style={styles.cardContainer}>
+        {/* <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>Duty Instructions *</Text>
             <TextInput
@@ -508,7 +509,7 @@ const InfoPage = ({route}) => {
               style={styles.textInput}
             />
           </View>
-        </View>
+        </View> */}
         <LineView />
         <View style={styles.container}>
           <Text style={styles.sectionTitle}>Passengers Information *</Text>

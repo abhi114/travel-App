@@ -22,6 +22,19 @@ const Home = ({route}) => {
     const [startFuel,setStartFuel] = useState('');
     const [endFuel,setEndFuel] = useState('');
     const [fuelcost,setfuelcost] = useState('');
+    const getCurrentTime = () => {
+      const date = new Date();
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+
+      hours = hours % 12;
+      hours = hours ? hours : 12; // The hour '0' should be '12'
+      minutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero to minutes
+
+      const time = `${hours}:${minutes} ${ampm}`;
+      return time;
+    };
     const {
       id,
       name,
@@ -64,13 +77,14 @@ const Home = ({route}) => {
     };
     const storeData = async (startkmvalue,endkmvalue,startfuelValue,endfuelValue) => {
       try {
+        console.log(getCurrentTime());
         const userRef = firestore().collection('users').doc(id); // Reference user document
         mainData[Rprtdate].startKm=startkmvalue
         mainData[Rprtdate].endKm = endkmvalue
         mainData[Rprtdate].starFuel = startfuelValue + `lit`;
         mainData[Rprtdate].endFuel = endfuelValue + `lit`;
          mainData[Rprtdate].FuelCost = `Rs `+fuelcost;
-        
+          mainData[Rprtdate].endDate = getCurrentTime();
         const updatedUserData = mainData // Add new key-value pair
         console.log("updated data is" + JSON.stringify(updatedUserData));
         await userRef.set(updatedUserData, {merge: true}); // Set user data in the document
@@ -101,7 +115,7 @@ const Home = ({route}) => {
           startFuel,
           endFuel,
           Rprtdate,
-          endDate,
+          endDate:getCurrentTime(),
           mainData,
           fuelcost,
           vehicleDetails,
@@ -109,368 +123,314 @@ const Home = ({route}) => {
         });
 
     }
-  return (
-    <View style={styles.outerContainer}>
-      <ScrollView style={styles.container}>
-        <View style={styles.cardContainer}>
-          <View style={[styles.card, {marginBottom: 10}]}>
-            <View style={styles.header}>
-              <View style={styles.headerTextContainer}>
-                <Text style={styles.headerText}>{name}</Text>
-                <Text style={styles.headerText}>{number}</Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  makecall();
-                }}
-                style={styles.headerIconContainer}>
-                <Icon name="phone" size={35} color={'#ffA500'} />
-              </TouchableOpacity>
-            </View>
-          </View>
+ return (
+   <View style={styles.container}>
+     <ScrollView style={styles.scrollContainer}>
+       <View style={styles.contentWrapper}>
+         <Text style={styles.mainHeader}>Summary Details</Text>
 
-          <View style={styles.card}>
-            <View style={styles.sectionRow}>
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Reporting Date And Time</Text>
-                <Text style={styles.sectionText}>{Rprtdate}</Text>
-              </View>
-              <TouchableOpacity style={styles.sectionIconContainer}>
-                <Icon3
-                  name="clock-time-five-outline"
-                  size={32}
-                  color={'#000000'}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
+         {/* Header Card */}
+         <View style={styles.headerCard}>
+           <View style={styles.headerContent}>
+             <View>
+               <Text style={styles.nameText}>{name}</Text>
+               <Text style={styles.numberText}>{number}</Text>
+             </View>
+             <TouchableOpacity onPress={makecall} style={styles.phoneButton}>
+               <Icon name="phone" size={24} color="#fff" />
+             </TouchableOpacity>
+           </View>
+         </View>
 
-          <View style={styles.line}></View>
+         {/* Info Cards */}
+         <View style={styles.infoCard}>
+           <View style={styles.infoRow}>
+             <View style={styles.infoContent}>
+               <Text style={styles.infoLabel}>Reporting Date And Time</Text>
+               <Text style={styles.infoValue}>{Rprtdate}</Text>
+             </View>
+             <Icon3 name="clock-time-five-outline" size={24} color="#555" />
+           </View>
+         </View>
 
-          <View style={styles.card}>
-            <View style={styles.sectionRow}>
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>End Time</Text>
-                <Text style={styles.sectionText}>{endDate}</Text>
-              </View>
-              <TouchableOpacity style={styles.sectionIconContainer}>
-                <Icon3
-                  name="clock-time-ten-outline"
-                  size={32}
-                  color={'#000000'}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
+         <View style={styles.infoCard}>
+           <View style={styles.infoRow}>
+             <View style={styles.infoContent}>
+               <Text style={styles.infoLabel}>Reporting Address</Text>
+               <Text style={styles.infoValue}>{address}</Text>
+             </View>
+             <Icon1 name="location" size={24} color="#555" />
+           </View>
+         </View>
 
-          <View style={styles.line}></View>
+         <View style={styles.infoCard}>
+           <View style={styles.infoRow}>
+             <View style={styles.infoContent}>
+               <Text style={styles.infoLabel}>City</Text>
+               <Text style={styles.infoValue}>{city}</Text>
+             </View>
+             <Icon3 name="home-city-outline" size={24} color="#555" />
+           </View>
+         </View>
 
-          <View style={styles.card}>
-            <View style={styles.sectionRow}>
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Reporting Address</Text>
-                <Text style={styles.sectionText}>{address}</Text>
-              </View>
-              <TouchableOpacity style={styles.sectionIconContainer}>
-                <Icon1 name="location" size={30} color={'#000000'} />
-              </TouchableOpacity>
-            </View>
-          </View>
+         <View style={styles.infoCard}>
+           <View style={styles.infoRow}>
+             <View style={styles.infoContent}>
+               <Text style={styles.infoLabel}>Vehicle Details</Text>
+               <Text style={styles.infoValue}>{vehicleDetails}</Text>
+             </View>
+             <Icon3 name="car" size={24} color="#555" />
+           </View>
+         </View>
 
-          <View style={styles.line}></View>
+         {accept && (
+           <View style={styles.readingsSection}>
+             <Text style={styles.readingsHeader}>Final Readings</Text>
+             <View style={styles.driverNote}>
+               <Text style={styles.driverNoteText}>
+                 To Be Filled By The Driver
+               </Text>
+               <Icon3 name="car-info" size={20} color="#2196F3" />
+             </View>
 
-          <View style={styles.card}>
-            <View style={styles.sectionRow}>
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>City</Text>
-                <Text style={styles.sectionText}>{city}</Text>
-              </View>
-              <TouchableOpacity style={styles.sectionIconContainer}>
-                <Icon3 name="home-city-outline" size={32} color={'#000000'} />
-              </TouchableOpacity>
-            </View>
-          </View>
+             <View style={styles.inputGroup}>
+               <Text style={styles.inputLabel}>Start Km</Text>
+               <TextInput
+                 value={startKm}
+                 onChangeText={setStartkm}
+                 keyboardType="numeric"
+                 placeholder="Enter Km"
+                 style={styles.input}
+                 placeholderTextColor="#999"
+               />
+             </View>
 
-          <View style={styles.line}></View>
+             <View style={styles.inputGroup}>
+               <Text style={styles.inputLabel}>End Km</Text>
+               <TextInput
+                 value={endkm}
+                 onChangeText={setendKm}
+                 keyboardType="numeric"
+                 placeholder="Enter Km"
+                 style={styles.input}
+                 placeholderTextColor="#999"
+               />
+             </View>
 
-          <View style={styles.card}>
-            <View style={styles.sectionRow}>
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Vehicle Details</Text>
-                <Text style={styles.sectionText}>{vehicleDetails}</Text>
-              </View>
-              <TouchableOpacity style={styles.sectionIconContainer}>
-                <Icon3 name="car" size={32} color={'#000000'} />
-              </TouchableOpacity>
-            </View>
-          </View>
+             <View style={styles.inputGroup}>
+               <Text style={styles.inputLabel}>Fuel Cost In Rs</Text>
+               <TextInput
+                 value={fuelcost}
+                 onChangeText={setfuelcost}
+                 keyboardType="numeric"
+                 placeholder="Enter Cost of Fuel"
+                 style={styles.input}
+                 placeholderTextColor="#999"
+               />
+             </View>
 
-          <View style={styles.line}></View>
+             <View style={styles.inputGroup}>
+               <Text style={styles.inputLabel}>Starting Fuel Reading</Text>
+               <TextInput
+                 value={startFuel}
+                 onChangeText={setStartFuel}
+                 keyboardType="numeric"
+                 placeholder="Enter Start Fuel Reading"
+                 style={styles.input}
+                 placeholderTextColor="#999"
+               />
+             </View>
 
-          <View style={styles.card}>
-            <View style={styles.sectionRow}>
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Instructions</Text>
-                <Text style={styles.sectionText}>{dutyInstructions}</Text>
-              </View>
-              <TouchableOpacity style={styles.sectionIconContainer}>
-                <Icon3 name="information-outline" size={32} color={'#000000'} />
-              </TouchableOpacity>
-            </View>
-          </View>
+             <View style={styles.inputGroup}>
+               <Text style={styles.inputLabel}>End Fuel Reading</Text>
+               <TextInput
+                 value={endFuel}
+                 onChangeText={setEndFuel}
+                 keyboardType="numeric"
+                 placeholder="Enter End Fuel Reading"
+                 style={styles.input}
+                 placeholderTextColor="#999"
+               />
+             </View>
+           </View>
+         )}
+       </View>
+     </ScrollView>
 
-          <View style={styles.line}></View>
-
-          {accept && (
-            <View>
-              <Text style={{margin: 8, color: '#000', fontWeight: 'bold',fontSize:18,alignSelf:'center'}}>
-                Final Readings
-              </Text>
-              <View
-                style={{
-                  borderRadius: 10,
-                  margin: 7,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <Text style={{margin: 8, color: '#0000FF', fontWeight: 'bold'}}>
-                  To Be Filled By The Driver
-                </Text>
-                <Icon3 name="car-info" size={22} color={'#0000FF'} />
-              </View>
-
-              <View style={styles.card}>
-                <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>Start Km</Text>
-                  <TextInput
-                    value={startKm}
-                    keyboardType="numeric"
-                    onChangeText={setStartkm}
-                    placeholder="Enter Km"
-                    style={styles.textInput}
-                  />
-                </View>
-              </View>
-              <View style={styles.line}></View>
-              <View style={[styles.card, {marginTop: 5}]}>
-                <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>End Km</Text>
-                  <TextInput
-                    value={endkm}
-                    onChangeText={setendKm}
-                    keyboardType="numeric"
-                    placeholder="Enter Km"
-                    style={styles.textInput}
-                  />
-                </View>
-              </View>
-
-              <View style={styles.line}></View>
-              <View style={[styles.card, {marginTop: 5}]}>
-                <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>Fuel Cost In Rs</Text>
-                  <TextInput
-                    value={fuelcost}
-                    keyboardType="numeric"
-                    onChangeText={setfuelcost}
-                    placeholder="Enter Cost of Fuel"
-                    style={styles.textInput}
-                  />
-                </View>
-              </View>
-              <View style={styles.line}></View>
-              <View style={[styles.card, {marginTop: 5}]}>
-                <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>Starting Fuel Reading</Text>
-                  <TextInput
-                    value={startFuel}
-                    keyboardType="numeric"
-                    onChangeText={setStartFuel}
-                    placeholder="Enter Start Fuel Reading"
-                    style={styles.textInput}
-                  />
-                </View>
-              </View>
-              <View style={styles.line}></View>
-              <View style={[styles.card, {marginTop: 5}]}>
-                <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>End Fuel Reading</Text>
-                  <TextInput
-                    value={endFuel}
-                    keyboardType="numeric"
-                    onChangeText={setEndFuel}
-                    placeholder="Enter End Fuel Reading"
-                    style={styles.textInput}
-                  />
-                </View>
-              </View>
-
-              {/**<View style={styles.card}>
-                <View style={styles.section}>
-                  <Text style={styles.sectionTitle}>Send OTP</Text>
-                  <Text style={styles.sectionText}>
-                    Please Select Any One of the Source to send OTP
-                  </Text>
-                  <View
-                    style={{
-                      flexDirection: 'column',
-                      flex: 1,
-                      borderWidth: 2,
-                    }}>
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        backgroundColor: 'gray',
-                        alignItems: 'center',
-                        justifyContent: 'space-evenly',
-                        height: 50,
-                      }}>
-                      <Icon name="whatsapp" size={30} color={'#FFFF00'} />
-                      <Text style={[styles.text, {color: '#FFFFFF'}]}>
-                        Send code on Whatsapp
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        flex: 1,
-                        flexDirection: 'row',
-                        backgroundColor: 'white',
-                        alignItems: 'center',
-                        justifyContent: 'space-evenly',
-                        height: 50,
-                      }}>
-                      <Icon1 name="message" size={30} color={'#000000'} />
-                      <Text style={[styles.text, {color: '#000000'}]}>
-                        Send code on Message
-                      </Text>
-                    </View>
-                  </View>
-                </View>
-              </View> **/}
-            </View>
-          )}
-        </View>
-      </ScrollView>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={() => navigate.goBack()}
-          style={[styles.button, styles.noShowButton]}>
-          <Text style={styles.buttonText}>{accept ? 'reject' : 'dismiss'}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => afteraccept()}
-          style={[styles.button, styles.startButton]}>
-          <Text style={styles.buttonText}>{accept ? 'Finish' : 'start'}</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+     <View style={styles.footer}>
+       <TouchableOpacity
+         onPress={() => navigate.goBack()}
+         style={[styles.footerButton, styles.dismissButton]}>
+         <Text style={styles.buttonText}>{accept ? 'Reject' : 'Dismiss'}</Text>
+       </TouchableOpacity>
+       <TouchableOpacity
+         onPress={() => afteraccept()}
+         style={[styles.footerButton, styles.startButton]}>
+         <Text style={styles.buttonText}>{accept ? 'Finish' : 'Start'}</Text>
+       </TouchableOpacity>
+     </View>
+   </View>
+ );
 };
 
 const styles = StyleSheet.create({
-  outerContainer: {
-    flex: 1,
-    backgroundColor: '#FFFF',
-  },
   container: {
     flex: 1,
+    backgroundColor: '#f5f5f5',
   },
-  cardContainer: {
-    padding: 20,
+  scrollContainer: {
+    flex: 1,
   },
-  card: {
-    backgroundColor: '#f0f0f0',
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: '#000000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
+  contentWrapper: {
+    padding: 16,
   },
-  header: {
+  mainHeader: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#1a1a1a',
+    marginBottom: 16,
+    marginLeft: 4,
+  },
+  headerCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    marginBottom: 16,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 2},
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+  },
+  headerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 12,
-    backgroundColor: '#D3D3D3',
-    borderRadius: 10,
-    marginHorizontal: 10,
+    padding: 16,
   },
-  headerTextContainer: {
-    flexDirection: 'column',
+  nameText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#1a1a1a',
+    marginBottom: 4,
+  },
+  numberText: {
+    fontSize: 16,
+    color: '#666',
+  },
+  phoneButton: {
+    backgroundColor: '#2196F3',
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  infoCard: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    marginBottom: 12,
+    padding: 16,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+  infoRow: {
+    flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  headerText: {
+  infoContent: {
+    flex: 1,
+    marginRight: 16,
+  },
+  infoLabel: {
     fontSize: 14,
-    fontWeight: 'bold',
+    color: '#666',
+    marginBottom: 4,
+  },
+  infoValue: {
+    fontSize: 16,
+    color: '#1a1a1a',
+    fontWeight: '500',
+  },
+  readingsSection: {
+    marginTop: 24,
+  },
+  readingsHeader: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1a1a1a',
+    marginBottom: 16,
     textAlign: 'center',
   },
-  headerIconContainer: {
+  driverNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginBottom: 16,
+    backgroundColor: '#e3f2fd',
+    padding: 8,
+    borderRadius: 8,
   },
-  section: {
-    
-    
+  driverNoteText: {
+    color: '#2196F3',
+    fontWeight: '600',
+    marginRight: 8,
   },
-  sectionRow: {
+  inputGroup: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+  },
+  inputLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    color: '#1a1a1a',
+    backgroundColor: '#f8f8f8',
+  },
+  footer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems:'center'
-    
+    padding: 16,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#e0e0e0',
+    marginBottom:20
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000000',
-    marginVertical:5
-  },
-  sectionText: {
-    fontSize: 14,
-    
-    color: '#000000',
-  },
-  sectionIconContainer: {
-    justifyContent: 'center',
-    marginRight: 12,
-    marginTop: 18,
-  },
-  line: {
-    height: 1,
-    backgroundColor: '#000000',
-    marginVertical: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    padding: 5,
-    marginBottom: 30,
-    backgroundColor: '#F5FFFA',
-  },
-  button: {
-    width: 100,
-    height: 40,
-    borderRadius: 10,
+  footerButton: {
+    flex: 1,
+    marginHorizontal: 8,
+    paddingVertical: 12,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  noShowButton: {
-    backgroundColor: '#FF0000',
+  dismissButton: {
+    backgroundColor: '#ef5350',
   },
   startButton: {
-    backgroundColor: '#0000FF',
+    backgroundColor: '#2196F3',
   },
   buttonText: {
-    color: '#FFFFFF',
-    alignSelf: 'center',
-  },
-  textInput: {
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 8,
-    margin: 5,
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 

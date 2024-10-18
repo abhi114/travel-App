@@ -174,11 +174,18 @@ const UserDataScreen = ({route}) => {
             ? userInfo.monthExpenditure?.[monthNames[selectedMonth]]
             : 0}
         </Text>
-       
       </View>
       <LineView />
       {Object.keys(filteredData).length === 0 ? (
-        <Text style={{flex:1,justifyContent:'center',alignSelf:'center',fontWeight:'bold'}}>No Data Available</Text>
+        <Text
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignSelf: 'center',
+            fontWeight: 'bold',
+          }}>
+          No Data Available
+        </Text>
       ) : (
         <FlatList
           data={Object.keys(filteredData)}
@@ -216,9 +223,9 @@ const UserDataScreen = ({route}) => {
                                 flexDirection: 'row',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                alignSelf:'flex-start'
+                                alignSelf: 'flex-start',
                               }}>
-                              <Icon name="person-circle" size={50} />
+                              <Icon name="person-circle" size={30} />
                               <Text
                                 style={{
                                   color: '#000000',
@@ -231,11 +238,11 @@ const UserDataScreen = ({route}) => {
                               </Text>
                               <Text
                                 style={{
-                                  color: '#0000FF',
+                                  color: '#000',
                                   fontSize: 18,
                                   marginBottom: 1,
                                   textAlign: 'center',
-                                  marginLeft:4,
+                                  marginLeft: 4,
                                 }}>
                                 {filteredData[item].name}
                               </Text>
@@ -387,6 +394,7 @@ const UserDataScreen = ({route}) => {
                                     fontSize: 18,
                                     fontWeight: 'bold',
                                     color: '#000000',
+                                    marginRight: 2,
                                   }}>
                                   Start Fuel:
                                 </Text>
@@ -405,6 +413,7 @@ const UserDataScreen = ({route}) => {
                                     fontSize: 18,
                                     fontWeight: 'bold',
                                     color: '#000000',
+                                    marginRight: 2,
                                   }}>
                                   End Fuel:
                                 </Text>
@@ -436,7 +445,66 @@ const UserDataScreen = ({route}) => {
                                 {filteredData[item].FuelCost}
                               </Text>
                             </View>
+                            <LineView />
+                            <View style={{marginVertical: 5}}>
+                              <View style={{flexDirection: 'row', margin: 5}}>
+                                <Text
+                                  style={[styles.heading, {marginRight: 5}]}>
+                                  Address:
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontSize: 15,
 
+                                    color: '#000000',
+                                  }}>
+                                  {filteredData[item].address}
+                                </Text>
+                              </View>
+                              <View style={{flexDirection: 'row', margin: 5}}>
+                                <Text
+                                  style={[styles.heading, {marginRight: 5}]}>
+                                  City:
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontSize: 15,
+
+                                    color: '#000000',
+                                  }}>
+                                  {filteredData[item].city}
+                                </Text>
+                              </View>
+                              <View style={{flexDirection: 'row', margin: 5}}>
+                                <Text
+                                  style={[styles.heading, {marginRight: 5}]}>
+                                  Duty Instructions
+                                </Text>
+                                <Text
+                                  style={{
+                                    fontSize: 15,
+
+                                    color: '#000000',
+                                  }}>
+                                  {filteredData[item].dutyInstructions}
+                                </Text>
+                              </View>
+
+                              <View style={{flexDirection: 'row', margin: 5}}>
+                                <Text
+                                  style={[styles.heading, {marginRight: 5}]}>
+                                  Vehicle Details: 
+                                </Text>
+                              <Text
+                                style={{
+                                  fontSize: 15,
+
+                                  color: '#000000',
+                                }}>
+                                {filteredData[item].vehicleDetails}
+                              </Text>
+                              </View>
+                            </View>
                             <View>
                               <LineView />
                               <Text
@@ -562,42 +630,6 @@ const UserDataScreen = ({route}) => {
                           </View>
                         ),
                       )}
-                      <Text style={styles.heading}>Address</Text>
-                      <Text
-                        style={{
-                          fontSize: 15,
-
-                          color: '#000000',
-                        }}>
-                        {filteredData[item].address}
-                      </Text>
-                      <Text style={styles.heading}>City</Text>
-                      <Text
-                        style={{
-                          fontSize: 15,
-
-                          color: '#000000',
-                        }}>
-                        {filteredData[item].city}
-                      </Text>
-                      <Text style={styles.heading}>Duty Instructions</Text>
-                      <Text
-                        style={{
-                          fontSize: 15,
-
-                          color: '#000000',
-                        }}>
-                        {filteredData[item].dutyInstructions}
-                      </Text>
-                      <Text style={styles.heading}>Vehicle Details</Text>
-                      <Text
-                        style={{
-                          fontSize: 15,
-
-                          color: '#000000',
-                        }}>
-                        {filteredData[item].vehicleDetails}
-                      </Text>
                     </View>
                     <LineView />
                     <View>
