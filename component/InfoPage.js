@@ -691,6 +691,7 @@ export const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     borderRadius: 10, // Adjust corner curvature here
+    fontWeight:'bold',
     padding: 10,
     margin: 5,
     underlineStyle: {

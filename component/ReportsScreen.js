@@ -21,6 +21,8 @@ import Linecharts from './helpers/charts';
 import { LineView } from './helpers/helpers';
 import Widget from './ReportsScreenDetailed';
 import WeeklyStats from './WeeklyStats';
+import { ScrollView } from 'react-native';
+import { Car, ChevronDown, ChevronUp, FileText, MapPin } from 'lucide-react-native';
 
 
 const UserDataScreen = ({route}) => {
@@ -45,6 +47,7 @@ const UserDataScreen = ({route}) => {
   const [mainuserData,setmainuserData] = useState({});
    const [selectedMonth, setSelectedMonth] = useState(13);
    const [filteredData, setFilteredData] = useState({});
+  
     const [userInfo, setUserInfo] = useState([]);
    const navigation = useNavigation();
    console.log(userInfo.monthExpenditure?.[monthNames[selectedMonth]]);
@@ -121,16 +124,17 @@ const UserDataScreen = ({route}) => {
    
   };
   return (
-    <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-        <Text style={styles.headerText}>Report Details</Text>
+    <ScrollView style={styles2.container}>
+      <View style={styles2.header}>
+        <Text style={styles2.headerText}>Report Details</Text>
       </View>
 
-      <View style={styles.monthSelector}>
+      <View style={styles2.pickerContainer}>
         <Picker
           selectedValue={selectedMonth}
-          style={{height: 50, width: Dimensions.width}}
-          onValueChange={itemValue => handleMonthChange(itemValue)}>
+          style={styles2.picker}
+          onValueChange={itemValue => handleMonthChange(itemValue)}
+          mode="dropdown">
           <Picker.Item label="Select Month" value={13} />
           <Picker.Item label="January" value={12} />
           <Picker.Item label="February" value={1} />
@@ -146,35 +150,23 @@ const UserDataScreen = ({route}) => {
           <Picker.Item label="December" value={11} />
         </Picker>
       </View>
+
       <LineView />
-      <View>
-        <Text style={styles.headerText}>Monthly Fuel Expenditure</Text>
-        <Text
-          style={{
-            color: '#000000',
-            fontSize: 12,
-            marginBottom: 1,
-            margin: 5,
-            textAlign: 'center',
-          }}>
+
+      <View style={styles2.expenditureContainer}>
+        <Text style={styles2.headerText}>Monthly Fuel Expenditure</Text>
+        <Text style={styles2.subText}>
           Total Fuel Expenditure for the Month of{' '}
           {selectedMonth !== 13 ? monthNames[selectedMonth] : ' '} -
         </Text>
-        <Text
-          style={{
-            color: '#000000',
-            fontSize: 12,
-            marginBottom: 1,
-            margin: 5,
-            fontWeight: 'bold',
-            textAlign: 'center',
-          }}>
+        <Text style={styles2.amountText}>
           Rs{' '}
           {selectedMonth !== 13
             ? userInfo.monthExpenditure?.[monthNames[selectedMonth]]
             : 0}
         </Text>
       </View>
+
       <LineView />
       {Object.keys(filteredData).length === 0 ? (
         <Text
@@ -189,519 +181,996 @@ const UserDataScreen = ({route}) => {
       ) : (
         <FlatList
           data={Object.keys(filteredData)}
-          renderItem={({item}) => (
-            <TouchableOpacity onPress={() => handlePress(item)}>
-              <View style={styles.cardContainer}>
-                <View style={styles.cardHeader}>
-                  <Text
-                    style={{
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                      color: '#000000',
-                    }}>
-                    Date of Journey - {item}
-                  </Text>
-                  {!expanded[item] ? (
-                    <Text style={{fontSize: 14, color: '#0000FF'}}>
-                      Click for detailed View
-                    </Text>
-                  ) : (
-                    <Text style={{fontSize: 14, color: '#0000FF'}}>
-                      Click for normal view
-                    </Text>
-                  )}
-                </View>
-                {expanded[item] && (
-                  <View>
-                    <View style={styles.cardBody}>
-                      <View></View>
-                      {Object.keys(filteredData[item].PassengerData).map(
-                        passengerKey => (
-                          <View key={passengerKey}>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                alignSelf: 'flex-start',
-                              }}>
-                              <Icon name="person-circle" size={30} />
-                              <Text
-                                style={{
-                                  color: '#000000',
-                                  fontSize: 18,
-                                  marginBottom: 1,
-                                  fontWeight: 'bold',
-                                  textAlign: 'center',
-                                }}>
-                                Driver's Name:
-                              </Text>
-                              <Text
-                                style={{
-                                  color: '#000',
-                                  fontSize: 18,
-                                  marginBottom: 1,
-                                  textAlign: 'center',
-                                  marginLeft: 4,
-                                }}>
-                                {filteredData[item].name}
-                              </Text>
-                            </View>
-                            <View style={styles.line}></View>
-                            <View
-                              style={{
-                                flexDirection: 'column',
-                                marginVertical: 10,
-                              }}>
-                              <View style={{flexDirection: 'row'}}>
-                                <Icon1
-                                  name="date"
-                                  size={20}
-                                  color={'#0000FF'}
-                                />
-                                <Text
-                                  style={{
-                                    fontSize: 15,
-                                    fontWeight: 'bold',
-                                    color: '#000000',
-                                    marginLeft: 5,
-                                  }}>
-                                  Start Date:
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontSize: 14,
+          renderItem={({item}) => {
+             const fuelUsed =
+               parseInt(filteredData[item].endFuel) -
+               parseInt(filteredData[item].starFuel);
+            return (
+              <TouchableOpacity
+                onPress={() => handlePress(item)}
+                style={styles2.touchable}
+                activeOpacity={0.7}>
+                <View style={styles2.cardContainer}>
+                  <View style={styles2.cardHeader}>
+                    <View style={styles2.dateContainer}>
+                      <Text style={styles2.dateLabel}>Date of Journey</Text>
+                      <Text style={styles2.dateValue}>{item}</Text>
+                    </View>
 
-                                    color: '#000000',
-                                  }}>
-                                  {filteredData[item].ReportingDate}
-                                </Text>
-                              </View>
+                    <View style={styles2.expandButton}>
+                      <Text style={styles2.expandText}>
+                        {!expanded[item] ? 'View Details' : 'Show Less'}
+                      </Text>
+                      {!expanded[item] ? (
+                        <ChevronDown size={20} color="#4A90E2" />
+                      ) : (
+                        <ChevronUp size={20} color="#4A90E2" />
+                      )}
+                    </View>
+                  </View>
+                  <View style={styles2.expandedContent}>
+                    {expanded[item] && (
+                      <View>
+                        <View style={styles2.cardBody}>
+                          {Object.keys(filteredData[item].PassengerData).map(
+                            passengerKey => (
                               <View
-                                style={{
-                                  flexDirection: 'row',
-                                  marginVertical: 8,
-                                }}>
-                                <Icon1
-                                  name="date"
-                                  size={20}
-                                  color={'#0000FF'}
-                                />
-                                <Text
-                                  style={{
-                                    fontSize: 15,
-                                    fontWeight: 'bold',
-                                    color: '#000000',
-                                    marginLeft: 5,
-                                  }}>
-                                  End Date:
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontSize: 15,
-
-                                    color: '#000000',
-                                  }}>
-                                  {filteredData[item].endDate}
-                                </Text>
-                              </View>
-                            </View>
-                            <LineView />
-                            <Text
-                              style={{
-                                fontSize: 18,
-                                fontWeight: 'bold',
-                                color: '#000000',
-                                marginVertical: 5,
-                              }}>
-                              Distance Travelled in Km -
-                            </Text>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                marginVertical: 10,
-                                justifyContent: 'space-around',
-                              }}>
-                              <View style={{flexDirection: 'row'}}>
-                                <Icon
-                                  name="location"
-                                  size={20}
-                                  color={'#0000FF'}
-                                />
-                                <Text
-                                  style={{
-                                    fontSize: 18,
-                                    fontWeight: 'bold',
-                                    color: '#000000',
-                                  }}>
-                                  Start Km:
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontSize: 18,
-
-                                    color: '#000000',
-                                  }}>
-                                  {filteredData[item].startKm}
-                                </Text>
-                              </View>
-                              <View style={{flexDirection: 'row'}}>
-                                <Icon
-                                  name="location"
-                                  size={20}
-                                  color={'#0000FF'}
-                                />
-                                <Text
-                                  style={{
-                                    fontSize: 18,
-                                    fontWeight: 'bold',
-                                    color: '#000000',
-                                  }}>
-                                  End Km:
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontSize: 18,
-
-                                    color: '#000000',
-                                  }}>
-                                  {filteredData[item].endKm}
-                                </Text>
-                              </View>
-                            </View>
-                            <LineView />
-                            <View style={{flexDirection: 'row'}}>
-                              <Icon3 name="fuel" size={26} color={'#0000FF'} />
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  fontWeight: 'bold',
-                                  color: '#000000',
-                                  marginVertical: 5,
-                                }}>
-                                Fuel Usages {`(in litres)-`}
-                              </Text>
-                            </View>
-                            <View
-                              style={{
-                                flexDirection: 'row',
-                                marginVertical: 10,
-                                justifyContent: 'space-around',
-                              }}>
-                              <View style={{flexDirection: 'row'}}>
-                                <Text
-                                  style={{
-                                    fontSize: 18,
-                                    fontWeight: 'bold',
-                                    color: '#000000',
-                                    marginRight: 2,
-                                  }}>
-                                  Start Fuel:
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontSize: 18,
-
-                                    color: '#000000',
-                                  }}>
-                                  {filteredData[item].starFuel}
-                                </Text>
-                              </View>
-                              <View style={{flexDirection: 'row'}}>
-                                <Text
-                                  style={{
-                                    fontSize: 18,
-                                    fontWeight: 'bold',
-                                    color: '#000000',
-                                    marginRight: 2,
-                                  }}>
-                                  End Fuel:
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontSize: 18,
-
-                                    color: '#000000',
-                                  }}>
-                                  {filteredData[item].endFuel}
-                                </Text>
-                              </View>
-                            </View>
-                            <LineView />
-                            <View style={{flexDirection: 'row'}}>
-                              <Icon3
-                                name="currency-rupee"
-                                size={26}
-                                color={'#0000FF'}
-                              />
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  fontWeight: 'bold',
-                                  color: '#000000',
-                                  marginVertical: 5,
-                                }}>
-                                Fuel Costs {`(in Rs)-`}{' '}
-                                {filteredData[item].FuelCost}
-                              </Text>
-                            </View>
-                            <LineView />
-                            <View style={{marginVertical: 5}}>
-                              <View style={{flexDirection: 'row', margin: 5}}>
-                                <Text
-                                  style={[styles.heading, {marginRight: 5}]}>
-                                  Address:
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontSize: 15,
-
-                                    color: '#000000',
-                                  }}>
-                                  {filteredData[item].address}
-                                </Text>
-                              </View>
-                              <View style={{flexDirection: 'row', margin: 5}}>
-                                <Text
-                                  style={[styles.heading, {marginRight: 5}]}>
-                                  City:
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontSize: 15,
-
-                                    color: '#000000',
-                                  }}>
-                                  {filteredData[item].city}
-                                </Text>
-                              </View>
-                              <View style={{flexDirection: 'row', margin: 5}}>
-                                <Text
-                                  style={[styles.heading, {marginRight: 5}]}>
-                                  Duty Instructions
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontSize: 15,
-
-                                    color: '#000000',
-                                  }}>
-                                  {filteredData[item].dutyInstructions}
-                                </Text>
-                              </View>
-
-                              <View style={{flexDirection: 'row', margin: 5}}>
-                                <Text
-                                  style={[styles.heading, {marginRight: 5}]}>
-                                  Vehicle Details: 
-                                </Text>
-                              <Text
-                                style={{
-                                  fontSize: 15,
-
-                                  color: '#000000',
-                                }}>
-                                {filteredData[item].vehicleDetails}
-                              </Text>
-                              </View>
-                            </View>
-                            <View>
-                              <LineView />
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  fontWeight: 'bold',
-                                  color: '#000000',
-                                }}>
-                                Driver's Signature:
-                              </Text>
-                              {filteredData[item].passengersSignature !==
-                              undefined ? (
-                                <View style={styles.Imagecontainer}>
-                                  <Image
-                                    source={{
-                                      uri: filteredData[item].driversSignature,
-                                    }}
-                                    style={styles.image}
-                                    resizeMode="contain"
-                                  />
+                                key={passengerKey}
+                                style={styles2.driverSection}>
+                                <View style={styles2.driverHeader}>
+                                  <View style={styles2.iconContainer}>
+                                    <Icon
+                                      name="person-circle"
+                                      size={40}
+                                      color="#4A90E2"
+                                    />
+                                  </View>
+                                  <View style={styles2.driverInfo}>
+                                    <Text style={styles2.label}>
+                                      Driver's Name
+                                    </Text>
+                                    <Text style={styles2.driverName}>
+                                      {filteredData[item].name}
+                                    </Text>
+                                  </View>
                                 </View>
-                              ) : (
-                                <View style={styles.Imagecontainer}>
+                                <View style={styles2.divider} />
+                                <View style={styles2.dateSection}>
+                                  <View style={styles2.dateContainer}>
+                                    <View style={styles2.dateRow}>
+                                      <View style={styles2.iconWrapper}>
+                                        <Icon1
+                                          name="date"
+                                          size={20}
+                                          color="#4A90E2"
+                                        />
+                                      </View>
+                                      <View style={styles2.dateInfo}>
+                                        <Text style={styles2.dateLabel}>
+                                          Start Date
+                                        </Text>
+                                        <Text style={styles2.dateValue}>
+                                          {filteredData[item].ReportingDate}
+                                        </Text>
+                                      </View>
+                                    </View>
+
+                                    <View style={styles2.separator} />
+
+                                    <View style={styles2.dateRow}>
+                                      <View style={styles2.iconWrapper}>
+                                        <Icon1
+                                          name="date"
+                                          size={20}
+                                          color="#4A90E2"
+                                        />
+                                      </View>
+                                      <View style={styles2.dateInfo}>
+                                        <Text style={styles2.dateLabel}>
+                                          End Date
+                                        </Text>
+                                        <Text style={styles2.dateValue}>
+                                          {filteredData[item].endDate}
+                                        </Text>
+                                      </View>
+                                    </View>
+                                  </View>
+                                </View>
+                                <View style={styles2.divider} />
+                                <View style={styles2.distanceSection}>
+                                  <View style={styles2.headerContainer}>
+                                    <Icon
+                                      name="speedometer-outline"
+                                      size={24}
+                                      color="#4A90E2"
+                                    />
+                                    <Text style={styles2.headerText}>
+                                      Distance Travelled in Km
+                                    </Text>
+                                  </View>
+
+                                  <View style={styles2.metersContainer}>
+                                    <View style={styles2.meterCard}>
+                                      <View style={styles2.iconWrapper}>
+                                        <Icon
+                                          name="location"
+                                          size={20}
+                                          color="#4A90E2"
+                                        />
+                                      </View>
+                                      <View style={styles2.meterInfo}>
+                                        <Text style={styles2.meterLabel}>
+                                          Start Km
+                                        </Text>
+                                        <Text style={styles2.meterValue}>
+                                          {filteredData[item].startKm}
+                                        </Text>
+                                      </View>
+                                    </View>
+
+                                    <View style={styles2.separator} />
+
+                                    <View style={styles2.meterCard}>
+                                      <View style={styles2.iconWrapper}>
+                                        <Icon
+                                          name="location"
+                                          size={20}
+                                          color="#4A90E2"
+                                        />
+                                      </View>
+                                      <View style={styles2.meterInfo}>
+                                        <Text style={styles2.meterLabel}>
+                                          End Km
+                                        </Text>
+                                        <Text style={styles2.meterValue}>
+                                          {filteredData[item].endKm}
+                                        </Text>
+                                      </View>
+                                    </View>
+                                  </View>
+
+                                  <View style={styles2.totalDistance}>
+                                    <Text style={styles2.totalLabel}>
+                                      Total Distance
+                                    </Text>
+                                    <Text style={styles2.totalValue}>
+                                      {filteredData[item].endKm -
+                                        filteredData[item].startKm}{' '}
+                                      km
+                                    </Text>
+                                  </View>
+                                </View>
+                                <LineView />
+                                <View style={styles2.fuelSection}>
+                                  <View style={styles2.headerContainer}>
+                                    <View style={styles2.iconWrapper}>
+                                      <Icon3
+                                        name="fuel"
+                                        size={24}
+                                        color="#4A90E2"
+                                      />
+                                    </View>
+                                    <Text style={styles2.headerText}>
+                                      Fuel Usage{' '}
+                                      <Text style={styles2.subHeader}>
+                                        (in litres)
+                                      </Text>
+                                    </Text>
+                                  </View>
+
+                                  <View style={styles2.fuelMetricsContainer}>
+                                    <View style={styles2.fuelCard}>
+                                      <View style={styles2.fuelInfo}>
+                                        <Text style={styles2.fuelLabel}>
+                                          Start Fuel
+                                        </Text>
+                                        <View
+                                          style={styles2.fuelValueContainer}>
+                                          <Text style={styles2.fuelValue}>
+                                            {filteredData[item].starFuel}
+                                          </Text>
+                                          <Text
+                                            style={styles2.unitLabel}></Text>
+                                        </View>
+                                      </View>
+                                      <View
+                                        style={styles2.fuelIndicator('full')}
+                                      />
+                                    </View>
+
+                                    <View style={styles2.fuelCard}>
+                                      <View style={styles2.fuelInfo}>
+                                        <Text style={styles2.fuelLabel}>
+                                          End Fuel
+                                        </Text>
+                                        <View
+                                          style={styles2.fuelValueContainer}>
+                                          <Text style={styles2.fuelValue}>
+                                            {filteredData[item].endFuel}
+                                          </Text>
+                                          <Text
+                                            style={styles2.unitLabel}></Text>
+                                        </View>
+                                      </View>
+                                      <View
+                                        style={styles2.fuelIndicator('low')}
+                                      />
+                                    </View>
+                                  </View>
+
+                                  <View style={styles2.totalFuelUsage}>
+                                    <Text style={styles2.totalLabel}>
+                                      Total Fuel Consumed
+                                    </Text>
+                                    <View style={styles2.totalValueContainer}>
+                                      <Text style={styles2.totalValue}>
+                                        {fuelUsed}
+                                      </Text>
+                                      <Text style={styles2.totalUnit}>
+                                        Litres
+                                      </Text>
+                                    </View>
+                                  </View>
+                                </View>
+                                <LineView />
+                                <View style={styles2.container}>
+                                  {/* Fuel Cost Card */}
+                                  <View style={styles2.costCard}>
+                                    <View style={styles2.costHeader}>
+                                      <View style={styles2.iconWrapper}>
+                                        <Icon3
+                                          name="currency-rupee"
+                                          size={24}
+                                          color="#4A90E2"
+                                        />
+                                      </View>
+                                      <Text style={styles2.costLabel}>
+                                        Fuel Costs
+                                      </Text>
+                                    </View>
+                                    <Text style={styles2.costValue}>
+                                      ₹ {filteredData[item].FuelCost}
+                                    </Text>
+                                  </View>
+
+                                  <View style={styles2.divider} />
+
+                                  {/* Details Section */}
+                                  <View style={styles2.detailsSection}>
+                                    {/* Location Details */}
+                                    <View style={styles2.detailCard}>
+                                      <View style={styles2.cardHeader}>
+                                        <MapPin size={20} color="#4A90E2" />
+                                        <Text style={styles2.cardTitle}>
+                                          Location Details
+                                        </Text>
+                                      </View>
+
+                                      <View style={styles2.detailRow}>
+                                        <Text style={styles2.detailLabel}>
+                                          Address
+                                        </Text>
+                                        <Text style={styles2.detailValue}>
+                                          {filteredData[item].address}
+                                        </Text>
+                                      </View>
+
+                                      <View style={styles2.detailRow}>
+                                        <Text style={styles2.detailLabel}>
+                                          City
+                                        </Text>
+                                        <Text style={styles2.detailValue}>
+                                          {filteredData[item].city}
+                                        </Text>
+                                      </View>
+                                    </View>
+
+                                    {/* Duty Instructions */}
+                                    <View style={styles2.detailCard}>
+                                      <View style={styles2.cardHeader}>
+                                        <FileText size={20} color="#4A90E2" />
+                                        <Text style={styles2.cardTitle}>
+                                          Duty Instructions
+                                        </Text>
+                                      </View>
+                                      <Text style={styles2.instructionsText}>
+                                        {filteredData[item].dutyInstructions}
+                                      </Text>
+                                    </View>
+
+                                    {/* Vehicle Details */}
+                                    <View style={styles2.detailCard}>
+                                      <View style={styles2.cardHeader}>
+                                        <Car size={20} color="#4A90E2" />
+                                        <Text style={styles2.cardTitle}>
+                                          Vehicle Details
+                                        </Text>
+                                      </View>
+                                      <Text style={styles2.vehicleText}>
+                                        {filteredData[item].vehicleDetails}
+                                      </Text>
+                                    </View>
+                                  </View>
+                                </View>
+                                <View>
+                                  <LineView />
                                   <Text
                                     style={{
-                                      margin: 8,
                                       fontSize: 18,
+                                      fontWeight: 'bold',
                                       color: '#000000',
                                     }}>
-                                    No signature available
+                                    Driver's Signature:
+                                  </Text>
+                                  {filteredData[item].passengersSignature !==
+                                  undefined ? (
+                                    <View style={styles.Imagecontainer}>
+                                      <Image
+                                        source={{
+                                          uri: filteredData[item]
+                                            .driversSignature,
+                                        }}
+                                        style={styles.image}
+                                        resizeMode="contain"
+                                      />
+                                    </View>
+                                  ) : (
+                                    <View style={styles.Imagecontainer}>
+                                      <Text
+                                        style={{
+                                          margin: 8,
+                                          fontSize: 18,
+                                          color: '#000000',
+                                        }}>
+                                        No signature available
+                                      </Text>
+                                    </View>
+                                  )}
+                                </View>
+                                <View style={styles.line}></View>
+                                <View style={{flexDirection: 'row'}}>
+                                  <Icon
+                                    name="person-circle"
+                                    size={35}
+                                    color={'#0000FF'}
+                                  />
+                                  <Text
+                                    style={{
+                                      fontSize: 18,
+                                      fontWeight: 'bold',
+                                      color: '#000000',
+                                      marginVertical: 5,
+                                    }}>
+                                    {passengerKey}:{' '}
                                   </Text>
                                 </View>
-                              )}
-                            </View>
-                            <View style={styles.line}></View>
-                            <View style={{flexDirection: 'row'}}>
-                              <Icon
-                                name="person-circle"
-                                size={35}
-                                color={'#0000FF'}
-                              />
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  fontWeight: 'bold',
-                                  color: '#000000',
-                                  marginVertical: 5,
-                                }}>
-                                {passengerKey}:{' '}
-                              </Text>
-                            </View>
-                            <LineView />
-                            <View style={{flexDirection: 'row'}}>
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  fontWeight: 'bold',
-                                  color: '#000000',
-                                  marginVertical: 5,
-                                }}>
-                                Name:{' '}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontSize: 18,
+                                <LineView />
+                                <View style={{flexDirection: 'row'}}>
+                                  <Text
+                                    style={{
+                                      fontSize: 18,
+                                      fontWeight: 'bold',
+                                      color: '#000000',
+                                      marginVertical: 5,
+                                    }}>
+                                    Name:{' '}
+                                  </Text>
+                                  <Text
+                                    style={{
+                                      fontSize: 18,
 
-                                  color: '#000000',
-                                  marginVertical: 5,
-                                }}>
-                                {
-                                  filteredData[item].PassengerData[passengerKey]
-                                    .PassengerName
-                                }
-                              </Text>
-                            </View>
-                            <View style={{flexDirection: 'row'}}>
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  fontWeight: 'bold',
-                                  color: '#000000',
-                                  marginVertical: 5,
-                                }}>
-                                Destination Address:{' '}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontSize: 18,
+                                      color: '#000000',
+                                      marginVertical: 5,
+                                    }}>
+                                    {
+                                      filteredData[item].PassengerData[
+                                        passengerKey
+                                      ].PassengerName
+                                    }
+                                  </Text>
+                                </View>
+                                <View style={{flexDirection: 'row'}}>
+                                  <Text
+                                    style={{
+                                      fontSize: 18,
+                                      fontWeight: 'bold',
+                                      color: '#000000',
+                                      marginVertical: 5,
+                                    }}>
+                                    Destination Address:{' '}
+                                  </Text>
+                                  <Text
+                                    style={{
+                                      fontSize: 18,
 
-                                  color: '#000000',
-                                  marginVertical: 5,
-                                }}>
-                                {
-                                  filteredData[item].PassengerData[passengerKey]
-                                    .DestinationAddress
-                                }
-                              </Text>
-                            </View>
-                            <View style={{flexDirection: 'row'}}>
-                              <Text
-                                style={{
-                                  fontSize: 18,
-                                  fontWeight: 'bold',
-                                  color: '#000000',
-                                  marginVertical: 5,
-                                }}>
-                                Starting Address:{' '}
-                              </Text>
-                              <Text
-                                style={{
-                                  fontSize: 18,
+                                      color: '#000000',
+                                      marginVertical: 5,
+                                    }}>
+                                    {
+                                      filteredData[item].PassengerData[
+                                        passengerKey
+                                      ].DestinationAddress
+                                    }
+                                  </Text>
+                                </View>
+                                <View style={{flexDirection: 'row'}}>
+                                  <Text
+                                    style={{
+                                      fontSize: 18,
+                                      fontWeight: 'bold',
+                                      color: '#000000',
+                                      marginVertical: 5,
+                                    }}>
+                                    Starting Address:{' '}
+                                  </Text>
+                                  <Text
+                                    style={{
+                                      fontSize: 18,
 
-                                  color: '#000000',
-                                  marginVertical: 5,
-                                }}>
-                                {
-                                  filteredData[item].PassengerData[passengerKey]
-                                    .StartingAddress
-                                }
-                              </Text>
-                            </View>
-                            <LineView />
-                          </View>
-                        ),
-                      )}
-                    </View>
-                    <LineView />
-                    <View>
-                      <Text
-                        style={{
-                          fontSize: 18,
-                          fontWeight: 'bold',
-                          color: '#000000',
-                        }}>
-                        Passenger's Signature:
-                      </Text>
-                      {filteredData[item].passengersSignature !== undefined ? (
-                        <View style={styles.Imagecontainer}>
-                          <Image
-                            source={{
-                              uri: filteredData[item].passengersSignature,
-                            }}
-                            style={styles.image}
-                            resizeMode="contain"
-                          />
+                                      color: '#000000',
+                                      marginVertical: 5,
+                                    }}>
+                                    {
+                                      filteredData[item].PassengerData[
+                                        passengerKey
+                                      ].StartingAddress
+                                    }
+                                  </Text>
+                                </View>
+                                <LineView />
+                              </View>
+                            ),
+                          )}
                         </View>
-                      ) : (
-                        <View style={styles.Imagecontainer}>
+                        <LineView />
+                        <View>
                           <Text
                             style={{
-                              margin: 8,
                               fontSize: 18,
-
+                              fontWeight: 'bold',
                               color: '#000000',
                             }}>
-                            No signature available
+                            Passenger's Signature:
                           </Text>
+                          {filteredData[item].passengersSignature !==
+                          undefined ? (
+                            <View style={styles.Imagecontainer}>
+                              <Image
+                                source={{
+                                  uri: filteredData[item].passengersSignature,
+                                }}
+                                style={styles.image}
+                                resizeMode="contain"
+                              />
+                            </View>
+                          ) : (
+                            <View style={styles.Imagecontainer}>
+                              <Text
+                                style={{
+                                  margin: 8,
+                                  fontSize: 18,
+
+                                  color: '#000000',
+                                }}>
+                                No signature available
+                              </Text>
+                            </View>
+                          )}
                         </View>
-                      )}
-                    </View>
-                    <LineView />
-                    <Text
-                      style={{
-                        margin: 8,
-                        fontSize: 18,
-                        fontWeight: 'bold',
-                        color: '#000000',
-                      }}>
-                      Feedbacks -
-                    </Text>
-                    {filteredData[item].Feedback !== undefined ? (
-                      <View style={styles.feedbackcard}>
+                        <LineView />
                         <Text
                           style={{
                             margin: 8,
                             fontSize: 18,
-
+                            fontWeight: 'bold',
                             color: '#000000',
                           }}>
-                          {filteredData[item].Feedback}
+                          Feedbacks -
                         </Text>
+                        {filteredData[item].Feedback !== undefined ? (
+                          <View style={styles.feedbackcard}>
+                            <Text
+                              style={{
+                                margin: 8,
+                                fontSize: 18,
+
+                                color: '#000000',
+                              }}>
+                              {filteredData[item].Feedback}
+                            </Text>
+                          </View>
+                        ) : (
+                          <Text>Feedbacks Not available</Text>
+                        )}
                       </View>
-                    ) : (
-                      <Text>Feedbacks Not available</Text>
                     )}
                   </View>
-                )}
-              </View>
-            </TouchableOpacity>
-          )}
+                </View>
+              </TouchableOpacity>
+            );
+          }}
           keyExtractor={item => item}
         />
       )}
-    </View>
+    </ScrollView>
   );
 };
-
+const styles2 = StyleSheet.create({
+  container: {
+    padding: 16,
+  },
+  costCard: {
+    backgroundColor: '#F0F7FF',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 16,
+  },
+  costHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  iconWrapper: {
+    backgroundColor: '#FFFFFF',
+    padding: 8,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  costLabel: {
+    fontSize: 16,
+    color: '#666666',
+    fontWeight: '500',
+  },
+  costValue: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#333333',
+    marginTop: 4,
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#E8EDF3',
+    marginVertical: 16,
+  },
+  detailsSection: {
+    gap: 16,
+  },
+  detailCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E8EDF3',
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333333',
+    marginLeft: 8,
+  },
+  detailRow: {
+    marginBottom: 8,
+  },
+  detailLabel: {
+    fontSize: 14,
+    color: '#666666',
+    marginBottom: 4,
+  },
+  detailValue: {
+    fontSize: 15,
+    color: '#333333',
+    lineHeight: 22,
+  },
+  instructionsText: {
+    fontSize: 15,
+    color: '#333333',
+    lineHeight: 22,
+  },
+  vehicleText: {
+    fontSize: 15,
+    color: '#333333',
+    lineHeight: 22,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    padding: 5,
+  },
+  expandedContent: {
+    marginTop: 15,
+  },
+  cardBody: {
+    backgroundColor: '#FAFAFA',
+    borderRadius: 8,
+    padding: 8,
+  },
+  driverSection: {
+    marginBottom: 16,
+  },
+  dateSection: {
+    marginVertical: 12,
+  },
+  dateContainer: {
+    backgroundColor: '#F8F9FB',
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#E8EDF3',
+  },
+  distanceSection: {
+    marginVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E8EDF3',
+  },
+  fuelSection: {
+    marginVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 16,
+    paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E8EDF3',
+  },
+  iconWrapper: {
+    backgroundColor: '#EBF3FF',
+    padding: 8,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333333',
+  },
+  subHeader: {
+    fontSize: 14,
+    color: '#666666',
+    fontWeight: '400',
+  },
+  fuelMetricsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 12,
+  },
+  fuelCard: {
+    flex: 1,
+    backgroundColor: '#F8F9FB',
+    borderRadius: 8,
+    padding: 12,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  fuelInfo: {
+    zIndex: 1,
+  },
+  fuelLabel: {
+    fontSize: 13,
+    color: '#666666',
+    marginBottom: 4,
+  },
+  fuelValueContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  fuelValue: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#333333',
+  },
+  unitLabel: {
+    fontSize: 14,
+    color: '#666666',
+    marginLeft: 4,
+  },
+  fuelIndicator: level => ({
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 4,
+    backgroundColor: level === 'full' ? '#4CAF50' : '#FF9800',
+  }),
+  totalFuelUsage: {
+    marginTop: 16,
+    backgroundColor: '#F0F7FF',
+    borderRadius: 8,
+    padding: 12,
+    alignItems: 'center',
+  },
+  totalLabel: {
+    fontSize: 14,
+    color: '#4A90E2',
+    marginBottom: 4,
+  },
+  totalValueContainer: {
+    flexDirection: 'row',
+    alignItems: 'baseline',
+  },
+  totalValue: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#333333',
+  },
+  totalUnit: {
+    fontSize: 14,
+    color: '#666666',
+    marginLeft: 4,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333333',
+    marginLeft: 8,
+  },
+  metersContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+  },
+  meterCard: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    backgroundColor: '#F8F9FB',
+    borderRadius: 8,
+  },
+  iconWrapper: {
+    backgroundColor: '#EBF3FF',
+    padding: 8,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  meterInfo: {
+    flex: 1,
+  },
+  meterLabel: {
+    fontSize: 13,
+    color: '#666666',
+    marginBottom: 4,
+  },
+  meterValue: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333333',
+  },
+  separator: {
+    width: 16,
+  },
+  totalDistance: {
+    marginTop: 16,
+    padding: 12,
+    backgroundColor: '#F0F7FF',
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  totalLabel: {
+    fontSize: 14,
+    color: '#4A90E2',
+    marginBottom: 4,
+  },
+  totalValue: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#333333',
+  },
+  dateRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  iconWrapper: {
+    backgroundColor: '#EBF3FF',
+    padding: 8,
+    borderRadius: 8,
+    marginRight: 12,
+  },
+  dateInfo: {
+    flex: 1,
+  },
+  dateLabel: {
+    fontSize: 13,
+    color: '#666666',
+    marginBottom: 4,
+    fontWeight: '500',
+  },
+  dateValue: {
+    fontSize: 16,
+    color: '#333333',
+    fontWeight: '600',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#E8EDF3',
+    marginVertical: 8,
+  },
+  driverHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    padding: 12,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  iconContainer: {
+    backgroundColor: '#F0F7FF',
+    padding: 8,
+    borderRadius: 50,
+    marginRight: 12,
+  },
+  driverInfo: {
+    flex: 1,
+  },
+  label: {
+    fontSize: 14,
+    color: '#666666',
+    marginBottom: 4,
+  },
+  driverName: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333333',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#E5E5E5',
+    marginTop: 16,
+  },
+  header: {
+    marginBottom: 20,
+    paddingVertical: 8,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 8,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333333',
+    textAlign: 'center',
+    marginVertical: 8,
+  },
+  pickerContainer: {
+    backgroundColor: '#F5F5F5',
+    borderRadius: 8,
+    marginBottom: 20,
+    overflow: 'hidden',
+  },
+  picker: {
+    height: 50,
+    width: Dimensions.get('window').width - 32, // Accounting for container padding
+    backgroundColor: 'transparent',
+  },
+  expenditureContainer: {
+    backgroundColor: '#F8F8F8',
+    borderRadius: 8,
+    padding: 16,
+    marginVertical: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  subText: {
+    color: '#666666',
+    fontSize: 14,
+    marginVertical: 8,
+    textAlign: 'center',
+  },
+  amountText: {
+    color: '#000000',
+    fontSize: 24,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginTop: 8,
+  },
+  touchable: {
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  cardContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#F0F0F0',
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  dateContainer: {
+    flex: 1,
+  },
+  dateLabel: {
+    fontSize: 14,
+    color: '#666666',
+    marginBottom: 4,
+  },
+  dateValue: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333333',
+  },
+  expandButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F9FF',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+  },
+  expandText: {
+    fontSize: 14,
+    color: '#4A90E2',
+    marginRight: 4,
+    fontWeight: '500',
+  },
+});
 const styles = StyleSheet.create({
   container: {
     flex: 1,

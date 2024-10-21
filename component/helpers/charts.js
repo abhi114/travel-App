@@ -72,9 +72,17 @@ const Linecharts = ({name}) => {
     backgroundGradientFrom: '#2c2c2e',
     backgroundGradientTo: '#3a3a3c',
     decimalPlaces: 0,
-    color: (opacity = 1) => `rgba(140, 140, 140, ${opacity})`,
+    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`, // Highlighted bar colors
     labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    style: {borderRadius: 16},
+    style: {
+      borderRadius: 16,
+    },
+    propsForBackgroundLines: {
+      strokeDasharray: '', // Removes dashed lines
+      stroke: '#555', // Adjust line color for contrast
+    },
+    fillShadowGradient: '#1a73e8', // Adds color to bar fill
+    fillShadowGradientOpacity: 0.8, // Increase bar fill opacity for more highlight
     propsForDots: {
       r: '5',
       strokeWidth: '2',
@@ -115,6 +123,9 @@ const Linecharts = ({name}) => {
             width={Dimensions.get('window').width}
             height={228}
             chartConfig={chartConfig}
+            barPercentage={0.7} // Increase to make bars wider
+            fromZero={true} // Makes bars start from zero
+            showValuesOnTopOfBars={true} // Option to show values on top of bars
           />
         </View>
       )}
