@@ -82,8 +82,8 @@ const Sign = ({id, Rprtdate, mainData}) => {
             fontSize: 15,
             alignSelf: 'center',
             color: '#000000',
-            fontWeight:'bold',
-            margin:5
+            fontWeight: 'bold',
+            margin: 5,
           }}>
           Verification Signature
         </Text>
@@ -92,6 +92,7 @@ const Sign = ({id, Rprtdate, mainData}) => {
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: 15,
+            margin: 5,
           }}>
           Signature - Driver's Signature
         </Text>
@@ -100,7 +101,18 @@ const Sign = ({id, Rprtdate, mainData}) => {
         ) : (
           <View>
             <SignatureCapture
-              style={[{flex: 1, width: 350, height: 300}, styles.signature]}
+              style={[
+                {
+                  flex: 1,
+                  width: 300,
+                  height: 300,
+                  borderRadius:20,
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                },
+              ]}
               ref={signRef}
               onSaveEvent={_onSaveEvent}
               onDragEvent={_onDragEvent}
@@ -140,15 +152,16 @@ const Sign = ({id, Rprtdate, mainData}) => {
             alignItems: 'center',
             justifyContent: 'center',
             fontSize: 15,
+            margin:5,
           }}>
           Signature - Passenger's Signature
         </Text>
         {signSaveStart ? (
           <ActivityIndicator />
         ) : (
-          <View>
+          <View style={{overflow:'hidden'}}>
             <SignatureCapture
-              style={[{flex: 1, width: 350, height: 300}, styles.signature]}
+              style={[{flex: 1, width: 300, height: 300,justifyContent:'center',alignContent:'center',alignItems:'center',alignSelf:'center'}]}
               ref={signRef}
               onSaveEvent={_onSaveEvent}
               onDragEvent={_onDragEvent}
@@ -161,15 +174,25 @@ const Sign = ({id, Rprtdate, mainData}) => {
               maxStrokeWidth={4}
               viewMode={'portrait'}
             />
-            
-            <View style={{flex: 1, flexDirection: 'row'}}>
-              <TouchableHighlight style={styles.buttonStyle} onPress={saveSign}>
+
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                padding: 20,
+              }}>
+              <TouchableHighlight
+                style={[styles.buttonStyle, styles.saveButton]}
+                onPress={saveSign}
+                underlayColor="#0056b3">
                 <Text style={styles.buttonText}>Save And Exit</Text>
               </TouchableHighlight>
 
               <TouchableHighlight
-                style={styles.buttonStyle}
-                onPress={resetSign}>
+                style={[styles.buttonStyle, styles.resetButton]}
+                onPress={resetSign}
+                underlayColor="#d9534f">
                 <Text style={styles.buttonText}>Reset</Text>
               </TouchableHighlight>
             </View>
@@ -325,6 +348,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
+
   container: {
     flex: 1,
   },
@@ -468,6 +492,22 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
+  },
+  buttonStyle: {
+    flex: 1,
+    marginHorizontal: 10,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ADD8E6',
+    marginVertical:10,
+  },
+
+  buttonText: {
+    color: '#000',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 export default Duty

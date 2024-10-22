@@ -286,12 +286,12 @@ const InfoPage = ({route}) => {
           </TouchableOpacity>
         </View>
         <Text style={styles.headerText}>Journey Details</Text>
-        <View style={styles.cardContainer}>
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Full Name *</Text>
-            <Text style={styles.textInput}>{driversdta.name}</Text>
-          </View>
-        </View>
+         <View style={styles.cardContainer}>
+      <View style={styles.card}>
+        <Text style={styles.sectionTitle}>Full Name *</Text>
+        <Text style={styles.textInput}>{driversdta.name}</Text>
+      </View>
+    </View>
 
         <View style={styles.cardContainer}>
           <View style={styles.card}>
@@ -602,8 +602,8 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#252F40',
     textAlign: 'center',
-    justifyContent:'center',
-    alignSelf:'center'
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   container: {
     flex: 1,
@@ -665,7 +665,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 5,
     elevation: 5,
-    marginBottom:25
+    marginBottom: 25,
   },
 
   proceedButton: {
@@ -691,7 +691,8 @@ export const styles = StyleSheet.create({
     borderColor: 'black',
     borderWidth: 1,
     borderRadius: 10, // Adjust corner curvature here
-    fontWeight:'bold',
+    fontWeight: 'bold',
+    color: '#000000',
     padding: 10,
     margin: 5,
     underlineStyle: {

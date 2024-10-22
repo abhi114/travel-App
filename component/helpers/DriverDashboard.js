@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Animated,
   Easing,
+  Image,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LottieView from 'lottie-react-native';
@@ -39,7 +40,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
     <View style={styles.container}>
       {/* Title Animation */}
       <TouchableOpacity style={styles.logoutButton} onPress={logout}>
-        <Text style={{color: '#ffffff'}}>Logout</Text>
+        <Text style={{color: '#fff'}}>Logout</Text>
       </TouchableOpacity>
       <LottieView
         source={require('../../assets/lottie-animation.json')}
@@ -51,6 +52,10 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
       <Animated.View style={{transform: [{scale: scaleAnim}]}}>
         <Text style={styles.titleText}>Welcome To Drive</Text>
       </Animated.View>
+      <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',gap:10,marginVertical:10}}>
+        <Image source={require('../../assets/profile.png')} style={{width:40,height:40}}/>
+        <Text style={styles.titleText}>{data?.name}</Text>
+      </View>
 
       {/* Buttons appear after the animation */}
       <Animated.View style={{opacity: opacityAnim}}>
@@ -83,15 +88,21 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: '#ffffff',
     fontFamily: 'Poppins-Bold',
-    marginBottom: 50,
+    
+   
   },
   logoutButton: {
     position: 'absolute',
     top: 20,
     right: 20,
-    padding: 10,
-    backgroundColor: '#FF3D00',
+    backgroundColor: '#ff4757', // Optional color
+    paddingVertical: 10,
+    paddingHorizontal: 30,
     borderRadius: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.3,
+    shadowOffset: {width: 0, height: 2},
+    shadowRadius: 5,
   },
   buttonPrimary: {
     backgroundColor: '#2196F3',
@@ -100,7 +111,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
-
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOpacity: 0.4,
@@ -114,7 +124,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
-
     justifyContent: 'center',
     shadowColor: '#000',
     shadowOpacity: 0.2,
@@ -128,5 +137,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
   },
 });
+
 
 export default DriverDashboard;

@@ -394,10 +394,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     marginBottom: 8,
+    fontWeight:'bold'
   },
   input: {
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: '#ADD8E6',
     borderRadius: 8,
     padding: 12,
     fontSize: 16,
@@ -411,7 +412,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
-    marginBottom:20
+    marginBottom: 20,
   },
   footerButton: {
     flex: 1,

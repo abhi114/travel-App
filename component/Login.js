@@ -100,6 +100,7 @@ const Login = ({route}) => {
                   JSON.stringify({emailId, id, data}),
                 );
                 setLoginActivityIndicator(false);
+                console.log("data is" + JSON.stringify(data));
                 navigation.reset({
                   index: 0,
                   routes: [{name: 'ButtonPage', params: {emailId, id, data}}],
