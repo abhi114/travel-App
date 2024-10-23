@@ -8,6 +8,7 @@ import {
   Animated,
   Easing,
   Image,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LottieView from 'lottie-react-native';
@@ -16,7 +17,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
   const navigation = useNavigation();
   const scaleAnim = useRef(new Animated.Value(0)).current; // Initial scale for the title
   const opacityAnim = useRef(new Animated.Value(0)).current; // Initial opacity for buttons
-
+  const width = Dimensions.get('screen').width;
   useEffect(() => {
     // Title Animation
     Animated.timing(scaleAnim, {
@@ -88,12 +89,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: '#ffffff',
     fontFamily: 'Poppins-Bold',
-    
-   
   },
   logoutButton: {
     position: 'absolute',
-    top: 20,
+    top: Dimensions.get('screen').width / 10,
     right: 20,
     backgroundColor: '#ff4757', // Optional color
     paddingVertical: 10,
@@ -103,6 +102,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowOffset: {width: 0, height: 2},
     shadowRadius: 5,
+    marginRight:5
   },
   buttonPrimary: {
     backgroundColor: '#2196F3',

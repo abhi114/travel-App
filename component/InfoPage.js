@@ -8,6 +8,7 @@ import {
   TextInput,
   Button,
   Alert,
+  FlatList,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Replace with your icon library
 import Icon1 from 'react-native-vector-icons/Entypo'; // Replace with your icon library
@@ -36,6 +37,75 @@ const InfoPage = ({route}) => {
       'December',
     ];
     const currentMonthName = monthNames[new Date().getMonth()];
+    const importantCitiesUP = [
+      'Agra',
+      'Aligarh',
+      'Allahabad',
+      'Ambedkarnagar',
+      'Auraiya',
+      'Ayodhya',
+      'Azamgarh',
+      'Badaun',
+      'Baghpat',
+      'Bahraich',
+      'Ballia',
+      'Balrampur',
+      'Banda',
+      'Barabanki',
+      'Bareilly',
+      'Bijnor',
+      'Budaun',
+      'Bulandshahr',
+      'Chandauli',
+      'Chitrakoot',
+      'Deoria',
+      'Etah',
+      'Etawah',
+      'Farrukhabad',
+      'Fatehpur',
+      'Firozabad',
+      'Gautam Buddha Nagar (Noida)',
+      'Ghaziabad',
+      'Ghazipur',
+      'Gonda',
+      'Gorakhpur',
+      'Hamirpur',
+      'Hapur',
+      'Hardoi',
+      'Hathras',
+      'Jalaun',
+      'Jaunpur',
+      'Jhansi',
+      'Kannauj',
+      'Kanpur',
+      'Kanshiram Nagar',
+      'Kushinagar',
+      'Lakhimpur Kheri',
+      'Lucknow',
+      'Maharajganj',
+      'Mahoba',
+      'Mainpuri',
+      'Mathura',
+      'Mau',
+      'Mirzapur',
+      'Moradabad',
+      'Muzaffarnagar',
+      'Pilibhit',
+      'Pratapgarh',
+      'Raebareli',
+      'Rampur',
+      'Saharanpur',
+      'Sambhal',
+      'Shahjahanpur',
+      'Shrawasti',
+      'Siddharthnagar',
+      'Sitapur',
+      'Sonbhadra',
+      'Sultanpur',
+      'Unnao',
+      'Varanasi',
+    ];
+
   const navigate = useNavigation();
   const [Rprtdate,setRprDate] = useState('');
   const [isTimePickerVisible, setIsTimePickerVisible] = useState(false);
@@ -51,7 +121,27 @@ const InfoPage = ({route}) => {
   const [destinationAddress,setDestinationAddress] = useState(['']);
   const [vehicleDetails,setvehicleDetails]= useState('');
     const [dutyInstructions,setDutyInstructions] =useState('');
+     //const [city, setCity] = useState('');
+     const [suggestions, setSuggestions] = useState([]);
     const [views, setViews] = useState([{}]);
+    const handleInputChange = input => {
+      setCity(input);
+
+      if (input) {
+        const filteredSuggestions = importantCitiesUP.filter(cityName =>
+          cityName.toLowerCase().includes(input.toLowerCase()),
+        );
+        setSuggestions(filteredSuggestions);
+      } else {
+        setSuggestions([]);
+      }
+    };
+
+    const onSelectSuggestion = suggestion => {
+      console.log('press');
+      setCity(suggestion);
+      setSuggestions([]); // Clear suggestions after selection
+    };
     const logout = () => {
       Alert.alert('Confirm Logout', 'Are you sure you want to log out?', [
         {
@@ -86,15 +176,18 @@ const InfoPage = ({route}) => {
       setIsDatePickerVisible(true);
     };
     const handleConfirmDate = date => {
-      const formattedDate = `${pad(
-        date.getDate(),
-      )}`;
-      setRprDate(formattedDate);
+      const formattedDate = `${pad(date.getDate())}-${pad(
+        date.getMonth() + 1, // getMonth() returns 0-11, so we add 1 for a 1-12 range
+      )}-${date.getFullYear()}`;
+      
+      const index = monthNames.indexOf(month) + 1;
+      setRprDate(formattedDate );
       setIsDatePickerVisible(false);
     };
 
     const handleCancelDate = () => {
       setIsDatePickerVisible(false);
+      //setRprDate('');
     };
     const handleConfirm = time => {
       const formattedTime = `${pad(time.getHours() % 12 || 12)}:${pad(
@@ -282,16 +375,16 @@ const InfoPage = ({route}) => {
               borderColor: '#0000FF',
             }}>
             <Icon3 name="logout" size={20} color={'#a2b223'} />
-            <Text style={[{marginRight: 5}]}>Logout</Text>
+            <Text style={[{marginRight: 5, color: '#000000'}]}>Logout</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.headerText}>Journey Details</Text>
-         <View style={styles.cardContainer}>
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>Full Name *</Text>
-        <Text style={styles.textInput}>{driversdta.name}</Text>
-      </View>
-    </View>
+        <View style={styles.cardContainer}>
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Full Name *</Text>
+            <Text style={styles.textInput}>{driversdta.name}</Text>
+          </View>
+        </View>
 
         <View style={styles.cardContainer}>
           <View style={styles.card}>
@@ -320,6 +413,7 @@ const InfoPage = ({route}) => {
                 value={Rprtdate}
                 placeholder="Enter in 00 th/st "
                 style={styles.textInput}
+                placeholderTextColor={'#8e8e8e'}
               />
               <TouchableOpacity
                 style={[
@@ -334,7 +428,7 @@ const InfoPage = ({route}) => {
                 ]}
                 onPress={handleDatePicker}>
                 <Icon3 name="calendar" size={30} color="#4F8EF7" />
-                <Text>Select Date </Text>
+                <Text style={{color: '#000'}}>Select Date </Text>
               </TouchableOpacity>
             </View>
             {isDatePickerVisible && (
@@ -367,6 +461,7 @@ const InfoPage = ({route}) => {
                 value={RprtTime}
                 placeholder="Enter in 00:00 am/pm"
                 style={styles.textInput}
+                placeholderTextColor={'#8e8e8e'}
               />
               <TouchableOpacity
                 style={[
@@ -381,7 +476,7 @@ const InfoPage = ({route}) => {
                 ]}
                 onPress={handleTimePicker}>
                 <Icon4 name="access-time" size={30} color="#4F8EF7" />
-                <Text>Select Time </Text>
+                <Text style={{color: '#000'}}>Select Time </Text>
               </TouchableOpacity>
             </View>
             {isTimePickerVisible && (
@@ -404,6 +499,7 @@ const InfoPage = ({route}) => {
               value={month}
               placeholder="Enter month"
               style={styles.textInput}
+              placeholderTextColor={'#8e8e8e'}
             />
           </View>
         </View>
@@ -466,6 +562,7 @@ const InfoPage = ({route}) => {
                   onChangeText={setAddress}
                   placeholder="Enter address"
                   style={styles.textInput}
+                  placeholderTextColor={'#8e8e8e'}
                 />
               </View>
               <View style={styles.sectionIconContainer}>
@@ -480,10 +577,28 @@ const InfoPage = ({route}) => {
             <Text style={styles.sectionTitle}>Serving city *</Text>
             <TextInput
               value={city}
-              onChangeText={setCity}
+              onChangeText={handleInputChange}
               placeholder="Enter City"
               style={styles.textInput}
             />
+            {suggestions.length > 0 ? (
+            <FlatList
+              data={suggestions}
+              keyExtractor={item => item}
+              renderItem={({item}) => (
+                <TouchableOpacity
+                  onPress={() => onSelectSuggestion(item)}
+                  style={styles.suggestionItem}
+                  activeOpacity={0.7}>
+                  <Text style={styles.suggestionText}>{item}</Text>
+                </TouchableOpacity>
+              )}
+              style={styles.suggestionList}
+              showsVerticalScrollIndicator={false}
+              bounces={false}
+              ItemSeparatorComponent={() => <View style={styles.separator} />}
+            />
+            ) : null}
           </View>
         </View>
 
@@ -600,7 +715,7 @@ export const styles = StyleSheet.create({
   headerText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#252F40',
+    color: '#000000',
     textAlign: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
@@ -617,6 +732,36 @@ export const styles = StyleSheet.create({
   cardContainer: {
     marginVertical: 10,
     marginHorizontal: 20,
+  },
+  suggestionList: {
+    maxHeight: 200,
+    borderRadius: 25,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    marginHorizontal: 2,
+  },
+  suggestionItem: {
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius:15
+  },
+  suggestionText: {
+    fontSize: 16,
+    color: '#2C3E50',
+    fontWeight: '400',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#E8EDF1',
+    marginHorizontal: 16,
   },
   card: {
     backgroundColor: '#f0f0f0',
