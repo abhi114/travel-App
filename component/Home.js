@@ -66,6 +66,7 @@ const Home = ({route}) => {
          const fuelData = {
            [`monthExpenditure.${month}`]: totalCost.toString(),
          };
+         console.log("fuel data is" + JSON.stringify(fuelData));
          await userRef.update(fuelData); // Set user data in the document
          console.log('fuel data updated');
        } else {
@@ -83,8 +84,8 @@ const Home = ({route}) => {
         mainData[Rprtdate].endKm = endkmvalue
         mainData[Rprtdate].starFuel = startfuelValue + `lit`;
         mainData[Rprtdate].endFuel = endfuelValue + `lit`;
-         mainData[Rprtdate].FuelCost = `Rs `+fuelcost;
-          mainData[Rprtdate].endDate = getCurrentTime();
+        mainData[Rprtdate].FuelCost = `Rs `+fuelcost;
+        mainData[Rprtdate].endDate = getCurrentTime();
         const updatedUserData = mainData // Add new key-value pair
         console.log("updated data is" + JSON.stringify(updatedUserData));
         await userRef.set(updatedUserData, {merge: true}); // Set user data in the document

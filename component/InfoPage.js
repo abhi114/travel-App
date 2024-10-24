@@ -18,6 +18,7 @@ import Icon3 from 'react-native-vector-icons/AntDesign';
 import Icon4 from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+
 import { LineView } from './helpers/helpers';
 
 const InfoPage = ({route}) => {
@@ -180,7 +181,8 @@ const InfoPage = ({route}) => {
         date.getMonth() + 1, // getMonth() returns 0-11, so we add 1 for a 1-12 range
       )}-${date.getFullYear()}`;
       
-      const index = monthNames.indexOf(month) + 1;
+      const month = monthNames[date.getMonth()]
+      setmonth(month);
       setRprDate(formattedDate );
       setIsDatePickerVisible(false);
     };
@@ -210,7 +212,7 @@ const InfoPage = ({route}) => {
      const handleendCancel = () => {
        setIsEndTimePickerVisible(false);
      };
-    const removeView = () => {
+    const removeView = (index) => {
       if (views.length > 1) {
         setViews(views.slice(0, -1));
         setPassengerNames(passengerNames.filter((_, i) => i !== index));
@@ -359,138 +361,124 @@ const InfoPage = ({route}) => {
   };
   return (
     <View style={styles.outerContainer}>
-      <ScrollView style={styles.container}>
-        <View
-          style={[
-            styles.buttonContainer,
-            {flexDirection: 'row', justifyContent: 'space-between'},
-          ]}>
-          <Text style={styles.headerText}>Your Details</Text>
+      <ScrollView style={styles.container} className="flex-1 bg-gray-50 ">
+        <View className="w-full px-4 py-3 flex flex-row justify-between items-center bg-white border-b border-gray-100">
+          <Text className="text-xl font-semibold text-gray-800">
+            Your Details
+          </Text>
+
           <TouchableOpacity
             onPress={logout}
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 2,
-              borderColor: '#0000FF',
-            }}>
-            <Icon3 name="logout" size={20} color={'#a2b223'} />
-            <Text style={[{marginRight: 5, color: '#000000'}]}>Logout</Text>
+            className="flex flex-row items-center space-x-2 px-3 py-2 rounded-lg active:bg-gray-100"
+            activeOpacity={0.7}>
+            <Icon3 size={20} name="logout" color={'#000'} />
+            <Text className="text-gray-800 font-medium text-base">Logout</Text>
           </TouchableOpacity>
         </View>
-        <Text style={styles.headerText}>Journey Details</Text>
-        <View style={styles.cardContainer}>
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Full Name *</Text>
-            <Text style={styles.textInput}>{driversdta.name}</Text>
-          </View>
-        </View>
 
-        <View style={styles.cardContainer}>
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Number *</Text>
-            <Text style={styles.textInput}>{driversdta.MobileNumber}</Text>
-          </View>
+        <View className="px-4 py-6 bg-white border-b border-gray-200">
+          <Text className="text-2xl font-bold text-gray-800">
+            Journey Details
+          </Text>
+          <Text className="text-sm text-gray-600 mt-1">
+            Please fill in the required information
+          </Text>
         </View>
+        <View className="p-4 space-y-4">
+          {/* Full Name Card */}
+          <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+            <Text className="text-sm font-medium text-gray-700 mb-2">
+              Full Name <Text className="text-blue-500">*</Text>
+            </Text>
+            <View className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+              <Text className="text-gray-800 font-medium">
+                {driversdta.name}
+              </Text>
+            </View>
+          </View>
 
-        <View style={styles.cardContainer}>
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Reporting Date * </Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                borderColor: 'gray',
-                borderWidth: 1,
-                padding: 10,
-                borderRadius: 5,
-                justifyContent: 'space-around',
-              }}>
+          {/* Number Card */}
+          <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+            <Text className="text-sm font-medium text-gray-700 mb-2">
+              Number <Text className="text-blue-500">*</Text>
+            </Text>
+            <View className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+              <Text className="text-gray-800 font-medium">
+                {driversdta.MobileNumber}
+              </Text>
+            </View>
+          </View>
+
+          {/* Reporting Date Card */}
+          <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+            <Text className="text-sm font-medium text-gray-700 mb-2">
+              Reporting Date <Text className="text-blue-500">*</Text>
+            </Text>
+            <View className="flex-row items-center bg-gray-50 rounded-lg border border-gray-200">
               <TextInput
+                className="flex-1 p-3 text-gray-800"
                 keyboardType="numeric"
-                inputMode="date"
+                inputMode="numeric"
                 onChangeText={setRprDate}
                 value={Rprtdate}
-                placeholder="Enter in 00 th/st "
-                style={styles.textInput}
-                placeholderTextColor={'#8e8e8e'}
+                placeholder="Enter in 00 th/st"
+                placeholderTextColor="#9ca3af"
               />
               <TouchableOpacity
-                style={[
-                  {
-                    marginLeft: 10,
-                    width: 80,
-                    height: 30,
-                    borderRadius: 20,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  },
-                ]}
-                onPress={handleDatePicker}>
-                <Icon3 name="calendar" size={30} color="#4F8EF7" />
-                <Text style={{color: '#000'}}>Select Date </Text>
+                onPress={handleDatePicker}
+                className="px-4 py-3 bg-blue-50 rounded-r-lg border-l border-gray-200">
+                <View className="items-center">
+                  <Icon3 name="calendar" size={24} color="#3b82f6" />
+                  <Text className="text-xs text-blue-600 mt-1">Select</Text>
+                </View>
               </TouchableOpacity>
             </View>
-            {isDatePickerVisible && (
-              <DateTimePickerModal
-                isVisible={isDatePickerVisible}
-                mode="date"
-                onConfirm={handleConfirmDate}
-                onCancel={handleCancelDate}
-                is24Hour={false}
-              />
-            )}
           </View>
-        </View>
-        <View style={styles.cardContainer}>
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Reporting Time *</Text>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                borderColor: 'gray',
-                borderWidth: 1,
-                padding: 10,
-                borderRadius: 5,
-                justifyContent: 'space-around',
-              }}>
+
+          {/* Reporting Time Card */}
+          <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+            <Text className="text-sm font-medium text-gray-700 mb-2">
+              Reporting Time <Text className="text-blue-500">*</Text>
+            </Text>
+            <View className="flex-row items-center bg-gray-50 rounded-lg border border-gray-200">
               <TextInput
-                inputMode="date"
+                className="flex-1 p-3 text-gray-800"
+                inputMode="text"
                 onChangeText={setRprtTime}
                 value={RprtTime}
                 placeholder="Enter in 00:00 am/pm"
-                style={styles.textInput}
-                placeholderTextColor={'#8e8e8e'}
+                placeholderTextColor="#9ca3af"
               />
               <TouchableOpacity
-                style={[
-                  {
-                    marginLeft: 10,
-                    width: 80,
-                    height: 40,
-                    borderRadius: 20,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  },
-                ]}
-                onPress={handleTimePicker}>
-                <Icon4 name="access-time" size={30} color="#4F8EF7" />
-                <Text style={{color: '#000'}}>Select Time </Text>
+                onPress={handleTimePicker}
+                className="px-4 py-3 bg-blue-50 rounded-r-lg border-l border-gray-200">
+                <View className="items-center">
+                  <Icon4 name="access-time" size={24} color="#3b82f6" />
+                  <Text className="text-xs text-blue-600 mt-1">Select</Text>
+                </View>
               </TouchableOpacity>
             </View>
-            {isTimePickerVisible && (
-              <DateTimePickerModal
-                isVisible={isTimePickerVisible}
-                mode="time"
-                onConfirm={handleConfirm}
-                onCancel={handleCancel}
-                is24Hour={false}
-              />
-            )}
           </View>
         </View>
-        <View style={styles.cardContainer}>
+
+        {/* Date Picker Modal */}
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode="date"
+          onConfirm={handleConfirmDate}
+          onCancel={handleCancelDate}
+          is24Hour={false}
+        />
+
+        {/* Time Picker Modal */}
+        <DateTimePickerModal
+          isVisible={isTimePickerVisible}
+          mode="time"
+          onConfirm={handleConfirm}
+          onCancel={handleCancel}
+          is24Hour={false}
+        />
+        {/* <View style={styles.cardContainer}>
           <View style={styles.card}>
             <Text style={styles.sectionTitle}>Reporting month*</Text>
             <TextInput
@@ -502,7 +490,7 @@ const InfoPage = ({route}) => {
               placeholderTextColor={'#8e8e8e'}
             />
           </View>
-        </View>
+        </View> */}
 
         {/* <View style={styles.cardContainer}>
           <View style={styles.card}>
@@ -552,64 +540,74 @@ const InfoPage = ({route}) => {
           </View>
         </View> */}
 
-        <View style={styles.cardContainer}>
-          <View style={styles.card}>
-            <View style={styles.sectionRow}>
-              <View style={styles.section}>
-                <Text style={styles.sectionTitle}>Reporting Address *</Text>
+        <View className="p-4 space-y-4">
+          {/* Reporting Address Section */}
+          <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+            <View className="flex-row items-center justify-between">
+              <View className="flex-1 mr-4">
+                <Text className="text-sm font-medium text-gray-700 mb-2">
+                  Reporting Address <Text className="text-blue-500">*</Text>
+                </Text>
                 <TextInput
                   value={address}
                   onChangeText={setAddress}
                   placeholder="Enter address"
-                  style={styles.textInput}
-                  placeholderTextColor={'#8e8e8e'}
+                  placeholderTextColor="#9ca3af"
+                  className="bg-gray-50 rounded-lg p-3 text-gray-800 border border-gray-200"
                 />
               </View>
-              <View style={styles.sectionIconContainer}>
-                <Icon1 name="location" size={30} color={'#000000'} />
+              <View className="p-3 bg-blue-50 rounded-lg">
+                <Icon1 name="location" size={24} color="#3b82f6" />
               </View>
             </View>
           </View>
-        </View>
 
-        <View style={styles.cardContainer}>
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Serving city *</Text>
+          {/* Serving City Section */}
+          <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+            <Text className="text-sm font-medium text-gray-700 mb-2">
+              Serving City <Text className="text-blue-500">*</Text>
+            </Text>
             <TextInput
               value={city}
               onChangeText={handleInputChange}
               placeholder="Enter City"
-              style={styles.textInput}
+              placeholderTextColor="#9ca3af"
+              className="bg-gray-50 rounded-lg p-3 text-gray-800 border border-gray-200"
             />
-            {suggestions.length > 0 ? (
-            <FlatList
-              data={suggestions}
-              keyExtractor={item => item}
-              renderItem={({item}) => (
-                <TouchableOpacity
-                  onPress={() => onSelectSuggestion(item)}
-                  style={styles.suggestionItem}
-                  activeOpacity={0.7}>
-                  <Text style={styles.suggestionText}>{item}</Text>
-                </TouchableOpacity>
-              )}
-              style={styles.suggestionList}
-              showsVerticalScrollIndicator={false}
-              bounces={false}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
-            />
-            ) : null}
+            {suggestions.length > 0 && (
+              <View className="mt-2 bg-white rounded-lg border border-gray-200">
+                <FlatList
+                  data={suggestions}
+                  keyExtractor={item => item}
+                  renderItem={({item}) => (
+                    <TouchableOpacity
+                      onPress={() => onSelectSuggestion(item)}
+                      className="px-4 py-3 active:bg-gray-50">
+                      <Text className="text-gray-700">{item}</Text>
+                    </TouchableOpacity>
+                  )}
+                  ItemSeparatorComponent={() => (
+                    <View className="h-px bg-gray-200" />
+                  )}
+                  className="max-h-40"
+                  showsVerticalScrollIndicator={false}
+                  bounces={false}
+                />
+              </View>
+            )}
           </View>
-        </View>
 
-        <View style={styles.cardContainer}>
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Vehicle Details *</Text>
+          {/* Vehicle Details Section */}
+          <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+            <Text className="text-sm font-medium text-gray-700 mb-2">
+              Vehicle Details <Text className="text-blue-500">*</Text>
+            </Text>
             <TextInput
               value={vehicleDetails}
               onChangeText={setvehicleDetails}
               placeholder="Enter Vehicle Details"
-              style={styles.textInput}
+              placeholderTextColor="#9ca3af"
+              className="bg-gray-50 rounded-lg p-3 text-gray-800 border border-gray-200"
             />
           </View>
         </View>
@@ -626,78 +624,151 @@ const InfoPage = ({route}) => {
           </View>
         </View> */}
         <LineView />
-        <View style={styles.container}>
-          <Text style={styles.sectionTitle}>Passengers Information *</Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginHorizontal: 10,
-              marginVertical: 15,
-            }}>
+        <View className="px-4 mb-4">
+          <Text className="text-lg font-bold text-gray-800 mb-2">
+            Passengers Information <Text className="text-blue-500">*</Text>
+          </Text>
+
+          {/* Add/Remove Buttons */}
+          {/* <View className="flex-row justify-between items-center my-4">
             <TouchableOpacity
-              onPress={removeView}
-              style={styles.removeViewButton}>
-              <Text>Remove</Text>
-              <Icon3 name="minus" size={26} color="#000000" />
+              onPress={addView}
+              className="flex-row items-center bg-blue-50 px-4 py-2 rounded-lg border border-blue-100">
+              <Text className="text-blue-600 mr-2">Add</Text>
+              <Icon3 name="plus" size={20} color="#3b82f6" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={addView} style={styles.addViewButton}>
-              <Text>Add</Text>
-              <Icon3 name="plus" size={26} color="#000000" />
-            </TouchableOpacity>
-          </View>
+          </View> */}
+
+          {/* Passenger Forms */}
           {views.map((view, index) => (
-            <View key={index} style={styles.cardContainer}>
-              <Text style={styles.sectionTitle}>Passenger {index + 1}</Text>
-              <View style={styles.card}>
-                <Text style={styles.sectionTitle}>Name Of Passenger *</Text>
+            <View key={index} className="mb-4">
+              <Text className="text-md font-medium text-gray-700 mb-2">
+                Passenger {index + 1}
+              </Text>
+
+              {/* Name Input */}
+              <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm mb-3">
+                <Text className="text-sm font-medium text-gray-700 mb-2">
+                  Name Of Passenger <Text className="text-blue-500">*</Text>
+                </Text>
                 <TextInput
                   value={passengerNames[index]}
                   onChangeText={value =>
                     handlePassengerNameChange(index, value)
                   }
                   placeholder="Enter Name of passenger"
-                  style={styles.textInput}
+                  placeholderTextColor="#9ca3af"
+                  className="bg-gray-50 rounded-lg p-3 text-gray-800 border border-gray-200"
                 />
               </View>
-              <View style={styles.card}>
-                <Text style={styles.sectionTitle}>Starting Address *</Text>
+
+              {/* Starting Address */}
+              <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm mb-3">
+                <Text className="text-sm font-medium text-gray-700 mb-2">
+                  Starting Address <Text className="text-blue-500">*</Text>
+                </Text>
                 <TextInput
                   value={startingAddress[index]}
                   onChangeText={value =>
                     handleStartingAddressChange(index, value)
                   }
                   placeholder="Enter Starting address"
-                  style={styles.textInput}
+                  placeholderTextColor="#9ca3af"
+                  className="bg-gray-50 rounded-lg p-3 text-gray-800 border border-gray-200"
                 />
               </View>
-              <View style={styles.card}>
-                <Text style={styles.sectionTitle}>Drop Address *</Text>
+
+              {/* Drop Address */}
+              <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
+                <Text className="text-sm font-medium text-gray-700 mb-2">
+                  Drop Address <Text className="text-blue-500">*</Text>
+                </Text>
                 <TextInput
                   value={destinationAddress[index]}
                   onChangeText={value =>
                     handleDestinationAddressChange(index, value)
                   }
                   placeholder="Enter Drop Address"
-                  style={styles.textInput}
+                  placeholderTextColor="#9ca3af"
+                  className="bg-gray-50 rounded-lg p-3 text-gray-800 border border-gray-200"
                 />
+              </View>
+              <View className="flex-row justify-between items-center my-4">
+                {index == 0 && (
+                  <TouchableOpacity
+                    onPress={addView}
+                    className="flex-row items-center bg-blue-50 px-4 py-2 rounded-lg border border-blue-100">
+                    <Text className="text-blue-600 mr-2">Add</Text>
+                    <Icon3 name="plus" size={20} color="#3b82f6" />
+                  </TouchableOpacity>
+                )}
+
+                {index != 0 && (
+                  <TouchableOpacity
+                    onPress={() => removeView(index)} // Pass the index here
+                    className="flex-row items-center bg-red-50 px-4 py-2 rounded-lg border border-red-100 mt-2">
+                    <Text className="text-red-600 mr-2">Remove</Text>
+                    <Icon3 name="minus" size={20} color="#dc2626" />
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
           ))}
         </View>
+        <View className="w-full px-5 py-8">
+          <TouchableOpacity
+            onPress={afteraccept}
+            className="w-full bg-blue-500 px-8 py-3.5 rounded-lg shadow-sm active:bg-blue-600"
+            activeOpacity={0.8}>
+            <Text className="text-white font-semibold text-center text-base">
+              Proceed
+            </Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
-
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={() => afteraccept()}
-          style={styles.proceedButton}>
-          <Text style={styles.proceedButtonText}>Proceed</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   );
 };
-
+const styles2 = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 3, // for Android shadow
+    marginBottom:10
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#000',
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F5F5F5',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    gap: 8, // Note: If gap isn't supported in your RN version, use marginLeft on logoutText instead
+  },
+  logoutText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#000',
+    padding:5
+    // marginLeft: 8, // Uncomment this if gap isn't supported in your RN version
+  },
+});
 export const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
@@ -751,7 +822,7 @@ export const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     paddingVertical: 12,
     paddingHorizontal: 16,
-    borderRadius:15
+    borderRadius: 15,
   },
   suggestionText: {
     fontSize: 16,
@@ -801,36 +872,48 @@ export const styles = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    padding: 10,
-    backgroundColor: '#e6e6fa',
-    borderRadius: 10, // Add a slight corner radius
-    borderWidth: 1, // Add a thin border
-    borderColor: '#CCCCCC', // Light gray border color
+    padding: 16,
+    backgroundColor: '#F8F8FF', // Lighter shade of lavender
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E8E8FF', // Subtle border color
     shadowColor: '#000000',
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 6,
+    marginHorizontal: 20,
     marginBottom: 25,
   },
 
   proceedButton: {
-    backgroundColor: '#000080', // a nice blue color
+    backgroundColor: '#1a237e', // Deeper, more professional blue
     borderRadius: 10,
-    padding: 10,
-    width: '60%',
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    width: '70%',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
     shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
+    shadowRadius: 4,
+    elevation: 4,
+    transform: [{scale: 1}], // For potential animation
   },
-
   proceedButtonText: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
     color: '#FFFFFF',
     textAlign: 'center',
+    letterSpacing: 0.5, // Adds professional spacing between letters
+    textTransform: 'uppercase', // Makes the text more commanding
   },
   textInput: {
     borderColor: 'black',

@@ -183,8 +183,8 @@ const UserDataScreen = ({route}) => {
           data={Object.keys(filteredData)}
           renderItem={({item}) => {
              const fuelUsed =
-               parseInt(filteredData[item].endFuel) -
-               parseInt(filteredData[item].starFuel);
+              Math.abs( parseInt(filteredData[item].endFuel) -
+               parseInt(filteredData[item].starFuel));
             return (
               <TouchableOpacity
                 onPress={() => handlePress(item)}
@@ -466,7 +466,7 @@ const UserDataScreen = ({route}) => {
                                     </View>
 
                                     {/* Duty Instructions */}
-                                    <View style={styles2.detailCard}>
+                                    {/* <View style={styles2.detailCard}>
                                       <View style={styles2.cardHeader}>
                                         <FileText size={20} color="#4A90E2" />
                                         <Text style={styles2.cardTitle}>
@@ -476,7 +476,7 @@ const UserDataScreen = ({route}) => {
                                       <Text style={styles2.instructionsText}>
                                         {filteredData[item].dutyInstructions}
                                       </Text>
-                                    </View>
+                                    </View> */}
 
                                     {/* Vehicle Details */}
                                     <View style={styles2.detailCard}>
@@ -492,57 +492,50 @@ const UserDataScreen = ({route}) => {
                                     </View>
                                   </View>
                                 </View>
-                                <View>
+                                <View className="w-full">
                                   <LineView />
-                                  <Text
-                                    style={{
-                                      fontSize: 18,
-                                      fontWeight: 'bold',
-                                      color: '#000000',
-                                    }}>
-                                    Driver's Signature:
-                                  </Text>
-                                  {filteredData[item].passengersSignature !==
-                                  undefined ? (
-                                    <View style={styles.Imagecontainer}>
-                                      <Image
-                                        source={{
-                                          uri: filteredData[item]
-                                            .driversSignature,
-                                        }}
-                                        style={styles.image}
-                                        resizeMode="contain"
-                                      />
-                                    </View>
-                                  ) : (
-                                    <View style={styles.Imagecontainer}>
-                                      <Text
-                                        style={{
-                                          margin: 8,
-                                          fontSize: 18,
-                                          color: '#000000',
-                                        }}>
-                                        No signature available
-                                      </Text>
-                                    </View>
-                                  )}
-                                </View>
-                                <View style={styles.line}></View>
-                                <View style={{flexDirection: 'row'}}>
-                                  <Icon
-                                    name="person-circle"
-                                    size={35}
-                                    color={'#0000FF'}
-                                  />
-                                  <Text
-                                    style={{
-                                      fontSize: 18,
-                                      fontWeight: 'bold',
-                                      color: '#000000',
-                                      marginVertical: 5,
-                                    }}>
-                                    {passengerKey}:{' '}
-                                  </Text>
+
+                                  {/* Driver's Signature Section */}
+                                  <View className="mb-4">
+                                    <Text className="text-lg font-bold text-gray-900 mb-2">
+                                      Driver's Signature:
+                                    </Text>
+
+                                    {filteredData[item].passengersSignature !==
+                                    undefined ? (
+                                      <View className="w-full bg-gray-50 rounded-lg overflow-hidden border border-gray-200 h-40">
+                                        <Image
+                                          source={{
+                                            uri: filteredData[item]
+                                              .driversSignature,
+                                          }}
+                                          className="w-full h-full"
+                                          resizeMode="contain"
+                                        />
+                                      </View>
+                                    ) : (
+                                      <View className="w-full bg-gray-50 rounded-lg border border-gray-200 h-40 items-center justify-center">
+                                        <Text className="text-lg text-gray-900 p-2">
+                                          No signature available
+                                        </Text>
+                                      </View>
+                                    )}
+                                  </View>
+
+                                  {/* Divider Line */}
+                                  <LineView />
+
+                                  {/* Passenger Info Section */}
+                                  <View className="flex-row items-center space-x-2">
+                                    <Icon
+                                      name="person-circle"
+                                      size={35}
+                                      color="#2563eb" // Tailwind blue-600
+                                    />
+                                    <Text className="text-lg font-bold text-gray-900">
+                                      {passengerKey}:{' '}
+                                    </Text>
+                                  </View>
                                 </View>
                                 <LineView />
                                 <View style={{flexDirection: 'row'}}>
@@ -622,36 +615,40 @@ const UserDataScreen = ({route}) => {
                             ),
                           )}
                         </View>
-                        <LineView />
-                        <View>
-                          <Text
-                            style={{
-                              fontSize: 18,
-                              fontWeight: 'bold',
-                              color: '#000000',
-                            }}>
-                            Passenger's Signature:
-                          </Text>
+
+                        <View className="mb-6">
+                          <View className="flex-row items-center mb-3 gap-2">
+                            <Icon3
+                              name="draw-pen"
+                              size={24}
+                              color="#4B5563"
+                              className="mr-3"
+                            />
+                            <Text className="text-xl font-bold text-gray-900">
+                              Passenger's Signature
+                            </Text>
+                          </View>
+
                           {filteredData[item].passengersSignature !==
                           undefined ? (
-                            <View style={styles.Imagecontainer}>
+                            <View className="bg-gray-50 rounded-xl p-4 border border-gray-200">
                               <Image
                                 source={{
                                   uri: filteredData[item].passengersSignature,
                                 }}
-                                style={styles.image}
+                                className="w-full h-32 rounded-lg"
                                 resizeMode="contain"
                               />
                             </View>
                           ) : (
-                            <View style={styles.Imagecontainer}>
-                              <Text
-                                style={{
-                                  margin: 8,
-                                  fontSize: 18,
-
-                                  color: '#000000',
-                                }}>
+                            <View className="bg-gray-50 rounded-xl p-6 border border-gray-200 items-center justify-center">
+                              <Icon3
+                                name="pencil-off"
+                                size={32}
+                                color="#9CA3AF"
+                                className="mb-2"
+                              />
+                              <Text className="text-gray-500 text-lg">
                                 No signature available
                               </Text>
                             </View>
@@ -697,7 +694,8 @@ const UserDataScreen = ({route}) => {
 };
 const styles2 = StyleSheet.create({
   container: {
-    padding: 16,
+    padding: 5,
+    marginBottom:10,
   },
   costCard: {
     backgroundColor: '#F0F7FF',
@@ -792,6 +790,7 @@ const styles2 = StyleSheet.create({
   },
   expandedContent: {
     marginTop: 15,
+    marginBottom:10,
   },
   cardBody: {
     backgroundColor: '#FAFAFA',

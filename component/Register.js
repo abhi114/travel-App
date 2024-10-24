@@ -33,11 +33,12 @@ const Register = () => {
             index: 0,
             routes: [{name: 'AdminPortal', params: {emailId, id, data}}],
           });
+          setIsLoading(false);
         }
       } catch (error) {
         console.log(error);
       } finally {
-        setIsLoading(false);
+        
       }
     };
     checkAdminLoginState();

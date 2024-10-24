@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Alert} from 'react-native';
 import Icon3 from 'react-native-vector-icons/AntDesign';
 import DriverDashboard from './helpers/DriverDashboard';
@@ -8,6 +8,22 @@ import DriverDashboard from './helpers/DriverDashboard';
 const ButtonPage = ({route}) => {
     const {emailId, id, data} = route.params;
     const navigation = useNavigation()
+    const [namedata,setNameData] = useState(data);
+    useEffect(() => {
+      const fetchName=async ()=>{
+      const loginState = await AsyncStorage.getItem('loginState');
+        if (loginState) {
+          const {emailId, id, data} = JSON.parse(loginState);
+          setNameData(data)
+        }
+      }
+
+      fetchName();
+      return () => {
+        
+      }
+    }, [])
+    
     const logout = () => {
       Alert.alert('Confirm Logout', 'Are you sure you want to log out?', [
         {
@@ -28,7 +44,7 @@ const ButtonPage = ({route}) => {
     };
   return (
     
-      <DriverDashboard emailId={emailId} id={id} data={data} logout={logout}/>
+      <DriverDashboard emailId={emailId} id={id} data={namedata} logout={logout}/>
       
   );
 };

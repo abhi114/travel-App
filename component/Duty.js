@@ -74,68 +74,53 @@ const Sign = ({id, Rprtdate, mainData}) => {
 
   if (currentSignature === 'driversSignature' && !signatureSaved) {
     return (
-      <View style={{flex: 1, flexDirection: 'column'}}>
-        <Text
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 15,
-            alignSelf: 'center',
-            color: '#000000',
-            fontWeight: 'bold',
-            margin: 5,
-          }}>
-          Verification Signature
-        </Text>
-        <Text
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 15,
-            margin: 5,
-          }}>
-          Signature - Driver's Signature
-        </Text>
+      <View style={styles2.container}>
+        <View style={styles2.headerContainer}>
+          <Text style={styles2.titleText}>Verification Signature</Text>
+          <Text style={styles2.subtitleText}>
+            Signature - Driver's Signature
+          </Text>
+        </View>
+
         {signSaveStart ? (
-          <ActivityIndicator />
+          <View style={styles2.loaderContainer}>
+            <ActivityIndicator size="large" color="#007AFF" />
+          </View>
         ) : (
-          <View>
-            <SignatureCapture
-              style={[
-                {
-                  flex: 1,
-                  width: 300,
-                  height: 300,
-                  borderRadius:20,
-                  justifyContent: 'center',
-                  alignContent: 'center',
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                },
-              ]}
-              ref={signRef}
-              onSaveEvent={_onSaveEvent}
-              onDragEvent={_onDragEvent}
-              saveImageFileInExtStorage={false}
-              showNativeButtons={false}
-              showTitleLabel={false}
-              backgroundColor="#2f4f4f"
-              strokeColor="#ffffff"
-              minStrokeWidth={4}
-              maxStrokeWidth={4}
-              viewMode={'portrait'}
-            />
+          <View style={styles2.signatureContainer}>
+            <View style={styles2.signatureWrapper}>
+              <SignatureCapture
+                style={styles2.signature}
+                ref={signRef}
+                onSaveEvent={_onSaveEvent}
+                onDragEvent={_onDragEvent}
+                saveImageFileInExtStorage={false}
+                showNativeButtons={false}
+                showTitleLabel={false}
+                backgroundColor="#F5F5F5"
+                strokeColor="#000000"
+                minStrokeWidth={4}
+                maxStrokeWidth={4}
+                viewMode={'portrait'}
+              />
+            </View>
 
-            <View style={{flex: 1, flexDirection: 'row'}}>
-              <TouchableHighlight style={styles.buttonStyle} onPress={saveSign}>
-                <Text style={styles.buttonText}>Save</Text>
-              </TouchableHighlight>
+            <View style={styles2.buttonContainer}>
+              <TouchableOpacity
+                style={[styles2.button, styles2.saveButton]}
+                onPress={saveSign}
+                activeOpacity={0.8}>
+                <Text style={styles2.buttonText}>Save</Text>
+              </TouchableOpacity>
 
-              <TouchableHighlight
-                style={styles.buttonStyle}
-                onPress={resetSign}>
-                <Text style={styles.buttonText}>Reset</Text>
-              </TouchableHighlight>
+              <TouchableOpacity
+                style={[styles2.button, styles2.resetButton]}
+                onPress={resetSign}
+                activeOpacity={0.8}>
+                <Text style={[styles2.buttonText, styles2.resetButtonText]}>
+                  Reset
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         )}
@@ -146,55 +131,53 @@ const Sign = ({id, Rprtdate, mainData}) => {
     return null;
   } else if (currentSignature === 'passengersSignature') {
     return (
-      <View style={{flex: 1, flexDirection: 'column'}}>
-        <Text
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: 15,
-            margin:5,
-          }}>
-          Signature - Passenger's Signature
-        </Text>
+      <View style={styles2.container}>
+        <View style={styles2.headerContainer}>
+          <Text style={styles2.titleText}>Verification Signature</Text>
+          <Text style={styles2.subtitleText}>
+            Signature - Passenger's Signature
+          </Text>
+        </View>
+
         {signSaveStart ? (
-          <ActivityIndicator />
+          <View style={styles2.loaderContainer}>
+            <ActivityIndicator size="large" color="#007AFF" />
+          </View>
         ) : (
-          <View style={{overflow:'hidden'}}>
-            <SignatureCapture
-              style={[{flex: 1, width: 300, height: 300,justifyContent:'center',alignContent:'center',alignItems:'center',alignSelf:'center'}]}
-              ref={signRef}
-              onSaveEvent={_onSaveEvent}
-              onDragEvent={_onDragEvent}
-              saveImageFileInExtStorage={false}
-              showNativeButtons={false}
-              showTitleLabel={false}
-              backgroundColor="#2f4f4f"
-              strokeColor="#ffffff"
-              minStrokeWidth={4}
-              maxStrokeWidth={4}
-              viewMode={'portrait'}
-            />
+          <View style={styles2.signatureContainer}>
+            <View style={styles2.signatureWrapper}>
+              <SignatureCapture
+                style={styles2.signature}
+                ref={signRef}
+                onSaveEvent={_onSaveEvent}
+                onDragEvent={_onDragEvent}
+                saveImageFileInExtStorage={false}
+                showNativeButtons={false}
+                showTitleLabel={false}
+                backgroundColor="#F5F5F5"
+                strokeColor="#000000"
+                minStrokeWidth={4}
+                maxStrokeWidth={4}
+                viewMode={'portrait'}
+              />
+            </View>
 
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                padding: 20,
-              }}>
-              <TouchableHighlight
-                style={[styles.buttonStyle, styles.saveButton]}
+            <View style={styles2.buttonContainer}>
+              <TouchableOpacity
+                style={[styles2.button, styles2.saveButton]}
                 onPress={saveSign}
-                underlayColor="#0056b3">
-                <Text style={styles.buttonText}>Save And Exit</Text>
-              </TouchableHighlight>
+                activeOpacity={0.8}>
+                <Text style={styles2.buttonText}>Save</Text>
+              </TouchableOpacity>
 
-              <TouchableHighlight
-                style={[styles.buttonStyle, styles.resetButton]}
+              <TouchableOpacity
+                style={[styles2.button, styles2.resetButton]}
                 onPress={resetSign}
-                underlayColor="#d9534f">
-                <Text style={styles.buttonText}>Reset</Text>
-              </TouchableHighlight>
+                activeOpacity={0.8}>
+                <Text style={[styles2.buttonText, styles2.resetButtonText]}>
+                  Reset
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
         )}
@@ -342,7 +325,104 @@ const Duty = ({route}) => {
     </View>
   );
 }
-
+const styles2 = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+  },
+  headerContainer: {
+    marginBottom: 20,
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1A1A1A',
+    textAlign: 'center',
+    marginBottom: 8,
+    ...Platform.select({
+      android: {
+        fontFamily: 'Roboto-Bold',
+      },
+    }),
+  },
+  subtitleText: {
+    fontSize: 16,
+    color: '#4A4A4A',
+    textAlign: 'center',
+    ...Platform.select({
+      android: {
+        fontFamily: 'Roboto',
+      },
+    }),
+  },
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  signatureContainer: {
+    flex: 1,
+  },
+  signatureWrapper: {
+    height: 300,
+    borderRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: '#F5F5F5',
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
+    ...Platform.select({
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  signature: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+    gap: 16,
+  },
+  button: {
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 8,
+    minWidth: 120,
+    ...Platform.select({
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  saveButton: {
+    backgroundColor: '#007AFF',
+  },
+  resetButton: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#007AFF',
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FFFFFF',
+    textAlign: 'center',
+    ...Platform.select({
+      android: {
+        fontFamily: 'Roboto-Medium',
+      },
+    }),
+  },
+  resetButtonText: {
+    color: '#007AFF',
+  },
+});
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,

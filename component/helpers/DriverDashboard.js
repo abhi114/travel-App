@@ -12,11 +12,13 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LottieView from 'lottie-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const DriverDashboard = ({emailId, id, data,logout}) => {
   const navigation = useNavigation();
   const scaleAnim = useRef(new Animated.Value(0)).current; // Initial scale for the title
   const opacityAnim = useRef(new Animated.Value(0)).current; // Initial opacity for buttons
+  const insets = useSafeAreaInsets();
   const width = Dimensions.get('screen').width;
   useEffect(() => {
     // Title Animation
@@ -37,45 +39,96 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
     }, 800); // Delay for the buttons
   }, []);
 
-  return (
-    <View style={styles.container}>
-      {/* Title Animation */}
-      <TouchableOpacity style={styles.logoutButton} onPress={logout}>
-        <Text style={{color: '#fff'}}>Logout</Text>
-      </TouchableOpacity>
-      <LottieView
-        source={require('../../assets/lottie-animation.json')}
-        autoPlay
-        loop
-        speed={0.5}
-        style={{width: 150, height: 150}}
-      />
-      <Animated.View style={{transform: [{scale: scaleAnim}]}}>
-        <Text style={styles.titleText}>Welcome To Drive</Text>
-      </Animated.View>
-      <View style={{flexDirection:'row',justifyContent:'center',alignItems:'center',gap:10,marginVertical:10}}>
-        <Image source={require('../../assets/profile.png')} style={{width:40,height:40}}/>
-        <Text style={styles.titleText}>{data?.name}</Text>
-      </View>
+ return (
+   <View className={`flex-1 bg-gray-900`} style={{paddingTop: insets.top}}>
+     {/* Header Section with Gradient Overlay */}
+     <View className="absolute top-0 left-0 right-0 h-64 bg-blue-600/20" />
 
-      {/* Buttons appear after the animation */}
-      <Animated.View style={{opacity: opacityAnim}}>
-        <TouchableOpacity
-          style={styles.buttonPrimary}
-          onPress={() => navigation.navigate('InfoPage', {emailId, id, data})}>
-          <Icon name="add-circle-outline" size={24} color="white" />
-          <Text style={styles.buttonText}>Create New Duty</Text>
-        </TouchableOpacity>
+     {/* Logout Button */}
+     <TouchableOpacity
+       onPress={logout}
+       className="absolute right-4 top-4 bg-red-500 rounded-full flex-row items-center px-4 py-2 shadow-lg">
+       <Icon name="logout" size={20} color="white" className="mr-2" />
+       <Text className="text-white font-medium">Logout</Text>
+     </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.buttonSecondary}
-          onPress={() => navigation.navigate('ReportsScreen', {id})}>
-          <Icon name="insert-chart-outlined" size={24} color="white" />
-          <Text style={styles.buttonText}>Check Reports</Text>
-        </TouchableOpacity>
-      </Animated.View>
-    </View>
-  );
+     {/* Main Content Container */}
+     <View className="flex-1 items-center justify-center px-6">
+       {/* Animation Container */}
+       <View className="mb-8">
+         <LottieView
+           source={require('../../assets/lottie-animation.json')}
+           autoPlay
+           loop
+           speed={0.5}
+           style={{width: width * 0.4, height: width * 0.4}}
+         />
+       </View>
+
+       {/* Welcome Text */}
+       <Animated.View style={{transform: [{scale: scaleAnim}]}}>
+         <Text className="text-4xl font-bold text-white text-center mb-2">
+           Welcome To Drive
+         </Text>
+       </Animated.View>
+
+       {/* Profile Section */}
+       <View className="flex-row items-center bg-gray-800/50 px-6 py-3 rounded-full mb-12 shadow-xl">
+         <Image
+           source={require('../../assets/profile.png')}
+           className="w-12 h-12 rounded-full mr-4"
+         />
+         <Text className="text-xl text-white font-semibold">{data?.name}</Text>
+       </View>
+
+       {/* Action Buttons Container */}
+       <Animated.View
+         className="w-full max-w-sm"
+         style={{opacity: opacityAnim}}>
+         {/* Create New Duty Button */}
+         <TouchableOpacity
+           className="bg-blue-600 mb-4 rounded-2xl shadow-xl active:bg-blue-700 transform active:scale-95 transition-all"
+           onPress={() => navigation.navigate('InfoPage', {emailId, id, data})}>
+           <View className="flex-row items-center justify-between px-6 py-4">
+             <View className="flex-1">
+               <Text className="text-white text-xl font-semibold mb-1">
+                 Create New Duty
+               </Text>
+               <Text className="text-blue-100 text-sm">
+                 Start a new driving assignment
+               </Text>
+             </View>
+             <View className="bg-blue-500 p-3 rounded-full">
+               <Icon name="add-circle-outline" size={24} color="white" />
+             </View>
+           </View>
+         </TouchableOpacity>
+
+         {/* Check Reports Button */}
+         <TouchableOpacity
+           className="bg-gray-800 rounded-2xl shadow-xl active:bg-gray-700 transform active:scale-95 transition-all"
+           onPress={() => navigation.navigate('ReportsScreen', {id})}>
+           <View className="flex-row items-center justify-between px-6 py-4">
+             <View className="flex-1">
+               <Text className="text-white text-xl font-semibold mb-1">
+                 Check Reports
+               </Text>
+               <Text className="text-gray-400 text-sm">
+                 View your driving history and stats
+               </Text>
+             </View>
+             <View className="bg-gray-700 p-3 rounded-full">
+               <Icon name="insert-chart-outlined" size={24} color="white" />
+             </View>
+           </View>
+         </TouchableOpacity>
+       </Animated.View>
+
+       {/* Bottom Decoration */}
+       <View className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-gray-900 to-transparent" />
+     </View>
+   </View>
+ );
 };
 
 const styles = StyleSheet.create({
@@ -92,11 +145,11 @@ const styles = StyleSheet.create({
   },
   logoutButton: {
     position: 'absolute',
-    top: Dimensions.get('screen').width / 10,
+    top: Dimensions.get('screen').width / 20,
     right: 20,
     backgroundColor: '#ff4757', // Optional color
     paddingVertical: 10,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     borderRadius: 5,
     shadowColor: '#000',
     shadowOpacity: 0.3,
