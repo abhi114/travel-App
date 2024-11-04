@@ -164,7 +164,7 @@ const Login = ({route}) => {
           </View>
 
           {/* Password Field */}
-          <View style={styles.inputContainer}>
+          <View style={styles.inputContainer}> 
             <Icon name="lock" size={20} color="#FFF" style={styles.icon} />
             <TextInput
               secureTextEntry={!showPassword}

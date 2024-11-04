@@ -7,7 +7,15 @@ import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import { LineView } from './helpers/helpers';
 import Icon from 'react-native-vector-icons/Ionicons';
-
+import Animated, {
+  FadeInDown,
+  FadeInRight,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import PassengerInfoScreen from './PassengerCard';
 
 
 const Sign = ({id, Rprtdate, mainData}) => {
@@ -210,14 +218,97 @@ const Duty = ({route}) => {
        ['Duration', Rprtdate, endDate],
        ['Fuel', `${startFuel}lit`, `${endFuel}lit`],
      ];
-     
+     //console.log('passengers Data' + JSON.stringify(mainData[Rprtdate].PassengerData));
      const [signatureEnable,setSignatureEnable] = useState(false);
      const handleCloseDuty = ()=>{
       navigation.navigate("Feedback",{id});
      }
+     const passengerData = mainData[Rprtdate].PassengerData;
      const getData = ()=>{
 
      }
+      const renderPassengerCard = (passengerKey, data, index) => {
+        return (
+          <Animated.View
+            entering={FadeInDown.delay(index * 200).springify()}
+            className="bg-white rounded-2xl p-5 mb-4 shadow-lg border border-gray-100"
+            key={passengerKey}>
+            {/* Header with passenger number and name */}
+            <View className="flex-row items-center mb-4">
+              <View className="bg-blue-100 rounded-full p-3 mr-3">
+                <MaterialCommunityIcons
+                  name="account"
+                  size={24}
+                  color="#3B82F6"
+                />
+              </View>
+              <View className="flex-1">
+                <Text className="text-gray-500 text-sm font-medium">
+                  {passengerKey}
+                </Text>
+                <Text className="text-xl font-semibold text-gray-800">
+                  {data.PassengerName}
+                </Text>
+              </View>
+              {/* <MaterialCommunityIcons
+                name="chevron-right"
+                size={24}
+                color="#94A3B8"
+              /> */}
+            </View>
+
+            {/* Journey Details */}
+            <View className="space-y-3">
+              {/* Starting Point */}
+              <Animated.View
+                entering={FadeInRight.delay(index * 300).springify()}
+                className="flex-row items-center bg-gray-50 p-3 rounded-xl">
+                <View className="bg-green-100 rounded-full p-2 mr-3">
+                  <MaterialCommunityIcons
+                    name="map-marker"
+                    size={20}
+                    color="#22C55E"
+                  />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-sm text-gray-500 font-medium">
+                    Starting Point
+                  </Text>
+                  <Text className="text-base text-gray-800">
+                    {data.StartingAddress}
+                  </Text>
+                </View>
+              </Animated.View>
+
+              {/* Connection Line */}
+              <View className="flex-row items-center px-4">
+                <View className="w-0.5 h-7 bg-gray-400 ml-4" />
+              </View>
+
+              {/* Destination */}
+              <Animated.View
+                entering={FadeInRight.delay(index * 400).springify()}
+                className="flex-row items-center bg-gray-50 p-3 rounded-xl">
+                <View className="bg-red-100 rounded-full p-2 mr-3">
+                  <MaterialCommunityIcons
+                    name="map-marker-radius"
+                    size={20}
+                    color="#EF4444"
+                  />
+                </View>
+                <View className="flex-1">
+                  <Text className="text-sm text-gray-500 font-medium">
+                    Destination
+                  </Text>
+                  <Text className="text-base text-gray-800">
+                    {data.DestinationAddress}
+                  </Text>
+                </View>
+              </Animated.View>
+            </View>
+          </Animated.View>
+        );
+      };
   return (
     <View style={styles.outerContainer}>
       <ScrollView style={styles.container}>
@@ -305,7 +396,33 @@ const Duty = ({route}) => {
             ))}
           </View>
         </View>
+        {/* passenger details section */}
 
+        {/* <View className="bg-gray-50 px-6 py-4 shadow-sm ">
+          <View className="flex-row items-center justify-between">
+            <View>
+              <Text className="text-2xl font-bold text-gray-800">
+                Passengers
+              </Text>
+              <Text className="text-gray-500">
+                {Object.keys(passengerData).length} passengers for this trip
+              </Text>
+            </View>
+            <View className="bg-blue-100 rounded-full p-2">
+              <MaterialCommunityIcons
+                name="account-group"
+                size={24}
+                color="#3B82F6"
+              />
+            </View>
+          </View>
+        </View>
+        {Object.entries(passengerData).map(([key, data], index) =>
+          renderPassengerCard(key, data, index),
+        )} */}
+        <PassengerInfoScreen passengerData={passengerData} />
+        {/* Bottom Padding */}
+        <View className="h-6" />
         {/* Signature Section */}
         <TouchableOpacity
           onPress={() => setSignatureEnable(true)}
@@ -440,7 +557,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#e0e0e0',
   },
   mainTitle: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: '700',
     color: '#1a1a1a',
     textAlign: 'center',
@@ -528,7 +645,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 0,
   },
   tableCellText: {
-    fontSize: 12,
+    fontSize: 13,
     color: '#333',
     textAlign: 'center',
   },
