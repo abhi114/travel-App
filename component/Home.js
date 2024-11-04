@@ -32,7 +32,7 @@ const Home = ({route}) => {
       hours = hours ? hours : 12; // The hour '0' should be '12'
       minutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero to minutes
 
-      const time = `${hours}:${minutes} ${ampm}`;
+      const time = `${hours}:${minutes}${ampm}`;
       return time;
     };
     const {

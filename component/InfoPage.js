@@ -22,6 +22,7 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { LineView } from './helpers/helpers';
 
 const InfoPage = ({route}) => {
+   
     const {id,data:driversdta} = route.params;
     const monthNames = [
       'January',
@@ -360,7 +361,7 @@ const InfoPage = ({route}) => {
     
   };
   return (
-    <View style={styles.outerContainer}>
+    <View style={styles.outerContainer} className="bg-gray-50">
       <ScrollView style={styles.container} className="flex-1 bg-gray-50 ">
         <View className="w-full px-4 py-3 flex flex-row justify-between items-center bg-white border-b border-gray-100">
           <Text className="text-xl font-semibold text-gray-800">
@@ -369,10 +370,10 @@ const InfoPage = ({route}) => {
 
           <TouchableOpacity
             onPress={logout}
-            className="flex flex-row items-center space-x-2 px-3 py-2 rounded-lg active:bg-gray-100"
+            className="flex flex-row items-center space-x-2 px-3 py-2 rounded-lg bg-red-500"
             activeOpacity={0.7}>
-            <Icon3 size={20} name="logout" color={'#000'} />
-            <Text className="text-gray-800 font-medium text-base">Logout</Text>
+            <Icon3 size={20} name="logout" color={'#fff'} />
+            <Text className="text-white font-medium text-base">Logout</Text>
           </TouchableOpacity>
         </View>
 
@@ -384,7 +385,7 @@ const InfoPage = ({route}) => {
             Please fill in the required information
           </Text>
         </View>
-        <View className="p-4 space-y-4">
+        <View className="p-4 space-y-4 " >
           {/* Full Name Card */}
           <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
             <Text className="text-sm font-medium text-gray-700 mb-2">

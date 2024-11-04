@@ -440,7 +440,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#e0e0e0',
   },
   mainTitle: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: '700',
     color: '#1a1a1a',
     textAlign: 'center',
@@ -528,7 +528,7 @@ const styles = StyleSheet.create({
     borderRightWidth: 0,
   },
   tableCellText: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#333',
     textAlign: 'center',
   },
