@@ -108,7 +108,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
         </Animated.View>
         <TouchableOpacity
           className="flex-row items-center bg-gray-800/50"
-          onPress={() => navigation.navigate('CarSelectionScreen')}
+          onPress={() => {}}
           style={{
             paddingHorizontal: wp('6%'),
             paddingVertical: hp('1.5%'),
@@ -135,7 +135,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
         {/* Selected Car Display */}
         <View style={{width: wp('90%'), marginBottom: hp('3%')}}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('CarSelectionScreen')}
+            onPress={() => navigation.navigate('CarSelectionScreen',{id:id})}
             className="bg-gray-800/80 "
             style={{
               borderRadius: wp('4%'),

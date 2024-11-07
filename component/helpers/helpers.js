@@ -36,7 +36,7 @@ const styles1 = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: '#ffff', // Change to your preferred background color
-    padding: 10,
+    padding: 3,
     alignItems: 'center',
     justifyContent: 'center',
   },
