@@ -21,6 +21,7 @@ const CarSelectionScreen = ({route}) => {
   const navigation = useNavigation();
   const [selectedCar, setSelectedCar] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading,setloading] = useState(false);
   const [cars,setCars] = useState([
   {
     carNumber: '947239847',
@@ -121,7 +122,8 @@ useEffect(() => {
 
     // Use merge option to update the document without overwriting existing data
     await userRef.set(data, { merge: true });
-    
+    await getAllCarData();
+   
   } catch (error) {
     console.error('Error storing user data:', error);
   }
