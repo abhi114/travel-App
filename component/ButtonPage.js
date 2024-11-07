@@ -2,6 +2,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import Icon3 from 'react-native-vector-icons/AntDesign';
 import DriverDashboard from './helpers/DriverDashboard';
 

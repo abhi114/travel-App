@@ -21,14 +21,14 @@ const PassengerInfoScreen = ({passengerData}) => {
           width: Dimensions.get('window').width * 0.75,
           marginRight: 15,
           borderRadius: 20,
-          padding: 16,
+          padding: 17,
           backgroundColor: '#fff',
           shadowColor: '#000',
           shadowOffset: { width: 0, height: 6 },
           shadowOpacity: 0.1,
           shadowRadius: 10,
           elevation: 10,
-          marginBottom:5
+          marginBottom:6
         }}
         key={key}
       >
@@ -54,9 +54,9 @@ const PassengerInfoScreen = ({passengerData}) => {
             flexDirection: 'row', 
             alignItems: 'center', 
             backgroundColor: '#F3F4F6', 
-            padding: 12, 
+            padding: 15, 
             borderRadius: 12, 
-            marginBottom: 8 
+            marginBottom: 5
           }}>
             <View style={{ backgroundColor: '#D1FAE5', borderRadius: 50, padding: 6, marginRight: 10 }}>
               <MaterialCommunityIcons name="map-marker" size={20} color="#10B981" />
@@ -72,7 +72,7 @@ const PassengerInfoScreen = ({passengerData}) => {
           </View>
 
           {/* Connection Line */}
-          <View style={{ width: 2, height: 20, backgroundColor: '#D1D5DB', marginLeft: 28 }} />
+          <View style={{ width: 2, height: 20, backgroundColor: '#D1D5DB', marginLeft: 28, }} />
 
           {/* Destination */}
           <View style={{
@@ -80,7 +80,8 @@ const PassengerInfoScreen = ({passengerData}) => {
             alignItems: 'center', 
             backgroundColor: '#F3F4F6', 
             padding: 12, 
-            borderRadius: 12 
+            borderRadius: 12, 
+            marginTop:2
           }}>
             <View style={{ backgroundColor: '#FEE2E2', borderRadius: 50, padding: 6, marginRight: 10 }}>
               <MaterialCommunityIcons name="map-marker-radius" size={20} color="#EF4444" />

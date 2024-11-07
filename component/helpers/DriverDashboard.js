@@ -13,7 +13,10 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LottieView from 'lottie-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 const DriverDashboard = ({emailId, id, data,logout}) => {
   const navigation = useNavigation();
   const scaleAnim = useRef(new Animated.Value(0)).current; // Initial scale for the title
@@ -52,13 +55,32 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
       {/* Logout Button */}
       <TouchableOpacity
         onPress={logout}
-        className="absolute right-4 top-4 bg-red-500 rounded-full flex-row items-center px-4 py-2 shadow-lg">
-        <Icon name="logout" size={20} color="white" className="mr-2" />
+        style={{
+          position: 'absolute',
+          top: hp('2%'),
+          right: wp('4%'),
+          backgroundColor: '#EF4444',
+          borderRadius: wp('4%'),
+          flexDirection: 'row',
+          alignItems: 'center',
+          paddingVertical: hp('1%'),
+          paddingHorizontal: wp('4%'),
+          shadowOpacity: 0.2,
+          shadowRadius: 5,
+        }}>
+        <Icon
+          name="logout"
+          size={wp('5%')}
+          style={{marginRight: wp('2%')}}
+          color="white"
+        />
         <Text className="text-white font-medium">Logout</Text>
       </TouchableOpacity>
 
       {/* Main Content Container */}
-      <View className="flex-1 items-center justify-center px-6">
+      <View
+        className="flex-1 items-center justify-center "
+        style={{paddingHorizontal: wp(6)}}>
         {/* Animation Container */}
         <View className="mb-8">
           {/* <LottieView
@@ -72,45 +94,97 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
 
         {/* Welcome Text */}
         <Animated.View style={{transform: [{scale: scaleAnim}]}}>
-          <Text className="text-4xl font-bold text-white text-center mb-5">
+          <Text
+            className=""
+            style={{
+              fontSize: wp('10%'),
+              fontWeight: 'bold',
+              color: '#fff',
+              textAlign: 'center',
+              marginBottom: hp('2%'),
+            }}>
             Welcome To <Text style={{color: '#FF0000'}}>Drive..</Text>
           </Text>
         </Animated.View>
         <TouchableOpacity
-          className="flex-row items-center bg-gray-800/50 px-6 py-3 rounded-full mb-5 shadow-xl"
-          onPress={() => navigation.navigate('CarSelectionScreen')}>
+          className="flex-row items-center bg-gray-800/50"
+          onPress={() => navigation.navigate('CarSelectionScreen')}
+          style={{
+            paddingHorizontal: wp('6%'),
+            paddingVertical: hp('1.5%'),
+            borderRadius: wp('8%'),
+            marginBottom: hp('3%'),
+            shadowOpacity: 0.2,
+            shadowRadius: 5,
+          }}>
           <Image
             source={require('../../assets/profile.png')}
-            className="w-10 h-10 rounded-full mr-4"
+            style={{
+              width: wp('10%'),
+              height: wp('10%'),
+              borderRadius: wp('5%'),
+              marginRight: wp('3%'),
+            }}
           />
-          <Text className="text-xl text-white font-semibold">{data?.name}</Text>
+          <Text
+            className=" text-white font-semibold"
+            style={{fontSize: wp('5%')}}>
+            {data?.name}
+          </Text>
         </TouchableOpacity>
         {/* Selected Car Display */}
-        <View className="w-full max-w-sm mb-6">
+        <View style={{width: wp('90%'), marginBottom: hp('3%')}}>
           <TouchableOpacity
             onPress={() => navigation.navigate('CarSelectionScreen')}
-            className="bg-gray-800/80 rounded-2xl overflow-hidden shadow-xl">
-            <View className="px-4 py-3 border-b border-gray-700">
-              <Text className="text-gray-400 text-sm font-medium">
+            className="bg-gray-800/80 "
+            style={{
+              borderRadius: wp('4%'),
+              overflow: 'hidden',
+              shadowOpacity: 0.2,
+              shadowRadius: 5,
+            }}>
+            <View
+              className="  border-gray-700"
+              style={{
+                paddingVertical: hp('2%'),
+                paddingHorizontal: wp('3%'),
+                borderBottomWidth: wp(0.5),
+              }}>
+              <Text
+                className="text-gray-400 "
+                style={{
+                  color: '#A3A3A3',
+                  fontSize: wp('3.5%'),
+                  fontWeight: '500',
+                }}>
                 Current Vehicle
               </Text>
             </View>
-            <View className="flex-row items-center p-4">
+            <View className="flex-row items-center" style={{padding: hp('2%')}}>
               <Image
                 source={{uri: selectedCar?.image}}
-                className="w-16 h-16 rounded-lg mr-4"
+                className="rounded-lg"
                 resizeMode="cover"
+                style={{
+                  width: wp('16%'),
+                  height: wp('16%'),
+                  marginRight: wp('4%'),
+                }}
               />
               <View className="flex-1">
-                <Text className="text-white text-lg font-semibold">
+                <Text
+                  className="text-white font-semibold"
+                  style={{fontSize: wp('5%')}}>
                   {selectedCar?.name}
                 </Text>
-                <Text className="text-gray-400 text-sm">
+                <Text className="text-gray-400" style={{fontSize: wp('4%')}}>
                   ID: {selectedCar?.id}
                 </Text>
               </View>
-              <View className="bg-blue-500/20 p-2 rounded-full">
-                <Icon name="directions-car" size={24} color="#60A5FA" />
+              <View
+                className="bg-blue-500/20 rounded-full"
+                style={{padding: wp('2%')}}>
+                <Icon name="directions-car" size={wp('6%')} color="#60A5FA" />
               </View>
             </View>
             <View className="bg-blue-500/10 px-4 py-2 flex-row items-center justify-between">
@@ -130,21 +204,26 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
           style={{opacity: opacityAnim}}>
           {/* Create New Duty Button */}
           <TouchableOpacity
-            className="bg-blue-600 mb-4 rounded-2xl shadow-xl active:bg-blue-700 transform active:scale-95 transition-all"
-            onPress={() =>
-              navigation.navigate('InfoPage', {emailId, id, data})
-            }>
-            <View className="flex-row items-center justify-between px-6 py-4">
+            className="bg-blue-600  rounded-2xl shadow-xl active:bg-blue-700 transform active:scale-95 transition-all"
+            onPress={() => navigation.navigate('InfoPage', {emailId, id, data})}
+            style={{marginBottom: hp('2%')}}>
+            <View
+              className="flex-row items-center justify-between"
+              style={{paddingHorizontal: wp('6%'), paddingVertical: hp('2%')}}>
               <View className="flex-1">
-                <Text className="text-white text-xl font-semibold mb-1">
+                <Text
+                  className="text-white font-semibold"
+                  style={{fontSize: wp('5%'),marginBottom:wp(1)}}>
                   Create New Duty
                 </Text>
-                <Text className="text-blue-100 text-sm">
+                <Text className="text-blue-100" style={{fontSize: wp('3.5%')}}>
                   Start a new driving assignment
                 </Text>
               </View>
-              <View className="bg-blue-500 p-3 rounded-full">
-                <Icon name="add-circle-outline" size={24} color="white" />
+              <View
+                className="bg-blue-500 rounded-full"
+                style={{padding: wp('3%')}}>
+                <Icon name="add-circle-outline" size={wp('6%')} color="white" />
               </View>
             </View>
           </TouchableOpacity>
@@ -153,24 +232,34 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
           <TouchableOpacity
             className="bg-gray-800 rounded-2xl shadow-xl active:bg-gray-700 transform active:scale-95 transition-all"
             onPress={() => navigation.navigate('ReportsScreen', {id})}>
-            <View className="flex-row items-center justify-between px-6 py-4">
+            <View
+              className="flex-row items-center justify-between"
+              style={{paddingHorizontal: wp('6%'), paddingVertical: hp('2%')}}>
               <View className="flex-1">
-                <Text className="text-white text-xl font-semibold mb-1">
+                <Text
+                  className="text-white font-semibold "
+                  style={{fontSize: wp('5%'),marginBottom:wp(1)}}>
                   Check Reports
                 </Text>
-                <Text className="text-gray-400 text-sm">
+                <Text className="text-gray-400" style={{fontSize: wp('3.5%')}}>
                   View your driving history and stats
                 </Text>
               </View>
-              <View className="bg-gray-700 p-3 rounded-full">
-                <Icon name="insert-chart-outlined" size={24} color="white" />
+              <View
+                className="bg-gray-700 rounded-full"
+                style={{padding: wp('3%')}}>
+                <Icon
+                  name="insert-chart-outlined"
+                  size={wp('6%')}
+                  color="white"
+                />
               </View>
             </View>
           </TouchableOpacity>
         </Animated.View>
 
         {/* Bottom Decoration */}
-        <View className="absolute bottom-0 w-full h-32 bg-gradient-to-t from-gray-900 to-transparent" />
+        
       </View>
     </View>
   );

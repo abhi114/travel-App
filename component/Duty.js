@@ -15,6 +15,10 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 import PassengerInfoScreen from './PassengerCard';
 
 
@@ -53,7 +57,7 @@ const Sign = ({id, Rprtdate, mainData}) => {
     setSignSaveStart(true);
     const storageref = storage().ref();
     const imageRef = storageref.child(
-      `signatures/${id}/${currentSignature}.png`,
+      `signatures/${id}/${Rprtdate}/${currentSignature}.png`,
     );
     await imageRef.putString(result.encoded, 'base64', {
       contentType: 'image/png',
@@ -197,6 +201,11 @@ const Sign = ({id, Rprtdate, mainData}) => {
 const Duty = ({route}) => {
     
     const [accept, setaccept] = useState(false);
+    function removeMonth(dateString) {
+      const monthRegex = dateString.split(' '); // Matches a whole word
+      return monthRegex.filter((element, index) => index !== 1).join(' ');
+    }
+    
     const navigation = useNavigation()
      const {
        name,
@@ -215,7 +224,7 @@ const Duty = ({route}) => {
      const tableData = [
        ['', 'Start', 'End '],
        ['Km', startKm, endkm],
-       ['Duration', Rprtdate, endDate],
+       ['Duration', removeMonth(Rprtdate), endDate],
        ['Fuel', `${startFuel}lit`, `${endFuel}lit`],
      ];
      //console.log('passengers Data' + JSON.stringify(mainData[Rprtdate].PassengerData));
@@ -324,7 +333,7 @@ const Duty = ({route}) => {
                 <View style={styles.iconWrapper}>
                   <Icon
                     name="person-circle-outline"
-                    size={28}
+                    size={wp(7)}
                     color="#2196F3"
                   />
                 </View>
@@ -335,7 +344,7 @@ const Duty = ({route}) => {
               </View>
               <View style={styles.infoItem}>
                 <View style={styles.iconWrapper}>
-                  <Icon name="car-outline" size={28} color="#2196F3" />
+                  <Icon name="car-outline" size={wp(7)} color="#2196F3" />
                 </View>
                 <View style={styles.textContainer}>
                   <Text style={styles.labelText}>Car Details</Text>
@@ -347,7 +356,7 @@ const Duty = ({route}) => {
             <View style={[styles.infoRow, styles.topMargin]}>
               <View style={styles.infoItem}>
                 <View style={styles.iconWrapper}>
-                  <Icon name="call-outline" size={24} color="#2196F3" />
+                  <Icon name="call-outline" size={wp(7)} color="#2196F3" />
                 </View>
                 <View style={styles.textContainer}>
                   <Text style={styles.labelText}>Driver's Number</Text>
@@ -356,7 +365,7 @@ const Duty = ({route}) => {
               </View>
               <View style={styles.infoItem}>
                 <View style={styles.iconWrapper}>
-                  <Icon name="home-outline" size={24} color="#2196F3" />
+                  <Icon name="home-outline" size={wp(7)} color="#2196F3" />
                 </View>
                 <View style={styles.textContainer}>
                   <Text style={styles.labelText}>Address</Text>
@@ -387,7 +396,8 @@ const Duty = ({route}) => {
                       style={[
                         styles.tableCellText,
                         rowIndex === 0 && styles.headerCellText,
-                      ]}>
+                      ]}
+                      numberOfLines={3}>
                       {cell}
                     </Text>
                   </View>
@@ -427,7 +437,7 @@ const Duty = ({route}) => {
         <TouchableOpacity
           onPress={() => setSignatureEnable(true)}
           style={styles.signatureButton}>
-          <Icon name="create-outline" size={22} color="#fff" />
+          <Icon name="create-outline" size={wp(7)} color="#fff" />
           <Text style={styles.signatureButtonText}>Add Signature</Text>
         </TouchableOpacity>
 
@@ -446,18 +456,18 @@ const styles2 = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 16,
-    paddingVertical: 20,
+    paddingHorizontal: wp(4),
+    paddingVertical: hp(2.5),
   },
   headerContainer: {
-    marginBottom: 20,
+    marginBottom: hp(2.5),
   },
   titleText: {
-    fontSize: 20,
+    fontSize: wp(5),
     fontWeight: '700',
     color: '#1A1A1A',
     textAlign: 'center',
-    marginBottom: 8,
+    marginBottom: hp(1),
     ...Platform.select({
       android: {
         fontFamily: 'Roboto-Bold',
@@ -465,7 +475,7 @@ const styles2 = StyleSheet.create({
     }),
   },
   subtitleText: {
-    fontSize: 16,
+    fontSize: wp(4),
     color: '#4A4A4A',
     textAlign: 'center',
     ...Platform.select({
@@ -483,8 +493,8 @@ const styles2 = StyleSheet.create({
     flex: 1,
   },
   signatureWrapper: {
-    height: 300,
-    borderRadius: 16,
+    height: hp(37.5),
+    borderRadius: wp(4),
     overflow: 'hidden',
     backgroundColor: '#F5F5F5',
     borderWidth: 1,
@@ -503,14 +513,14 @@ const styles2 = StyleSheet.create({
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: 20,
-    gap: 16,
+    marginTop: hp(2.5),
+    gap: wp(4),
   },
   button: {
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 8,
-    minWidth: 120,
+    paddingVertical: hp(1.5),
+    paddingHorizontal: wp(8),
+    borderRadius: wp(2),
+    minWidth: wp(30),
     ...Platform.select({
       android: {
         elevation: 2,
@@ -526,7 +536,7 @@ const styles2 = StyleSheet.create({
     borderColor: '#007AFF',
   },
   buttonText: {
-    fontSize: 16,
+    fontSize: wp(4),
     fontWeight: '600',
     color: '#FFFFFF',
     textAlign: 'center',
@@ -545,82 +555,87 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f5f5f5',
   },
-
   container: {
     flex: 1,
   },
   headerSection: {
-    paddingVertical: 20,
-    paddingHorizontal: 16,
+    paddingVertical: hp('2%'),
+    paddingHorizontal: wp('4%'),
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#e0e0e0',
   },
   mainTitle: {
-    fontSize: 24,
+    fontSize: wp('6%'),
     fontWeight: '700',
     color: '#1a1a1a',
     textAlign: 'center',
   },
   card: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    marginHorizontal: 16,
-    marginVertical: 8,
-    padding: 16,
+    borderRadius: wp('3%'),
+    marginHorizontal: wp('4%'),
+    marginVertical: hp('1%'),
+    padding: wp('4%'),
     elevation: 3,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: {width: 0, height: hp('0.25%')},
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: wp('1%'),
   },
   cardSection: {
-    paddingVertical: 8,
+    paddingVertical: hp('1%'),
   },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
+    flexWrap: 'wrap',
   },
   topMargin: {
-    marginTop: 24,
+    marginTop: hp('3%'),
   },
   infoItem: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginRight: 8,
+    marginRight: wp('2%'),
   },
   iconWrapper: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: wp('10%'),
+    height: wp('10%'),
+    borderRadius: wp('5%'),
     backgroundColor: '#e3f2fd',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: wp('3%'),
   },
   textContainer: {
     flex: 1,
+    flexShrink: 1,
   },
   labelText: {
-    fontSize: 13,
+    fontSize: wp('3.5%'),
     color: '#666',
-    marginBottom: 4,
+    marginBottom: hp('0.5%'),
+    textAlign: 'left',
   },
   valueText: {
-    fontSize: 15,
+    fontSize: wp('4%'),
     color: '#1a1a1a',
     fontWeight: '500',
+    textAlign: 'left',
+    flexShrink: 1,
+    lineHeight: hp('2.5%'),
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: wp('4.5%'),
     fontWeight: '600',
     color: '#1a1a1a',
-    marginBottom: 16,
+    marginBottom: hp('2%'),
   },
   tableContainer: {
-    borderRadius: 8,
+    borderRadius: wp('2%'),
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: '#e0e0e0',
@@ -632,7 +647,7 @@ const styles = StyleSheet.create({
   },
   tableCell: {
     flex: 1,
-    padding: 12,
+    padding: wp('3%'),
     justifyContent: 'center',
     borderRightWidth: 1,
     borderRightColor: '#e0e0e0',
@@ -645,9 +660,10 @@ const styles = StyleSheet.create({
     borderRightWidth: 0,
   },
   tableCellText: {
-    fontSize: 13,
+    fontSize: wp('3.5%'),
     color: '#333',
     textAlign: 'center',
+    flexShrink: 1,
   },
   headerCellText: {
     fontWeight: '600',
@@ -656,54 +672,53 @@ const styles = StyleSheet.create({
   signatureButton: {
     flexDirection: 'row',
     backgroundColor: '#2196F3',
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+    borderRadius: wp('2%'),
+    paddingVertical: hp('1.5%'),
+    paddingHorizontal: wp('6%'),
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    marginVertical: 20,
+    marginVertical: hp('2.5%'),
     elevation: 2,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
+    shadowOffset: {width: 0, height: hp('0.15%')},
     shadowOpacity: 0.2,
-    shadowRadius: 2,
+    shadowRadius: wp('0.5%'),
   },
   signatureButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: wp('4%'),
     fontWeight: '600',
-    marginLeft: 8,
+    marginLeft: wp('2%'),
   },
   signatureContainer: {
-    marginHorizontal: 16,
-    marginBottom: 16,
-    padding: 16,
+    marginHorizontal: wp('4%'),
+    marginBottom: hp('2%'),
+    padding: wp('4%'),
     borderWidth: 1,
     borderColor: '#e0e0e0',
-    borderRadius: 12,
+    borderRadius: wp('3%'),
     backgroundColor: '#fff',
   },
   footerButtonContainer: {
-    padding: 16,
+    padding: wp('4%'),
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
   },
   buttonStyle: {
     flex: 1,
-    marginHorizontal: 10,
-    paddingVertical: 12,
-    borderRadius: 10,
+    marginHorizontal: wp('2.5%'),
+    paddingVertical: hp('1.5%'),
+    borderRadius: wp('2.5%'),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#ADD8E6',
-    marginVertical:10,
+    marginVertical: hp('1.25%'),
   },
-
   buttonText: {
     color: '#000',
-    fontSize: 16,
+    fontSize: wp('4%'),
     fontWeight: 'bold',
   },
 });

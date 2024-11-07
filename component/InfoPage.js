@@ -314,7 +314,7 @@ const InfoPage = ({route}) => {
       return data;
     }, [passengerNames, startingAddress, destinationAddress]);
 
-    console.log(passengerData);
+    //console.log(passengerData);
   const afteraccept =async () => {
     if( Rprtdate === ''  || address === '' || city === '' || vehicleDetails === ''){
         alert("Please fill all the Fields")
@@ -422,7 +422,7 @@ const InfoPage = ({route}) => {
                 inputMode="numeric"
                 onChangeText={setRprDate}
                 value={Rprtdate}
-                placeholder="Enter in 00 th/st"
+                placeholder="Enter Date"
                 placeholderTextColor="#9ca3af"
               />
               <TouchableOpacity
@@ -447,7 +447,7 @@ const InfoPage = ({route}) => {
                 inputMode="text"
                 onChangeText={setRprtTime}
                 value={RprtTime}
-                placeholder="Enter in 00:00 am/pm"
+                placeholder="Enter Time"
                 placeholderTextColor="#9ca3af"
               />
               <TouchableOpacity

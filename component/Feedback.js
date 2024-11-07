@@ -33,7 +33,10 @@ const FeedbackScreen = ({route}) => {
         ))}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => navigation.navigate('ButtonPage', {id})}>
+          onPress={() => navigation.reset({
+                  index: 0,
+                  routes: [{name: 'ButtonPage', params: {id}}],
+                })}>
           <Text style={styles.buttonText}>Go To Selection Page</Text>
         </TouchableOpacity>
       </ScrollView>
