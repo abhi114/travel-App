@@ -23,7 +23,10 @@ import Widget from './ReportsScreenDetailed';
 import WeeklyStats from './WeeklyStats';
 import { ScrollView } from 'react-native';
 import { Car, ChevronDown, ChevronUp, FileText, MapPin } from 'lucide-react-native';
-
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 
 const UserDataScreen = ({route}) => {
   const {id} = route.params;
@@ -151,7 +154,7 @@ const UserDataScreen = ({route}) => {
         </Picker>
       </View>
 
-      <LineView />
+      {/* <LineView /> */}
 
       <View style={styles2.expenditureContainer}>
         <Text style={styles2.headerText}>Monthly Fuel Expenditure</Text>
@@ -167,7 +170,7 @@ const UserDataScreen = ({route}) => {
         </Text>
       </View>
 
-      <LineView />
+      {/* <LineView /> */}
       {Object.keys(filteredData).length === 0 ? (
         <Text
           style={{
@@ -175,6 +178,7 @@ const UserDataScreen = ({route}) => {
             justifyContent: 'center',
             alignSelf: 'center',
             fontWeight: 'bold',
+            color:'#000'
           }}>
           No Data Available
         </Text>
@@ -202,9 +206,9 @@ const UserDataScreen = ({route}) => {
                         {!expanded[item] ? 'View Details' : 'Show Less'}
                       </Text>
                       {!expanded[item] ? (
-                        <ChevronDown size={20} color="#4A90E2" />
+                        <ChevronDown size={wp(4)} color="#4A90E2" />
                       ) : (
-                        <ChevronUp size={20} color="#4A90E2" />
+                        <ChevronUp size={wp(4)} color="#4A90E2" />
                       )}
                     </View>
                   </View>
@@ -221,7 +225,7 @@ const UserDataScreen = ({route}) => {
                                   <View style={styles2.iconContainer}>
                                     <Icon
                                       name="person-circle"
-                                      size={40}
+                                      size={wp(10)}
                                       color="#4A90E2"
                                     />
                                   </View>
@@ -241,7 +245,7 @@ const UserDataScreen = ({route}) => {
                                       <View style={styles2.iconWrapper}>
                                         <Icon1
                                           name="date"
-                                          size={20}
+                                          size={wp(5)}
                                           color="#4A90E2"
                                         />
                                       </View>
@@ -261,7 +265,7 @@ const UserDataScreen = ({route}) => {
                                       <View style={styles2.iconWrapper}>
                                         <Icon1
                                           name="date"
-                                          size={20}
+                                          size={wp(5)}
                                           color="#4A90E2"
                                         />
                                       </View>
@@ -281,7 +285,7 @@ const UserDataScreen = ({route}) => {
                                   <View style={styles2.headerContainer}>
                                     <Icon
                                       name="speedometer-outline"
-                                      size={24}
+                                      size={wp(6)}
                                       color="#4A90E2"
                                     />
                                     <Text style={styles2.headerText}>
@@ -294,7 +298,7 @@ const UserDataScreen = ({route}) => {
                                       <View style={styles2.iconWrapper}>
                                         <Icon
                                           name="location"
-                                          size={20}
+                                          size={wp(5)}
                                           color="#4A90E2"
                                         />
                                       </View>
@@ -314,7 +318,7 @@ const UserDataScreen = ({route}) => {
                                       <View style={styles2.iconWrapper}>
                                         <Icon
                                           name="location"
-                                          size={20}
+                                          size={wp(5)}
                                           color="#4A90E2"
                                         />
                                       </View>
@@ -346,7 +350,7 @@ const UserDataScreen = ({route}) => {
                                     <View style={styles2.iconWrapper}>
                                       <Icon3
                                         name="fuel"
-                                        size={24}
+                                        size={wp(6)}
                                         color="#4A90E2"
                                       />
                                     </View>
@@ -420,7 +424,7 @@ const UserDataScreen = ({route}) => {
                                       <View style={styles2.iconWrapper}>
                                         <Icon3
                                           name="currency-rupee"
-                                          size={24}
+                                          size={wp(6)}
                                           color="#4A90E2"
                                         />
                                       </View>
@@ -440,7 +444,7 @@ const UserDataScreen = ({route}) => {
                                     {/* Location Details */}
                                     <View style={styles2.detailCard}>
                                       <View style={styles2.cardHeader}>
-                                        <MapPin size={20} color="#4A90E2" />
+                                        <MapPin size={wp(4)} color="#4A90E2" />
                                         <Text style={styles2.cardTitle}>
                                           Location Details
                                         </Text>
@@ -481,7 +485,7 @@ const UserDataScreen = ({route}) => {
                                     {/* Vehicle Details */}
                                     <View style={styles2.detailCard}>
                                       <View style={styles2.cardHeader}>
-                                        <Car size={20} color="#4A90E2" />
+                                        <Car size={wp(6)} color="#4A90E2" />
                                         <Text style={styles2.cardTitle}>
                                           Vehicle Details
                                         </Text>
@@ -496,14 +500,16 @@ const UserDataScreen = ({route}) => {
                                   <LineView />
 
                                   {/* Driver's Signature Section */}
-                                  <View className="mb-4">
+                                  <View style={{marginBottom: wp(3)}}>
                                     <Text className="text-lg font-bold text-gray-900 mb-2">
                                       Driver's Signature:
                                     </Text>
 
                                     {filteredData[item].passengersSignature !==
                                     undefined ? (
-                                      <View className="w-full bg-gray-50 rounded-lg overflow-hidden border border-gray-200 h-40">
+                                      <View
+                                        className="w-full bg-gray-50 rounded-lg overflow-hidden border border-gray-200"
+                                        style={{height: wp(40)}}>
                                         <Image
                                           source={{
                                             uri: filteredData[item]
@@ -514,8 +520,12 @@ const UserDataScreen = ({route}) => {
                                         />
                                       </View>
                                     ) : (
-                                      <View className="w-full bg-gray-50 rounded-lg border border-gray-200 h-40 items-center justify-center">
-                                        <Text className="text-lg text-gray-900 p-2">
+                                      <View
+                                        className="w-full bg-gray-50 rounded-lg border border-gray-200 items-center justify-center"
+                                        style={{height: wp(40)}}>
+                                        <Text
+                                          className="text-lg text-gray-900 "
+                                          style={{padding: wp(2)}}>
                                           No signature available
                                         </Text>
                                       </View>
@@ -529,7 +539,7 @@ const UserDataScreen = ({route}) => {
                                   <View className="flex-row items-center space-x-2">
                                     <Icon
                                       name="person-circle"
-                                      size={35}
+                                      size={wp(10)}
                                       color="#2563eb" // Tailwind blue-600
                                     />
                                     <Text className="text-lg font-bold text-gray-900">
@@ -538,22 +548,27 @@ const UserDataScreen = ({route}) => {
                                   </View>
                                 </View>
                                 <LineView />
-                                <View style={{flexDirection: 'row'}}>
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    flexWrap: 'wrap',
+                                  }}>
                                   <Text
                                     style={{
-                                      fontSize: 18,
+                                      fontSize: wp('5%'),
                                       fontWeight: 'bold',
                                       color: '#000000',
-                                      marginVertical: 5,
+                                      marginVertical: hp('1%'),
+                                      flexShrink: 1,
                                     }}>
-                                    Name:{' '}
+                                    Name:
                                   </Text>
                                   <Text
                                     style={{
-                                      fontSize: 18,
-
+                                      fontSize: wp('5%'),
                                       color: '#000000',
-                                      marginVertical: 5,
+                                      marginVertical: hp('1%'),
+                                      flexShrink: 1,
                                     }}>
                                     {
                                       filteredData[item].PassengerData[
@@ -562,22 +577,27 @@ const UserDataScreen = ({route}) => {
                                     }
                                   </Text>
                                 </View>
-                                <View style={{flexDirection: 'row'}}>
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    flexWrap: 'wrap',
+                                  }}>
                                   <Text
                                     style={{
-                                      fontSize: 18,
+                                      fontSize: wp('4.5%'),
                                       fontWeight: 'bold',
                                       color: '#000000',
-                                      marginVertical: 5,
+                                      paddingVertical: hp('1%'),
+                                      flexShrink: 1,
                                     }}>
-                                    Destination Address:{' '}
+                                    Destination Address:
                                   </Text>
                                   <Text
                                     style={{
-                                      fontSize: 18,
-
+                                      fontSize: wp('4.5%'),
                                       color: '#000000',
-                                      marginVertical: 5,
+                                      paddingVertical: hp('1%'),
+                                      flexShrink: 1,
                                     }}>
                                     {
                                       filteredData[item].PassengerData[
@@ -586,22 +606,27 @@ const UserDataScreen = ({route}) => {
                                     }
                                   </Text>
                                 </View>
-                                <View style={{flexDirection: 'row'}}>
+                                <View
+                                  style={{
+                                    flexDirection: 'row',
+                                    flexWrap: 'wrap',
+                                  }}>
                                   <Text
                                     style={{
-                                      fontSize: 18,
+                                      fontSize: wp('4.5%'),
                                       fontWeight: 'bold',
                                       color: '#000000',
-                                      marginVertical: 5,
+                                      marginVertical: hp('1%'),
+                                      flexShrink: 1,
                                     }}>
-                                    Starting Address:{' '}
+                                    Starting Address:
                                   </Text>
                                   <Text
                                     style={{
-                                      fontSize: 18,
-
+                                      fontSize: wp('4.5%'),
                                       color: '#000000',
-                                      marginVertical: 5,
+                                      marginVertical: hp('1%'),
+                                      flexShrink: 1,
                                     }}>
                                     {
                                       filteredData[item].PassengerData[
@@ -693,193 +718,169 @@ const UserDataScreen = ({route}) => {
   );
 };
 const styles2 = StyleSheet.create({
-  container: {
-    padding: 5,
-    marginBottom:10,
-  },
+  container: {padding: wp('1.25%'), marginBottom: hp('1.25%')},
   costCard: {
     backgroundColor: '#F0F7FF',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
+    borderRadius: wp('3%'),
+    padding: wp('4%'),
+    marginBottom: wp('4%'),
   },
   costHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: hp('1%'),
   },
   iconWrapper: {
     backgroundColor: '#FFFFFF',
-    padding: 8,
-    borderRadius: 8,
-    marginRight: 12,
+    padding: wp('2%'),
+    borderRadius: wp('2%'),
+    marginRight: wp('3%'),
   },
-  costLabel: {
-    fontSize: 16,
-    color: '#666666',
-    fontWeight: '500',
-  },
+  costLabel: {fontSize: wp('4%'), color: '#666666', fontWeight: '500'},
   costValue: {
-    fontSize: 24,
+    fontSize: wp('6%'),
     fontWeight: '700',
     color: '#333333',
-    marginTop: 4,
+    marginTop: hp('1%'),
   },
-  divider: {
-    height: 1,
-    backgroundColor: '#E8EDF3',
-    marginVertical: 16,
-  },
-  detailsSection: {
-    gap: 16,
-  },
+  divider: {height: 1, backgroundColor: '#E8EDF3', marginVertical: hp('2%')},
+  detailsSection: {gap: wp('4%')},
   detailCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: wp('3%'),
+    padding: wp('4%'),
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: hp('0.25%'),
     },
     shadowOpacity: 0.1,
-    shadowRadius: 3,
+    shadowRadius: wp('1%'),
     elevation: 3,
+    marginVertical: hp('1%'),
   },
   cardHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
-    paddingBottom: 8,
+    marginBottom: hp('1%'),
     borderBottomWidth: 1,
     borderBottomColor: '#E8EDF3',
+    paddingBottom: hp('1%'),
   },
   cardTitle: {
-    fontSize: 16,
+    fontSize: wp('4.5%'),
     fontWeight: '600',
     color: '#333333',
-    marginLeft: 8,
+    flexShrink: 1,
   },
   detailRow: {
-    marginBottom: 8,
+    marginBottom: hp('1%'),
   },
   detailLabel: {
-    fontSize: 14,
+    fontSize: wp('4%'),
     color: '#666666',
-    marginBottom: 4,
+    marginBottom: hp('0.5%'),
   },
   detailValue: {
-    fontSize: 15,
+    fontSize: wp('4.25%'),
     color: '#333333',
-    lineHeight: 22,
+    flexShrink: 1,
   },
   instructionsText: {
-    fontSize: 15,
+    fontSize: wp('3.75%'),
     color: '#333333',
-    lineHeight: 22,
+    lineHeight: hp('5.5%'),
   },
   vehicleText: {
-    fontSize: 15,
+    fontSize: wp('3.75%'),
     color: '#333333',
-    lineHeight: 22,
+    lineHeight: hp('5.5%'),
   },
-  container: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
-    padding: 5,
-  },
+  container: {flex: 1, backgroundColor: '#FFFFFF', padding: wp('1.25%')},
   expandedContent: {
-    marginTop: 15,
-    marginBottom:10,
+    marginTop: hp('2%'),
+    marginBottom: hp('1.25%'),
   },
   cardBody: {
     backgroundColor: '#FAFAFA',
-    borderRadius: 8,
-    padding: 8,
+    borderRadius: wp('2%'),
+    padding: wp('2%'),
   },
   driverSection: {
-    marginBottom: 16,
+    marginBottom: hp('2%'),
   },
   dateSection: {
-    marginVertical: 12,
+    marginVertical: hp('1.5%'),
   },
   dateContainer: {
     backgroundColor: '#F8F9FB',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: wp('3%'),
+    padding: wp('4%'),
     borderWidth: 1,
     borderColor: '#E8EDF3',
   },
   distanceSection: {
-    marginVertical: 16,
+    marginVertical: hp('2%'),
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: wp('3%'),
+    padding: wp('4%'),
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: hp('0.25%'),
     },
     shadowOpacity: 0.1,
-    shadowRadius: 3,
+    shadowRadius: wp('0.75%'),
     elevation: 3,
   },
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
-    paddingBottom: 12,
+    marginBottom: hp('2%'),
+    paddingBottom: hp('1.5%'),
     borderBottomWidth: 1,
     borderBottomColor: '#E8EDF3',
   },
   fuelSection: {
-    marginVertical: 16,
+    marginVertical: hp('2%'),
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: wp('3%'),
+    padding: wp('4%'),
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: hp('0.25%'),
     },
     shadowOpacity: 0.1,
-    shadowRadius: 3,
+    shadowRadius: wp('0.75%'),
     elevation: 3,
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E8EDF3',
   },
   iconWrapper: {
     backgroundColor: '#EBF3FF',
-    padding: 8,
-    borderRadius: 8,
-    marginRight: 12,
+    padding: wp('2%'),
+    borderRadius: wp('2%'),
+    marginRight: wp('3%'),
   },
   headerText: {
-    fontSize: 18,
+    fontSize: wp('4.5%'),
     fontWeight: '600',
     color: '#333333',
   },
   subHeader: {
-    fontSize: 14,
+    fontSize: wp('3.5%'),
     color: '#666666',
     fontWeight: '400',
   },
   fuelMetricsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    gap: 12,
+    gap: wp('3%'),
   },
   fuelCard: {
     flex: 1,
     backgroundColor: '#F8F9FB',
-    borderRadius: 8,
-    padding: 12,
+    borderRadius: wp('2%'),
+    padding: wp('3%'),
     position: 'relative',
     overflow: 'hidden',
   },
@@ -887,252 +888,256 @@ const styles2 = StyleSheet.create({
     zIndex: 1,
   },
   fuelLabel: {
-    fontSize: 13,
+    fontSize: wp('3.25%'),
     color: '#666666',
-    marginBottom: 4,
+    marginBottom: hp('0.5%'),
   },
   fuelValueContainer: {
     flexDirection: 'row',
     alignItems: 'baseline',
   },
   fuelValue: {
-    fontSize: 20,
+    fontSize: wp('5%'),
     fontWeight: '600',
     color: '#333333',
   },
   unitLabel: {
-    fontSize: 14,
+    fontSize: wp('3.5%'),
     color: '#666666',
-    marginLeft: 4,
+    marginLeft: wp('1%'),
   },
   fuelIndicator: level => ({
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 4,
+    height: hp('0.5%'),
     backgroundColor: level === 'full' ? '#4CAF50' : '#FF9800',
   }),
   totalFuelUsage: {
-    marginTop: 16,
+    marginTop: hp('2%'),
     backgroundColor: '#F0F7FF',
-    borderRadius: 8,
-    padding: 12,
+    borderRadius: wp('2%'),
+    padding: wp('3%'),
     alignItems: 'center',
   },
   totalLabel: {
-    fontSize: 14,
+    fontSize: wp('3.5%'),
     color: '#4A90E2',
-    marginBottom: 4,
+    marginBottom: hp('0.5%'),
   },
   totalValueContainer: {
     flexDirection: 'row',
     alignItems: 'baseline',
   },
   totalValue: {
-    fontSize: 24,
+    fontSize: wp('6%'),
     fontWeight: '700',
     color: '#333333',
   },
   totalUnit: {
-    fontSize: 14,
+    fontSize: wp('3.5%'),
     color: '#666666',
-    marginLeft: 4,
+    marginLeft: wp('1%'),
   },
   headerText: {
-    fontSize: 18,
+    fontSize: wp('4.5%'),
     fontWeight: '600',
     color: '#333333',
-    marginLeft: 8,
+    marginLeft: wp('2%'),
   },
   metersContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 5,
+    paddingHorizontal: wp('1.25%'),
   },
   meterCard: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
+    padding: wp('3%'),
     backgroundColor: '#F8F9FB',
-    borderRadius: 8,
+    borderRadius: wp('2%'),
   },
   iconWrapper: {
     backgroundColor: '#EBF3FF',
-    padding: 8,
-    borderRadius: 8,
-    marginRight: 12,
+    padding: wp('2%'),
+    borderRadius: wp('2%'),
+    marginRight: wp('3%'),
   },
   meterInfo: {
     flex: 1,
   },
   meterLabel: {
-    fontSize: 13,
+    fontSize: wp('3.25%'),
     color: '#666666',
-    marginBottom: 4,
+    marginBottom: hp('0.5%'),
   },
   meterValue: {
-    fontSize: 16,
+    fontSize: wp('4%'),
     fontWeight: '600',
     color: '#333333',
   },
   separator: {
-    width: 16,
+    width: wp('4%'),
   },
   totalDistance: {
-    marginTop: 16,
-    padding: 12,
+    marginTop: hp('2%'),
+    padding: wp('3%'),
     backgroundColor: '#F0F7FF',
-    borderRadius: 8,
+    borderRadius: wp('2%'),
     alignItems: 'center',
   },
   totalLabel: {
-    fontSize: 14,
+    fontSize: wp('3.5%'),
     color: '#4A90E2',
-    marginBottom: 4,
+    marginBottom: hp('0.5%'),
   },
   totalValue: {
-    fontSize: 20,
+    fontSize: wp('5%'),
     fontWeight: '700',
     color: '#333333',
   },
   dateRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: hp('1%'),
   },
   iconWrapper: {
     backgroundColor: '#EBF3FF',
-    padding: 8,
-    borderRadius: 8,
-    marginRight: 12,
+    padding: wp('2%'),
+    borderRadius: wp('2%'),
+    marginRight: wp('3%'),
   },
   dateInfo: {
     flex: 1,
   },
   dateLabel: {
-    fontSize: 13,
+    fontSize: wp('3.25%'),
     color: '#666666',
-    marginBottom: 4,
+    marginBottom: hp('0.5%'),
     fontWeight: '500',
   },
   dateValue: {
-    fontSize: 16,
+    fontSize: wp('4%'),
     color: '#333333',
     fontWeight: '600',
   },
   separator: {
     height: 1,
     backgroundColor: '#E8EDF3',
-    marginVertical: 8,
+    marginVertical: hp('1%'),
   },
   driverHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    padding: 12,
-    borderRadius: 8,
+    padding: wp('3%'),
+    borderRadius: wp('2%'),
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 1,
+      height: hp('0.25%'),
     },
     shadowOpacity: 0.05,
-    shadowRadius: 2,
+    shadowRadius: wp('0.5%'),
     elevation: 2,
   },
   iconContainer: {
     backgroundColor: '#F0F7FF',
-    padding: 8,
+    padding: wp('2%'),
     borderRadius: 50,
-    marginRight: 12,
+    marginRight: wp('3%'),
   },
   driverInfo: {
     flex: 1,
   },
   label: {
-    fontSize: 14,
+    fontSize: wp('3.5%'),
     color: '#666666',
-    marginBottom: 4,
+    marginBottom: hp('0.5%'),
   },
   driverName: {
-    fontSize: 18,
+    fontSize: wp('4.5%'),
     fontWeight: '600',
     color: '#333333',
   },
   divider: {
     height: 1,
     backgroundColor: '#E5E5E5',
-    marginTop: 16,
+    marginTop: hp('2%'),
   },
   header: {
-    marginBottom: 20,
-    paddingVertical: 8,
+    marginBottom: hp('2.5%'),
+    paddingVertical: hp('1%'),
     backgroundColor: '#F5F5F5',
-    borderRadius: 8,
+    borderRadius: wp('2%'),
   },
   headerText: {
-    fontSize: 18,
+    fontSize: wp('4.5%'),
     fontWeight: '600',
     color: '#333333',
     textAlign: 'center',
-    marginVertical: 8,
+    marginVertical: hp('1%'),
   },
   pickerContainer: {
     backgroundColor: '#F5F5F5',
-    borderRadius: 8,
-    marginBottom: 20,
+    borderRadius: wp('2%'),
+    marginBottom: hp('2.5%'),
     overflow: 'hidden',
+    margin: wp('1.25%'),
+    borderColor: '#0000FF',
+    borderWidth: 0.5,
   },
   picker: {
-    height: 50,
-    width: Dimensions.get('window').width - 32, // Accounting for container padding
+    height: hp('6.25%'),
+    width: Dimensions.get('window').width - 32,
     backgroundColor: 'transparent',
+    color: '#000',
   },
   expenditureContainer: {
     backgroundColor: '#F8F8F8',
-    borderRadius: 8,
-    padding: 16,
-    marginVertical: 16,
+    borderRadius: wp('2%'),
+    padding: wp('4%'),
+    marginVertical: hp('2%'),
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: hp('0.25%'),
     },
     shadowOpacity: 0.1,
-    shadowRadius: 3,
+    shadowRadius: wp('0.75%'),
     elevation: 3,
   },
   subText: {
     color: '#666666',
-    fontSize: 14,
-    marginVertical: 8,
+    fontSize: wp('3.5%'),
+    marginVertical: hp('1%'),
     textAlign: 'center',
   },
   amountText: {
-    color: '#000000',
-    fontSize: 24,
+    color: '#000',
+    fontSize: wp('6%'),
     fontWeight: '700',
     textAlign: 'center',
-    marginTop: 8,
+    marginTop: hp('1%'),
   },
   touchable: {
-    marginVertical: 8,
-    marginHorizontal: 16,
+    marginVertical: hp('1%'),
+    marginHorizontal: wp('4%'),
   },
   cardContainer: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: wp('3%'),
+    padding: wp('4%'),
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: hp('0.25%'),
     },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: wp('1%'),
     elevation: 3,
     borderWidth: 1,
     borderColor: '#F0F0F0',
@@ -1146,12 +1151,12 @@ const styles2 = StyleSheet.create({
     flex: 1,
   },
   dateLabel: {
-    fontSize: 14,
+    fontSize: wp('3.5%'),
     color: '#666666',
-    marginBottom: 4,
+    marginBottom: hp('0.5%'),
   },
   dateValue: {
-    fontSize: 18,
+    fontSize: wp('4.5%'),
     fontWeight: '600',
     color: '#333333',
   },
@@ -1159,14 +1164,14 @@ const styles2 = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#F5F9FF',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 20,
+    paddingVertical: hp('0.75%'),
+    paddingHorizontal: wp('3%'),
+    borderRadius: wp('5%'),
   },
   expandText: {
-    fontSize: 14,
+    fontSize: wp('3.5%'),
     color: '#4A90E2',
-    marginRight: 4,
+    marginRight: wp('1%'),
     fontWeight: '500',
   },
 });

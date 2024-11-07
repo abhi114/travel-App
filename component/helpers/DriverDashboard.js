@@ -82,15 +82,15 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
         className="flex-1 items-center justify-center "
         style={{paddingHorizontal: wp(6)}}>
         {/* Animation Container */}
-        <View className="mb-8">
-          {/* <LottieView
+        {/* <View className="mb-8">
+           <LottieView
             source={require('../../assets/lottie-animation.json')}
             autoPlay
             loop
             speed={0.5}
             style={{width: width * 0.4, height: width * 0.4}}
-          /> */}
-        </View>
+          /> 
+        </View> */}
 
         {/* Welcome Text */}
         <Animated.View style={{transform: [{scale: scaleAnim}]}}>
@@ -196,7 +196,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
               <Text className="text-blue-400 text-sm">
                 Tap to change vehicle
               </Text>
-              <Icon name="chevron-right" size={20} color="#60A5FA" />
+              <Icon name="chevron-right" size={wp(5)} color="#60A5FA" />
             </View>
           </TouchableOpacity>
         </View>
