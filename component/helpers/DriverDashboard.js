@@ -23,10 +23,10 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
   const opacityAnim = useRef(new Animated.Value(0)).current; // Initial opacity for buttons
   const insets = useSafeAreaInsets();
   const width = Dimensions.get('screen').width;
-  const [selectedCar, setSelectedCar] = useState({
-    name: 'Jeep Rubicon',
-    id: 'UP32AD2445',
-    image:
+  const [selectedCar, setSelecCar] = useState({
+    model: 'Jeep Rubicon',
+    carNumber: 'UP32AD2445',
+    downloadURL:
       'https://images.pexels.com/photos/810357/pexels-photo-810357.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
   });
   useEffect(() => {
@@ -135,7 +135,12 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
         {/* Selected Car Display */}
         <View style={{width: wp('90%'), marginBottom: hp('3%')}}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('CarSelectionScreen',{id:id})}
+            onPress={() =>
+              navigation.navigate('CarSelectionScreen', {
+                id: id,
+                setSelecCar: setSelecCar,
+              })
+            }
             className="bg-gray-800/80 "
             style={{
               borderRadius: wp('4%'),
@@ -162,7 +167,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
             </View>
             <View className="flex-row items-center" style={{padding: hp('2%')}}>
               <Image
-                source={{uri: selectedCar?.image}}
+                source={{uri: selectedCar?.downloadURL}}
                 className="rounded-lg"
                 resizeMode="cover"
                 style={{
@@ -175,10 +180,10 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
                 <Text
                   className="text-white font-semibold"
                   style={{fontSize: wp('5%')}}>
-                  {selectedCar?.name}
+                  {selectedCar?.model}
                 </Text>
                 <Text className="text-gray-400" style={{fontSize: wp('4%')}}>
-                  ID: {selectedCar?.id}
+                  ID: {selectedCar?.carNumber}
                 </Text>
               </View>
               <View
@@ -213,7 +218,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
               <View className="flex-1">
                 <Text
                   className="text-white font-semibold"
-                  style={{fontSize: wp('5%'),marginBottom:wp(1)}}>
+                  style={{fontSize: wp('5%'), marginBottom: wp(1)}}>
                   Create New Duty
                 </Text>
                 <Text className="text-blue-100" style={{fontSize: wp('3.5%')}}>
@@ -238,7 +243,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
               <View className="flex-1">
                 <Text
                   className="text-white font-semibold "
-                  style={{fontSize: wp('5%'),marginBottom:wp(1)}}>
+                  style={{fontSize: wp('5%'), marginBottom: wp(1)}}>
                   Check Reports
                 </Text>
                 <Text className="text-gray-400" style={{fontSize: wp('3.5%')}}>
@@ -259,7 +264,6 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
         </Animated.View>
 
         {/* Bottom Decoration */}
-        
       </View>
     </View>
   );

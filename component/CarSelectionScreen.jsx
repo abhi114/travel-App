@@ -51,7 +51,7 @@ const CarSelectionScreen = ({route}) => {
     statusColor: '#4CAF50',
   },
 ]);
-  const {id} = route.params
+  const {id,setSelecCar} = route.params
   //console.log(id);
  const getAllCarData = async () => {
   try {
@@ -167,7 +167,9 @@ useEffect(() => {
           styles.carCard,
           isSelected && styles.selectedCard,
         ]}
-        onPress={() => setSelectedCar(item.carNumber)}
+        onPress={() => {setSelectedCar(item.carNumber),
+          console.log("selected Car is" + JSON.stringify(item))
+          setSelecCar(item)}}
         activeOpacity={0.7}
       >
         <View style={styles.carContent}>
