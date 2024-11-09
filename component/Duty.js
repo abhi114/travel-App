@@ -199,7 +199,7 @@ const Sign = ({id, Rprtdate, mainData}) => {
 };
 
 const Duty = ({route}) => {
-    
+    const scrollViewRef= useRef(null);
     const [accept, setaccept] = useState(false);
     function removeMonth(dateString) {
       const monthRegex = dateString.split(' '); // Matches a whole word
@@ -320,7 +320,7 @@ const Duty = ({route}) => {
       };
   return (
     <View style={styles.outerContainer}>
-      <ScrollView style={styles.container}>
+      <ScrollView ref={scrollViewRef} style={styles.container}>
         <View style={styles.headerSection}>
           <Text style={styles.mainTitle}>Journey Information</Text>
         </View>
@@ -369,8 +369,8 @@ const Duty = ({route}) => {
                 </View>
                 <View style={styles.textContainer}>
                   <Text style={styles.labelText}>Address</Text>
-                  <Text style={styles.valueText} numberOfLines={2}>
-                    {address}
+                  <Text style={styles.valueText} >
+                    {address} 
                   </Text>
                 </View>
               </View>
@@ -435,7 +435,11 @@ const Duty = ({route}) => {
         <View className="h-6" />
         {/* Signature Section */}
         <TouchableOpacity
-          onPress={() => setSignatureEnable(true)}
+          onPress={() => {setSignatureEnable(true)
+            setTimeout(() => {
+              scrollViewRef.current?.scrollToEnd({animated: true});
+            }, 100);
+          }}
           style={styles.signatureButton}>
           <Icon name="create-outline" size={wp(7)} color="#fff" />
           <Text style={styles.signatureButtonText}>Add Signature</Text>

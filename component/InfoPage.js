@@ -27,7 +27,7 @@ import { LineView } from './helpers/helpers';
 
 const InfoPage = ({route}) => {
    
-    const {id,data:driversdta} = route.params;
+    const {id, data: driversdta, carNumber} = route.params;
     const monthNames = [
       'January',
       'February',
@@ -125,7 +125,7 @@ const InfoPage = ({route}) => {
   const [passengerNames, setPassengerNames] = useState(['']);
   const [startingAddress, setStartingAddress] = useState(['']);
   const [destinationAddress,setDestinationAddress] = useState(['']);
-  const [vehicleDetails,setvehicleDetails]= useState('');
+  const [vehicleDetails,setvehicleDetails]= useState(carNumber!=undefined ? carNumber : '');
     const [dutyInstructions,setDutyInstructions] =useState('');
      //const [city, setCity] = useState('');
      const [suggestions, setSuggestions] = useState([]);
@@ -367,61 +367,156 @@ const InfoPage = ({route}) => {
   return (
     <View style={styles.outerContainer} className="bg-gray-50">
       <ScrollView style={styles.container} className="flex-1 bg-gray-50 ">
-        <View className="w-full px-4 py-3 flex flex-row justify-between items-center bg-white border-b border-gray-100">
-          <Text className="text-xl font-semibold text-gray-800">
+        <View
+          className="w-full flex flex-row justify-between items-center bg-white border-b border-gray-100"
+          style={{paddingHorizontal: wp(3), paddingVertical: wp(3.5)}}>
+          <Text
+            className="font-semibold text-gray-800"
+            style={{fontSize: wp(5)}}>
             Your Details
           </Text>
 
           <TouchableOpacity
             onPress={logout}
-            className="flex flex-row items-center space-x-2 px-3 py-2 rounded-lg bg-red-500"
+            className="flex flex-row items-center"
+            style={{
+              paddingHorizontal: wp('3%'),
+              paddingVertical: hp('1.2%'),
+              borderRadius: wp('4%'),
+              backgroundColor: 'rgba(220, 38, 38, 1)', // Using rgba equivalent for bg-red-500
+            }}
             activeOpacity={0.7}>
-            <Icon3 size={20} name="logout" color={'#fff'} />
-            <Text className="text-white font-medium text-base">Logout</Text>
+            <Icon3 size={wp('4%')} name="logout" color={'#fff'} />
+            <Text
+              style={{
+                color: '#fff',
+                fontWeight: '500',
+                fontSize: wp('4.5%'),
+                marginLeft: wp('2%'),
+              }}>
+              Logout
+            </Text>
           </TouchableOpacity>
         </View>
 
-        <View className="px-4 py-6 bg-white border-b border-gray-200">
-          <Text className="text-2xl font-bold text-gray-800">
+        <View
+          style={{
+            paddingHorizontal: wp('4%'),
+            paddingVertical: hp('3%'),
+            backgroundColor: 'white',
+            borderBottomWidth: 1,
+            borderBottomColor: '#d1d5db',
+          }}>
+          <Text
+            style={{fontSize: wp('6%'), fontWeight: 'bold', color: '#1f2937'}}>
             Journey Details
           </Text>
-          <Text className="text-sm text-gray-600 mt-1">
+          <Text
+            style={{
+              fontSize: wp('3.5%'),
+              color: '#6b7280',
+              marginTop: hp('0.25%'),
+            }}>
             Please fill in the required information
           </Text>
         </View>
-        <View className="p-4 space-y-4 " >
+        <View className="p-4 space-y-4 ">
           {/* Full Name Card */}
-          <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
-            <Text className="text-sm font-medium text-gray-700 mb-2">
-              Full Name <Text className="text-blue-500">*</Text>
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderRadius: wp('3%'),
+              padding: wp('4%'),
+              borderWidth: 1,
+              borderColor: '#f3f4f6',
+              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+            }}>
+            <Text
+              style={{
+                fontSize: wp('3.5%'),
+                fontWeight: '500',
+                color: '#4b5563',
+                marginBottom: hp('0.5%'),
+              }}>
+              Full Name <Text style={{color: '#3b82f6'}}>*</Text>
             </Text>
-            <View className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-              <Text className="text-gray-800 font-medium">
+            <View
+              style={{
+                backgroundColor: '#f9fafb',
+                borderRadius: wp('2%'),
+                padding: wp('3%'),
+                borderWidth: 1,
+                borderColor: '#e5e7eb',
+              }}>
+              <Text style={{color: '#1f2937', fontWeight: '500'}}>
                 {driversdta.name}
               </Text>
             </View>
           </View>
 
           {/* Number Card */}
-          <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
-            <Text className="text-sm font-medium text-gray-700 mb-2">
-              Number <Text className="text-blue-500">*</Text>
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderRadius: wp('3%'),
+              padding: wp('4%'),
+              borderWidth: 1,
+              borderColor: '#f3f4f6',
+              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+            }}>
+            <Text
+              style={{
+                fontSize: wp('3.5%'),
+                fontWeight: '500',
+                color: '#4b5563',
+                marginBottom: hp('0.5%'),
+              }}>
+              Number <Text style={{color: '#3b82f6'}}>*</Text>
             </Text>
-            <View className="bg-gray-50 rounded-lg p-3 border border-gray-200">
-              <Text className="text-gray-800 font-medium">
+            <View
+              style={{
+                backgroundColor: '#f9fafb',
+                borderRadius: wp('2%'),
+                padding: wp('3%'),
+                borderWidth: 1,
+                borderColor: '#e5e7eb',
+              }}>
+              <Text style={{color: '#1f2937', fontWeight: '500'}}>
                 {driversdta.MobileNumber}
               </Text>
             </View>
           </View>
 
           {/* Reporting Date Card */}
-          <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
-            <Text className="text-sm font-medium text-gray-700 mb-2">
-              Reporting Date <Text className="text-blue-500">*</Text>
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderRadius: wp('3%'),
+              padding: wp('4%'),
+              borderWidth: 1,
+              borderColor: '#f3f4f6',
+              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+            }}>
+            <Text
+              style={{
+                fontSize: wp('3.5%'),
+                fontWeight: '500',
+                color: '#4b5563',
+                marginBottom: hp('0.5%'),
+              }}>
+              Reporting Date <Text style={{color: '#3b82f6'}}>*</Text>
             </Text>
-            <View className="flex-row items-center bg-gray-50 rounded-lg border border-gray-200">
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: '#f9fafb',
+                borderRadius: wp('2%'),
+                borderWidth: 1,
+                borderColor: '#e5e7eb',
+              }}>
               <TextInput
-                className="flex-1 p-3 text-gray-800"
+                style={{flex: 1, padding: wp('3%'), color: '#1f2937'}}
                 keyboardType="numeric"
                 inputMode="numeric"
                 onChangeText={setRprDate}
@@ -431,23 +526,56 @@ const InfoPage = ({route}) => {
               />
               <TouchableOpacity
                 onPress={handleDatePicker}
-                className="px-4 py-3 bg-blue-50 rounded-r-lg border-l border-gray-200">
-                <View className="items-center">
-                  <Icon3 name="calendar" size={24} color="#3b82f6" />
-                  <Text className="text-xs text-blue-600 mt-1">Select</Text>
+                style={{
+                  backgroundColor: '#eff6ff',
+                  borderTopRightRadius: wp('2%'),
+                  borderBottomRightRadius: wp('2%'),
+                  borderLeftWidth: 1,
+                  borderColor: '#e5e7eb',
+                  paddingHorizontal: wp('3%'),
+                  paddingVertical: hp('2%'),
+                }}>
+                <View style={{alignItems: 'center', padding: wp('0.5%')}}>
+                  <Icon3 name="calendar" size={wp('5%')} color="#3b82f6" />
+                  <Text style={{color: '#3b82f6', fontSize: wp('3%')}}>
+                    Select
+                  </Text>
                 </View>
               </TouchableOpacity>
             </View>
           </View>
 
           {/* Reporting Time Card */}
-          <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
-            <Text className="text-sm font-medium text-gray-700 mb-2">
-              Reporting Time <Text className="text-blue-500">*</Text>
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderRadius: wp('3%'),
+              borderWidth: 1,
+              borderColor: '#f3f4f6',
+              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+              paddingHorizontal: wp('3%'),
+              paddingVertical: wp(3),
+            }}>
+            <Text
+              style={{
+                fontSize: wp('3.5%'),
+                fontWeight: '500',
+                color: '#4b5563',
+                marginBottom: hp('0.5%'),
+              }}>
+              Reporting Time <Text style={{color: '#3b82f6'}}>*</Text>
             </Text>
-            <View className="flex-row items-center bg-gray-50 rounded-lg border border-gray-200">
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                backgroundColor: '#f9fafb',
+                borderRadius: wp('2%'),
+                borderWidth: 1,
+                borderColor: '#e5e7eb',
+              }}>
               <TextInput
-                className="flex-1 p-3 text-gray-800"
+                style={{flex: 1, padding: wp('3%'), color: '#1f2937'}}
                 inputMode="text"
                 onChangeText={setRprtTime}
                 value={RprtTime}
@@ -456,10 +584,20 @@ const InfoPage = ({route}) => {
               />
               <TouchableOpacity
                 onPress={handleTimePicker}
-                className="px-4 py-3 bg-blue-50 rounded-r-lg border-l border-gray-200">
-                <View className="items-center">
-                  <Icon4 name="access-time" size={24} color="#3b82f6" />
-                  <Text className="text-xs text-blue-600 mt-1">Select</Text>
+                style={{
+                  paddingHorizontal: wp('4%'),
+                  paddingVertical: hp('1.5%'),
+                  backgroundColor: '#eff6ff',
+                  borderTopRightRadius: wp('2%'),
+                  borderBottomRightRadius: wp('2%'),
+                  borderLeftWidth: 1,
+                  borderColor: '#e5e7eb',
+                }}>
+                <View style={{alignItems: 'center'}}>
+                  <Icon4 name="access-time" size={wp('6%')} color="#3b82f6" />
+                  <Text style={{color: '#3b82f6', fontSize: wp('3%')}}>
+                    Select
+                  </Text>
                 </View>
               </TouchableOpacity>
             </View>
@@ -553,16 +691,30 @@ const InfoPage = ({route}) => {
                 <Text className="text-sm font-medium text-gray-700 mb-2">
                   Reporting Address <Text className="text-blue-500">*</Text>
                 </Text>
-                <TextInput
-                  value={address}
-                  onChangeText={setAddress}
-                  placeholder="Enter address"
-                  placeholderTextColor="#9ca3af"
-                  className="bg-gray-50 rounded-lg p-3 text-gray-800 border border-gray-200"
-                />
-              </View>
-              <View className="p-3 bg-blue-50 rounded-lg">
-                <Icon1 name="location" size={24} color="#3b82f6" />
+                <View className="flex-1 flex-row align-center">
+                  <TextInput
+                    value={address}
+                    onChangeText={setAddress}
+                    placeholder="Enter address"
+                    placeholderTextColor="#9ca3af"
+                    className="bg-gray-50 rounded-lg  text-gray-800 border border-gray-200"
+                    style={{flex: 1, padding: wp(3), marginRight: wp(2)}}
+                  />
+                  <View
+                    className=" bg-blue-50 rounded-lg"
+                    style={{
+                      justifyContent: 'center',
+                      alignSelf: 'center',
+                      padding: wp(3),
+                    }}>
+                    <Icon1
+                      name="location"
+                      size={wp(6)}
+                      color="#3b82f6"
+                      style={{justifyContent: 'center', alignSelf: 'center'}}
+                    />
+                  </View>
+                </View>
               </View>
             </View>
           </View>
@@ -580,7 +732,7 @@ const InfoPage = ({route}) => {
               className="bg-gray-50 rounded-lg p-3 text-gray-800 border border-gray-200"
             />
             {suggestions.length > 0 && (
-              <View className="mt-2 bg-white rounded-lg border border-gray-200">
+              <View className="mt-2 bg-white rounded-lg border border-gray-600">
                 <FlatList
                   data={suggestions}
                   keyExtractor={item => item}
@@ -594,7 +746,7 @@ const InfoPage = ({route}) => {
                   ItemSeparatorComponent={() => (
                     <View className="h-px bg-gray-200" />
                   )}
-                  className="max-h-40"
+                  className="max-h-44"
                   showsVerticalScrollIndicator={false}
                   bounces={false}
                 />
@@ -603,16 +755,37 @@ const InfoPage = ({route}) => {
           </View>
 
           {/* Vehicle Details Section */}
-          <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
-            <Text className="text-sm font-medium text-gray-700 mb-2">
-              Vehicle Details <Text className="text-blue-500">*</Text>
+          <View
+            style={{
+              backgroundColor: 'white',
+              borderRadius: wp('3%'),
+              padding: wp('4%'),
+              borderWidth: 1,
+              borderColor: '#f3f4f6',
+              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
+            }}>
+            <Text
+              style={{
+                fontSize: wp('3.5%'),
+                fontWeight: '500',
+                color: '#4b5563',
+                marginBottom: hp('0.5%'),
+              }}>
+              Vehicle Details <Text style={{color: '#3b82f6'}}>*</Text>
             </Text>
             <TextInput
               value={vehicleDetails}
               onChangeText={setvehicleDetails}
               placeholder="Enter Vehicle Details"
               placeholderTextColor="#9ca3af"
-              className="bg-gray-50 rounded-lg p-3 text-gray-800 border border-gray-200"
+              style={{
+                backgroundColor: '#f9fafb',
+                borderRadius: wp('2%'),
+                padding: wp('3%'),
+                color: '#1f2937',
+                borderWidth: 1,
+                borderColor: '#e5e7eb',
+              }}
             />
           </View>
         </View>
@@ -698,22 +871,51 @@ const InfoPage = ({route}) => {
                   className="bg-gray-50 rounded-lg p-3 text-gray-800 border border-gray-200"
                 />
               </View>
-              <View className="flex-row justify-between items-center my-4">
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginVertical: hp('2%'),
+                }}>
                 {index == 0 && (
                   <TouchableOpacity
                     onPress={addView}
-                    className="flex-row items-center bg-blue-50 px-4 py-2 rounded-lg border border-blue-100">
-                    <Text className="text-blue-600 mr-2">Add</Text>
-                    <Icon3 name="plus" size={20} color="#3b82f6" />
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: '#eff6ff',
+                      paddingHorizontal: wp('4%'),
+                      paddingVertical: hp('1.5%'),
+                      borderRadius: wp('3%'),
+                      borderWidth: 1,
+                      borderColor: '#dbeafe',
+                    }}>
+                    <Text style={{color: '#3b82f6', marginRight: wp('2%')}}>
+                      Add
+                    </Text>
+                    <Icon3 name="plus" size={wp('5%')} color="#3b82f6" />
                   </TouchableOpacity>
                 )}
 
                 {index != 0 && (
                   <TouchableOpacity
-                    onPress={() => removeView(index)} // Pass the index here
-                    className="flex-row items-center bg-red-50 px-4 py-2 rounded-lg border border-red-100 mt-2">
-                    <Text className="text-red-600 mr-2">Remove</Text>
-                    <Icon3 name="minus" size={20} color="#dc2626" />
+                    onPress={() => removeView(index)}
+                    style={{
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                      backgroundColor: '#fef2f2',
+                      paddingHorizontal: wp('4%'),
+                      paddingVertical: hp('1.5%'),
+                      borderRadius: wp('3%'),
+                      borderWidth: 1,
+                      borderColor: '#fecaca',
+                      marginTop: hp('1%'),
+                    }}>
+                    <Text style={{color: '#dc2626', marginRight: wp('2%')}}>
+                      Remove
+                    </Text>
+                    <Icon3 name="minus" size={wp('5%')} color="#dc2626" />
                   </TouchableOpacity>
                 )}
               </View>

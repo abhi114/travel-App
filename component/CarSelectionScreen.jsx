@@ -15,6 +15,7 @@ import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CarDetailsModal from './helpers/AddCarModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const CarSelectionScreen = ({route}) => {
@@ -122,6 +123,7 @@ useEffect(() => {
 
     // Use merge option to update the document without overwriting existing data
     await userRef.set(data, { merge: true });
+    await AsyncStorage.setItem("CarNumber",carNumber);
     await getAllCarData();
    
   } catch (error) {
@@ -325,6 +327,7 @@ const styles = StyleSheet.create({
     paddingRight: wp('2%'), // Responsive padding
   },
   carName: {
+    color:'#000',
     fontSize: wp('4.5%'), // Responsive font size
     fontWeight: '600',
     marginBottom: hp('0.5%'),

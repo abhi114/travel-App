@@ -274,6 +274,7 @@ const CarDetailsModal = ({ isVisible, onClose, onSubmit }) => {
                       style={{
                         height: hp('6%'),
                         fontSize: wp('3.8%'),
+                        color:'#000'
                       }}
                     />
                   </View>
@@ -293,6 +294,7 @@ const CarDetailsModal = ({ isVisible, onClose, onSubmit }) => {
                       style={{
                         height: hp('6%'),
                         fontSize: wp('3.8%'),
+                        color:'#000'
                       }}
                       autoCapitalize="characters"
                     />

@@ -76,8 +76,17 @@ const Home = ({route}) => {
        console.error('Error storing fuel data:', error);
      }
     };
+    function getCurrentDate() {
+      const date = new Date();
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+      const year = date.getFullYear();
+
+      return `${day}-${month}-${year}`;
+    }
     const storeData = async (startkmvalue,endkmvalue,startfuelValue,endfuelValue) => {
       try {
+        const timestamp = firestore.FieldValue.serverTimestamp();
         console.log(getCurrentTime());
         const userRef = firestore().collection('users').doc(id); // Reference user document
         mainData[Rprtdate].startKm=startkmvalue
@@ -85,7 +94,8 @@ const Home = ({route}) => {
         mainData[Rprtdate].starFuel = startfuelValue + `lit`;
         mainData[Rprtdate].endFuel = endfuelValue + `lit`;
         mainData[Rprtdate].FuelCost = `Rs `+fuelcost;
-        mainData[Rprtdate].endDate = getCurrentTime();
+        mainData[Rprtdate].endDate =getCurrentDate()+' '  +  getCurrentTime();
+        mainData[Rprtdate].createdAt = timestamp;
         const updatedUserData = mainData // Add new key-value pair
         console.log("updated data is" + JSON.stringify(updatedUserData));
         await userRef.set(updatedUserData, {merge: true}); // Set user data in the document
@@ -116,13 +126,17 @@ const Home = ({route}) => {
           startFuel,
           endFuel,
           Rprtdate,
-          endDate:getCurrentTime(),
+          endDate: getCurrentDate() + ' ' + getCurrentTime(),
           mainData,
           fuelcost,
           vehicleDetails,
-          address
+          address,
         });
 
+    }
+    function removeMonth(dateString) {
+      const monthRegex = dateString.split(' '); // Matches a whole word
+      return monthRegex.filter((element, index) => index !== 1).join(' ');
     }
  return (
    <View style={styles.container}>
@@ -148,7 +162,7 @@ const Home = ({route}) => {
            <View style={styles.infoRow}>
              <View style={styles.infoContent}>
                <Text style={styles.infoLabel}>Reporting Date And Time</Text>
-               <Text style={styles.infoValue}>{Rprtdate}</Text>
+               <Text style={styles.infoValue}>{removeMonth(Rprtdate)}</Text>
              </View>
              <Icon3 name="clock-time-five-outline" size={24} color="#555" />
            </View>

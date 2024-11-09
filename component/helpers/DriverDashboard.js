@@ -97,7 +97,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
           <Text
             className=""
             style={{
-              fontSize: wp('10%'),
+              fontSize: wp('8%'),
               fontWeight: 'bold',
               color: '#fff',
               textAlign: 'center',
@@ -210,7 +210,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
           {/* Create New Duty Button */}
           <TouchableOpacity
             className="bg-blue-600  rounded-2xl shadow-xl active:bg-blue-700 transform active:scale-95 transition-all"
-            onPress={() => navigation.navigate('InfoPage', {emailId, id, data})}
+            onPress={() => navigation.navigate('InfoPage', {emailId, id, data,carNumber:selectedCar.carNumber})}
             style={{marginBottom: hp('2%')}}>
             <View
               className="flex-row items-center justify-between"
