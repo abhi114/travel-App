@@ -91,8 +91,8 @@ const Home = ({route}) => {
         const userRef = firestore().collection('users').doc(id); // Reference user document
         mainData[Rprtdate].startKm=startkmvalue
         mainData[Rprtdate].endKm = endkmvalue
-        mainData[Rprtdate].starFuel = startfuelValue + `lit`;
-        mainData[Rprtdate].endFuel = endfuelValue + `lit`;
+        mainData[Rprtdate].starFuel = startfuelValue;
+        mainData[Rprtdate].endFuel = endfuelValue ;
         mainData[Rprtdate].FuelCost = `Rs `+fuelcost;
         mainData[Rprtdate].endDate =getCurrentDate()+' '  +  getCurrentTime();
         mainData[Rprtdate].createdAt = timestamp;

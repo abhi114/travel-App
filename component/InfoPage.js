@@ -28,6 +28,27 @@ import { LineView } from './helpers/helpers';
 const InfoPage = ({route}) => {
    
     const {id, data: driversdta, carNumber} = route.params;
+     const getCurrentTime = () => {
+       const date = new Date();
+       let hours = date.getHours();
+       let minutes = date.getMinutes();
+       const ampm = hours >= 12 ? 'PM' : 'AM';
+
+       hours = hours % 12;
+       hours = hours ? hours : 12; // The hour '0' should be '12'
+       minutes = minutes < 10 ? '0' + minutes : minutes; // Add leading zero to minutes
+
+       const time = `${hours}:${minutes}${ampm}`;
+       return time;
+     };
+     function getCurrentDate() {
+       const date = new Date();
+       const day = String(date.getDate()).padStart(2, '0');
+       const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+       const year = date.getFullYear();
+
+       return `${day}-${month}-${year}`;
+     }
     const monthNames = [
       'January',
       'February',
@@ -182,13 +203,23 @@ const InfoPage = ({route}) => {
       setIsDatePickerVisible(true);
     };
     const handleConfirmDate = date => {
+       const currentDate = getCurrentDate();
+      console.log("date is pressing")
+       if (date < currentDate) {
+         alert('Please select a date that is today or later.');
+         return;
+       }
       const formattedDate = `${pad(date.getDate())}-${pad(
         date.getMonth() + 1, // getMonth() returns 0-11, so we add 1 for a 1-12 range
       )}-${date.getFullYear()}`;
-      
+       if (formattedDate < currentDate) {
+         alert('Please select a date that is today or later.');
+         setIsDatePickerVisible(false);
+         return;
+       }
       const month = monthNames[date.getMonth()]
       setmonth(month);
-      setRprDate(formattedDate );
+      setRprDate(formattedDate);
       setIsDatePickerVisible(false);
     };
 
@@ -320,7 +351,10 @@ const InfoPage = ({route}) => {
 
     //console.log(passengerData);
   const afteraccept =async () => {
-    if( Rprtdate === ''  || address === '' || city === '' || vehicleDetails === ''){
+   const currentDate = new Date();
+   const currentMonth = monthNames[currentDate.getMonth()];
+   //console.log("month is " + currentMonth);
+    if(address === '' || city === '' || vehicleDetails === ''){
         alert("Please fill all the Fields")
         return;
     } 
@@ -328,39 +362,47 @@ const InfoPage = ({route}) => {
       alert('Please fill all the Passenger Fields');
       return;
     };
-    
+    if(!importantCitiesUP.includes(city)){
+      alert("Please Select A Valid City")
+      return;
+    }
+      
     console.log(passengerData);
     console.log("id is" + id);
     const data = {
       name: driversdta.name,
       number: driversdta.MobileNumber,
-      ReportingDate: Rprtdate + ' ' + month + ' ' + RprtTime,
+      ReportingDate:
+        getCurrentDate() + ' ' + currentMonth + ' ' + getCurrentTime(),
       //endDate: endDate,
       address: address,
       city: city,
       vehicleDetails: vehicleDetails,
       //dutyInstructions: dutyInstructions,
       PassengerData: passengerData,
-      ReportingTime: RprtTime,
-      ReportingMonth: month,
+      ReportingTime: getCurrentTime(),
+      ReportingMonth: currentMonth,
     };  
     const mainData = {}
-    mainData[`${Rprtdate + ' ' + month + ' ' + RprtTime}`] = data;
+    mainData[
+      `${getCurrentDate() + ' ' + currentMonth + ' ' + getCurrentTime()}`
+    ] = data;
 
         console.log(mainData);
         await storeData(id,mainData);
         navigate.navigate('Home', {
           id,
-          name:driversdta.name,
-          number:driversdta.MobileNumber,
-          Rprtdate:Rprtdate +" " + month +" "+  RprtTime,
-         //endDate,
+          name: driversdta.name,
+          number: driversdta.MobileNumber,
+          Rprtdate:
+            getCurrentDate() + ' ' + currentMonth + ' ' + getCurrentTime(),
+          //endDate,
           address,
           city,
           vehicleDetails,
           //dutyInstructions,
           mainData,
-          month
+          currentMonth,
         });
     
   };
@@ -488,7 +530,7 @@ const InfoPage = ({route}) => {
           </View>
 
           {/* Reporting Date Card */}
-          <View
+          {/* <View
             style={{
               backgroundColor: 'white',
               borderRadius: wp('3%'),
@@ -543,10 +585,10 @@ const InfoPage = ({route}) => {
                 </View>
               </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
 
           {/* Reporting Time Card */}
-          <View
+          {/* <View
             style={{
               backgroundColor: 'white',
               borderRadius: wp('3%'),
@@ -601,7 +643,7 @@ const InfoPage = ({route}) => {
                 </View>
               </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
         </View>
 
         {/* Date Picker Modal */}

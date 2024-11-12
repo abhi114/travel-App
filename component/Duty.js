@@ -225,7 +225,7 @@ const Duty = ({route}) => {
        ['', 'Start', 'End '],
        ['Km', startKm, endkm],
        ['Duration', removeMonth(Rprtdate), endDate],
-       ['Fuel', `${startFuel}lit`, `${endFuel}lit`],
+       ['Fuel', `${startFuel}l`, `${endFuel}l`],
      ];
      //console.log('passengers Data' + JSON.stringify(mainData[Rprtdate].PassengerData));
      const [signatureEnable,setSignatureEnable] = useState(false);
