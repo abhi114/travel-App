@@ -69,6 +69,7 @@ const PersonalInfo = ({route}) => {
           routes: [{name: 'ButtonPage', params: {emailId, id, data}}],
         });
     }
+    
   return (
     <View style={styles.outerContainer}>
       <ScrollView style={styles.container}>

@@ -22,6 +22,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
   const scaleAnim = useRef(new Animated.Value(0)).current; // Initial scale for the title
   const opacityAnim = useRef(new Animated.Value(0)).current; // Initial opacity for buttons
   const insets = useSafeAreaInsets();
+  const [nameData,setNameData] = useState(data);
   const width = Dimensions.get('screen').width;
   const [selectedCar, setSelecCar] = useState({
     model: 'Jeep Rubicon',
@@ -108,7 +109,13 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
         </Animated.View>
         <TouchableOpacity
           className="flex-row items-center bg-gray-800/50"
-          onPress={() => {}}
+          onPress={() => {
+            navigation.navigate('EditProfile', {
+              data:nameData,
+              id: id,
+              setNameData: setNameData,
+            });
+          }}
           style={{
             paddingHorizontal: wp('6%'),
             paddingVertical: hp('1.5%'),
@@ -129,7 +136,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
           <Text
             className=" text-white font-semibold"
             style={{fontSize: wp('5%')}}>
-            {data?.name}
+            {nameData?.name}
           </Text>
         </TouchableOpacity>
         {/* Selected Car Display */}
@@ -210,7 +217,14 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
           {/* Create New Duty Button */}
           <TouchableOpacity
             className="bg-blue-600  rounded-2xl shadow-xl active:bg-blue-700 transform active:scale-95 transition-all"
-            onPress={() => navigation.navigate('InfoPage', {emailId, id, data,carNumber:selectedCar.carNumber})}
+            onPress={() =>
+              navigation.navigate('InfoPage', {
+                emailId,
+                id,
+                data,
+                carNumber: selectedCar.carNumber,
+              })
+            }
             style={{marginBottom: hp('2%')}}>
             <View
               className="flex-row items-center justify-between"

@@ -13,18 +13,20 @@ const ButtonPage = ({route}) => {
     const {emailId, id, data} = route.params;
     const navigation = useNavigation()
     const [namedata,setNameData] = useState(data);
+   
     useEffect(() => {
       const fetchName=async ()=>{
       const loginState = await AsyncStorage.getItem('loginState');
         if (loginState) {
           const {emailId, id, data} = JSON.parse(loginState);
           setNameData(data)
+          //console.log("login data" ,data)
         }
       }
 
       fetchName();
       return () => {
-        
+
       }
     }, [])
     
