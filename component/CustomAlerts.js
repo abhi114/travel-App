@@ -72,7 +72,13 @@ export const SuccessAlert = ({visible, message, onClose}) => {
 };
 
 // Form Validation Alert Component
-export const FormAlert = ({visible, fields, onClose}) => {
+export const FormAlert = ({
+  visible,
+  fields,
+  onClose,
+  message = 'Please fill in the following fields:',
+  fieldsAvailabe=true
+}) => {
   const slideY = useSharedValue(50);
   const opacity = useSharedValue(0);
 
@@ -104,9 +110,10 @@ export const FormAlert = ({visible, fields, onClose}) => {
             Incomplete Form
           </Text>
           <Text className="text-gray-600 text-center mb-4">
-            Please fill in the following fields:
+            {message}
           </Text>
-          {fields.map((field, index) => (
+
+          {fieldsAvailabe && fields.map((field, index) => (
             <Text key={index} className="text-red-500 text-center mb-1">
               • {field}
             </Text>

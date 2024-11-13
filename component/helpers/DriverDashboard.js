@@ -48,7 +48,10 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
       }).start();
     }, 800); // Delay for the buttons
   }, []);
-
+   useEffect(() => {
+     // Update `nameData` whenever `data` prop changes
+     setNameData(data);
+   }, [data]);
   return (
     <View className={`flex-1 bg-gray-900`} style={{paddingTop: insets.top}}>
       {/* Header Section with Gradient Overlay */}

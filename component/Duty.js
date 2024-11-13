@@ -6,6 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import { LineView } from './helpers/helpers';
+import {LoadingAlert} from './CustomAlerts';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Animated, {
   FadeInDown,
@@ -95,9 +96,7 @@ const Sign = ({id, Rprtdate, mainData}) => {
         </View>
 
         {signSaveStart ? (
-          <View style={styles2.loaderContainer}>
-            <ActivityIndicator size="large" color="#007AFF" />
-          </View>
+         <LoadingAlert visible={signSaveStart} message="Saving Data..." />
         ) : (
           <View style={styles2.signatureContainer}>
             <View style={styles2.signatureWrapper}>
@@ -152,9 +151,7 @@ const Sign = ({id, Rprtdate, mainData}) => {
         </View>
 
         {signSaveStart ? (
-          <View style={styles2.loaderContainer}>
-            <ActivityIndicator size="large" color="#007AFF" />
-          </View>
+          <LoadingAlert visible={signSaveStart} message="Saving Data..." />
         ) : (
           <View style={styles2.signatureContainer}>
             <View style={styles2.signatureWrapper}>

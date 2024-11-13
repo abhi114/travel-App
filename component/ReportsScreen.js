@@ -9,6 +9,7 @@ import {
   Dimensions,
   BackHandler,
   ActivityIndicator,
+  Linking,
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { Picker } from '@react-native-picker/picker';
@@ -59,6 +60,7 @@ const UserDataScreen = ({route}) => {
     const [userInfo, setUserInfo] = useState([]);
    const navigation = useNavigation();
    console.log(userInfo.monthExpenditure?.[monthNames[selectedMonth]]);
+   
   const EventItem = ({date, time, title, location}) => (
     <View style={styles.eventItem}>
       <View style={styles.eventDateTime}>
@@ -189,6 +191,7 @@ const UserDataScreen = ({route}) => {
 
   //   return sortedObject;
   // };
+  
   return (
     <ScrollView style={styles2.container}>
       <View style={styles2.header}>
@@ -331,7 +334,7 @@ const UserDataScreen = ({route}) => {
                                 <View
                                   key={passengerKey}
                                   style={styles2.driverSection}>
-                                  <View style={styles2.driverHeader}>
+                                  {/* <View style={styles2.driverHeader}>
                                     <View style={styles2.iconContainer}>
                                       <Icon
                                         name="person-circle"
@@ -347,7 +350,7 @@ const UserDataScreen = ({route}) => {
                                         {filteredData[item].name}
                                       </Text>
                                     </View>
-                                  </View>
+                                  </View> */}
                                   <View style={styles2.divider} />
                                   <View style={styles2.dateSection}>
                                     <View style={styles2.dateContainer}>

@@ -14,6 +14,7 @@ import Icon3 from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import {Linking} from 'react-native';
+import { LoadingAlert } from './CustomAlerts';
  
 const Home = ({route}) => {
     const navigate = useNavigation();
@@ -22,6 +23,7 @@ const Home = ({route}) => {
     const [startFuel,setStartFuel] = useState('');
     const [endFuel,setEndFuel] = useState('');
     const [fuelcost,setfuelcost] = useState('');
+    const [loadingVisible, setLoadingVisible] = useState(false);
     const getCurrentTime = () => {
       const date = new Date();
       let hours = date.getHours();
@@ -115,8 +117,10 @@ const Home = ({route}) => {
           Alert.alert("please enter the km and fuel values");
           return;
         }
+        setLoadingVisible(true);
         await storeData(startKm,endkm,startFuel,endFuel);
         await storeFuelData();
+        setLoadingVisible(false);
         navigate.navigate('Duty', {
           name,
           number,
@@ -284,6 +288,7 @@ const Home = ({route}) => {
          <Text style={styles.buttonText}>{accept ? 'Finish' : 'Start'}</Text>
        </TouchableOpacity>
      </View>
+     <LoadingAlert visible={loadingVisible} message="Saving Data..." />
    </View>
  );
 };

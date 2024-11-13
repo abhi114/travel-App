@@ -24,6 +24,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import { LineView } from './helpers/helpers';
+import { FormAlert, LoadingAlert } from './CustomAlerts';
 
 const InfoPage = ({route}) => {
    
@@ -146,7 +147,9 @@ const InfoPage = ({route}) => {
   const [passengerNames, setPassengerNames] = useState(['']);
   const [startingAddress, setStartingAddress] = useState(['']);
   const [destinationAddress,setDestinationAddress] = useState(['']);
+  const [validationVisible, setValidationVisible] = useState(false);
   const [vehicleDetails,setvehicleDetails]= useState(carNumber!=undefined ? carNumber : '');
+  const [loadingVisible, setLoadingVisible] = useState(false);
     const [dutyInstructions,setDutyInstructions] =useState('');
      //const [city, setCity] = useState('');
      const [suggestions, setSuggestions] = useState([]);
@@ -355,18 +358,18 @@ const InfoPage = ({route}) => {
    const currentMonth = monthNames[currentDate.getMonth()];
    //console.log("month is " + currentMonth);
     if(address === '' || city === '' || vehicleDetails === ''){
-        alert("Please fill all the Fields")
+        setValidationVisible(true);
         return;
     } 
     if(!validatePassengers(passengerData)){
-      alert('Please fill all the Passenger Fields');
+      setValidationVisible(true);
       return;
     };
     if(!importantCitiesUP.includes(city)){
-      alert("Please Select A Valid City")
+      setValidationVisible(true);
       return;
     }
-      
+      setLoadingVisible(true);
     console.log(passengerData);
     console.log("id is" + id);
     const data = {
@@ -390,6 +393,7 @@ const InfoPage = ({route}) => {
 
         console.log(mainData);
         await storeData(id,mainData);
+        setLoadingVisible(false);
         navigate.navigate('Home', {
           id,
           name: driversdta.name,
@@ -975,6 +979,16 @@ const InfoPage = ({route}) => {
           </TouchableOpacity>
         </View>
       </ScrollView>
+      <FormAlert
+        visible={validationVisible}
+        fields={['Journey Details', 'Passenger Details']}
+        onClose={() => {
+          setValidationVisible(!validationVisible);
+        }}
+        message="Please Fill All The Required Fields"
+        fieldsAvailabe={false}
+      />
+      <LoadingAlert visible={loadingVisible} message="Saving Data..." />
     </View>
   );
 };

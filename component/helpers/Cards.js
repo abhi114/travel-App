@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {View, Text, StyleSheet, Pressable, Linking, Alert} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -6,6 +6,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Animated, {FadeInUp} from 'react-native-reanimated';
 import {MapPin, Car, ChevronRight} from 'lucide-react-native';
+import { TouchableOpacity } from 'react-native';
 
 const styles = StyleSheet.create({
   detailCard: {
@@ -90,6 +91,23 @@ const styles = StyleSheet.create({
 });
 
 const LocationCard = ({data, item}) => {
+  const openGoogleMaps = () => {
+    const query = encodeURIComponent(
+      `${data[item].address}, ${data[item].city}`,
+    );
+    const url = `https://www.google.com/maps/search/?api=1&query=${query}`;
+    console.log(url);
+    Linking.openURL(url);
+    // Linking.canOpenURL(url)
+    //   .then(supported => {
+    //     if (supported) {
+    //       Linking.openURL(url);
+    //     } else {
+    //       Alert.alert('Error', 'Google Maps is not available');
+    //     }
+    //   })
+    //   .catch(err => console.error('An error occurred', err));
+  };
   return (
     <Animated.View
       entering={FadeInUp.duration(400).delay(100)}
@@ -114,10 +132,10 @@ const LocationCard = ({data, item}) => {
           <Text style={styles.detailValue}>{data[item].city}</Text>
         </View>
 
-        <Pressable style={styles.expandButton}>
+        <TouchableOpacity style={styles.expandButton} onPress={()=>{openGoogleMaps()}}>
           <Text style={styles.expandButtonText}>View on Map</Text>
           <ChevronRight size={wp(4)} color="#4A90E2" />
-        </Pressable>
+        </TouchableOpacity>
       </LinearGradient>
     </Animated.View>
   );
