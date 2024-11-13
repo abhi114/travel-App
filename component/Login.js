@@ -8,12 +8,14 @@ import firestore from '@react-native-firebase/firestore';
 import { MainFooter, validateEmail } from './helpers/helpers';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getMostUsedLoginId, saveLoginId } from './helpers/MostUsedLoginId';
 
 const Login = ({route}) => {
  
   const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
    const [showPassword, setShowPassword] = useState(false);
+   const [suggestedLoginId, setSuggestedLoginId] = useState('');
   const [verificationId, setVerificationId] = useState(null);
   //const [restPassword,setresetPassword] = useState(false);
    const [showConfirmation, setShowConfirmation] = useState(false);
@@ -39,6 +41,16 @@ const Login = ({route}) => {
        {text: 'OK', onPress: async () =>await ResetPassword()},
      ]);
    };
+   useEffect(() => {
+     const fetchMostUsedLoginId = async () => {
+       const mostUsedLoginId = await getMostUsedLoginId();
+       if (mostUsedLoginId) {
+         setSuggestedLoginId(mostUsedLoginId);
+         setEmailId(mostUsedLoginId || '');
+       }
+     };
+     fetchMostUsedLoginId();
+   }, []);
 
    const handleConfirmReset = () => {
      // Reset password logic goes here
@@ -90,6 +102,7 @@ const Login = ({route}) => {
         console.log("sign in");
         if(user){
             console.log(user);
+              await saveLoginId(emailId);
               const id = user.user.uid;
               console.log("id is" + id);
               const data = await getUserData(id)
