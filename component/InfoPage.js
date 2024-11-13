@@ -9,6 +9,7 @@ import {
   Button,
   Alert,
   FlatList,
+  Linking,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Replace with your icon library
 import Icon1 from 'react-native-vector-icons/Entypo'; // Replace with your icon library
@@ -166,7 +167,7 @@ const InfoPage = ({route}) => {
         setSuggestions([]);
       }
     };
-
+    
     const onSelectSuggestion = suggestion => {
       console.log('press');
       setCity(suggestion);
@@ -410,6 +411,27 @@ const InfoPage = ({route}) => {
         });
     
   };
+   const openGoogleMaps = () => {
+    if(address == '' || city== ''){
+      alert('Please enter address and city');
+      return;
+    }
+     const query = encodeURIComponent(
+       `${address},${city}`,
+     );
+     const url = `https://www.google.com/maps/search/?api=1&query=${query}`;
+     console.log(url);
+     Linking.openURL(url);
+     // Linking.canOpenURL(url)
+     //   .then(supported => {
+     //     if (supported) {
+     //       Linking.openURL(url);
+     //     } else {
+     //       Alert.alert('Error', 'Google Maps is not available');
+     //     }
+     //   })
+     //   .catch(err => console.error('An error occurred', err));
+   };
   return (
     <View style={styles.outerContainer} className="bg-gray-50">
       <ScrollView style={styles.container} className="flex-1 bg-gray-50 ">
@@ -746,20 +768,20 @@ const InfoPage = ({route}) => {
                     className="bg-gray-50 rounded-lg  text-gray-800 border border-gray-200"
                     style={{flex: 1, padding: wp(3), marginRight: wp(2)}}
                   />
-                  <View
+                  <TouchableOpacity
                     className=" bg-blue-50 rounded-lg"
                     style={{
                       justifyContent: 'center',
                       alignSelf: 'center',
                       padding: wp(3),
-                    }}>
+                    }} onPress={()=>{openGoogleMaps()}}>
                     <Icon1
                       name="location"
                       size={wp(6)}
                       color="#3b82f6"
                       style={{justifyContent: 'center', alignSelf: 'center'}}
                     />
-                  </View>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>

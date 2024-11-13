@@ -6,10 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
-  Dimensions,
-  BackHandler,
-  ActivityIndicator,
-  Linking,
+ 
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import { Picker } from '@react-native-picker/picker';
@@ -33,6 +30,7 @@ import Animated, {FadeInUp} from 'react-native-reanimated';
 import { LocationCard, VehicleCard } from './helpers/Cards';
 import PassengerDetails from './helpers/PassengerDetailsCard';
 import FuelExpenditureCard from './helpers/FuelExpenditureCard';
+import { LoadingAlert } from './CustomAlerts';
 
 const UserDataScreen = ({route}) => {
   const {id} = route.params;
@@ -51,15 +49,16 @@ const UserDataScreen = ({route}) => {
     'December',
     'January',
   ];
+  
   const [userData, setUserData] = useState({});
   const [expanded, setExpanded] = useState({});
   const [mainuserData,setmainuserData] = useState({});
    const [selectedMonth, setSelectedMonth] = useState(13);
    const [filteredData, setFilteredData] = useState({});
-  
+  const [loadingVisible, setLoadingVisible] = useState(false);
     const [userInfo, setUserInfo] = useState([]);
    const navigation = useNavigation();
-   console.log(userInfo.monthExpenditure?.[monthNames[selectedMonth]]);
+   //console.log(userInfo.monthExpenditure?.[monthNames[selectedMonth]]);
    
   const EventItem = ({date, time, title, location}) => (
     <View style={styles.eventItem}>
@@ -81,7 +80,7 @@ const UserDataScreen = ({route}) => {
             ...data.data(), // Get the document data
           };
           setUserInfo(userInfo);
-          console.log('real value is' + JSON.stringify(userInfo));
+          //console.log('real value is' + JSON.stringify(userInfo));
           
         } else {
           console.log('Document not found');
@@ -140,10 +139,15 @@ const UserDataScreen = ({route}) => {
     filterData();
   }, [selectedMonth,mainuserData]);
   const handlePress = date => {
-    setExpanded(prevExpanded => ({
-      ...prevExpanded,
-      [date]: !prevExpanded[date],
-    }));
+    setLoadingVisible(true);
+    setTimeout(() => {
+      setExpanded(prevExpanded => ({
+        ...prevExpanded,
+        [date]: !prevExpanded[date],
+      }));
+      setLoadingVisible(false);
+    }, 200);
+    
   };
   const handleMonthChange = month => {
      console.log(monthNames[month]);
@@ -277,7 +281,11 @@ const UserDataScreen = ({route}) => {
               : 0}
           </Text>
         </View> */}
-        <FuelExpenditureCard selectedMonth={selectedMonth} monthNames={monthNames} userInfo={userInfo}/>
+        <FuelExpenditureCard
+          selectedMonth={selectedMonth}
+          monthNames={monthNames}
+          userInfo={userInfo}
+        />
 
         {/* <LineView /> */}
         {Object.keys(filteredData).length === 0 ? (
@@ -300,12 +308,8 @@ const UserDataScreen = ({route}) => {
                   parseInt(filteredData[item].starFuel),
               );
               return (
-                <TouchableOpacity
-                  onPress={() => handlePress(item)}
-                  style={styles2.touchable}
-                  activeOpacity={0.7}>
-                  <Animated.View style={styles2.cardContainer}>
-                    
+                <TouchableOpacity style={styles2.touchable} activeOpacity={0.7}>
+                  <View style={styles2.cardContainer}>
                     <View style={styles2.cardHeader}>
                       <View style={styles2.dateContainer}>
                         <Text style={styles2.dateLabel}>Date of Journey</Text>
@@ -314,7 +318,9 @@ const UserDataScreen = ({route}) => {
                         </Text>
                       </View>
 
-                      <View style={styles2.expandButton}>
+                      <TouchableOpacity
+                        style={styles2.expandButton}
+                        onPress={() => handlePress(item)}>
                         <Text style={styles2.expandText}>
                           {!expanded[item] ? 'View Details' : 'Show Less'}
                         </Text>
@@ -323,7 +329,7 @@ const UserDataScreen = ({route}) => {
                         ) : (
                           <ChevronUp size={wp(4)} color="#4A90E2" />
                         )}
-                      </View>
+                      </TouchableOpacity>
                     </View>
                     <View style={styles2.expandedContent}>
                       {expanded[item] && (
@@ -534,8 +540,8 @@ const UserDataScreen = ({route}) => {
                                   <LineView />
                                   <View style={styles2.container}>
                                     {/* Fuel Cost Card */}
-                                    <Animated.View
-                                      entering={FadeInUp.duration(400)}
+                                    <View
+                                      
                                       style={styles3.costCard}>
                                       <LinearGradient
                                         colors={['#F8FAFF', '#F0F7FF']}
@@ -572,7 +578,7 @@ const UserDataScreen = ({route}) => {
                                           </Text>
                                         </View>
                                       </LinearGradient>
-                                    </Animated.View>
+                                    </View>
 
                                     <View style={styles2.divider} />
 
@@ -623,7 +629,7 @@ const UserDataScreen = ({route}) => {
                                               uri: filteredData[item]
                                                 .driversSignature,
                                             }}
-                                            className="w-full h-full"
+                                            className="w-auto h-full"
                                             resizeMode="contain"
                                           />
                                         </View>
@@ -762,7 +768,7 @@ const UserDataScreen = ({route}) => {
                         </View>
                       )}
                     </View>
-                  </Animated.View>
+                  </View>
                 </TouchableOpacity>
               );
             }}
@@ -770,6 +776,7 @@ const UserDataScreen = ({route}) => {
           />
         )}
       </LinearGradient>
+      <LoadingAlert visible={loadingVisible} message="Loading Data..." />
     </ScrollView>
   );
 };

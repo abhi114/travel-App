@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Linking, TouchableOpacity} from 'react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -115,6 +115,23 @@ const styles = StyleSheet.create({
 
 const PassengerDetails = ({filteredData, item, passengerKey}) => {
   const passengerData = filteredData[item].PassengerData[passengerKey];
+   const openGoogleMaps = (data) => {
+     const query = encodeURIComponent(
+       `${data}`,
+     );
+     const url = `https://www.google.com/maps/search/?api=1&query=${query}`;
+     console.log(url);
+     Linking.openURL(url);
+     // Linking.canOpenURL(url)
+     //   .then(supported => {
+     //     if (supported) {
+     //       Linking.openURL(url);
+     //     } else {
+     //       Alert.alert('Error', 'Google Maps is not available');
+     //     }
+     //   })
+     //   .catch(err => console.error('An error occurred', err));
+   };
 
   return (
     <Animated.View
@@ -176,7 +193,7 @@ const PassengerDetails = ({filteredData, item, passengerKey}) => {
             </View>
           </View>
         </View>
-        <View style={styles.locationContainer}>
+        <TouchableOpacity style={styles.locationContainer} onPress={()=>{openGoogleMaps(passengerData.StartingAddress);}}>
           <View style={{justifyContent: 'center', flexDirection: 'row'}}>
             <View style={styles.locationHeader}>
               <MapPin
@@ -190,8 +207,8 @@ const PassengerDetails = ({filteredData, item, passengerKey}) => {
           <Text style={styles.locationText}>
             {passengerData.StartingAddress}
           </Text>
-        </View>
-        <View style={styles.locationContainer}>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.locationContainer} onPress={()=>{openGoogleMaps(passengerData.StartingAddress);}}>
           <View style={{justifyContent: 'center', flexDirection: 'row'}}>
             <View style={styles.locationHeader}>
               <MapPin
@@ -205,7 +222,7 @@ const PassengerDetails = ({filteredData, item, passengerKey}) => {
           <Text style={styles.locationText}>
             {passengerData.DestinationAddress}
           </Text>
-        </View>
+        </TouchableOpacity>
       </LinearGradient>
     </Animated.View>
   );
