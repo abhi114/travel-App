@@ -59,7 +59,7 @@ const UserDataScreen = ({route}) => {
     const [userInfo, setUserInfo] = useState([]);
    const navigation = useNavigation();
    //console.log(userInfo.monthExpenditure?.[monthNames[selectedMonth]]);
-   
+   const [mainloadingVisible, setmainLoadingVisible] = useState(true);
   const EventItem = ({date, time, title, location}) => (
     <View style={styles.eventItem}>
       <View style={styles.eventDateTime}>
@@ -113,9 +113,13 @@ const UserDataScreen = ({route}) => {
 
           setmainuserData(sortedData);
           setUserData(sortedData);
+          setmainLoadingVisible(false);
+        }else{
+          setmainLoadingVisible(false);
         }
       } catch (error) {
         console.error('Error fetching user data:', error);
+        setmainLoadingVisible(false);
       }
     };
 
@@ -139,7 +143,9 @@ const UserDataScreen = ({route}) => {
     filterData();
   }, [selectedMonth,mainuserData]);
   const handlePress = date => {
+    if(expanded[date] === false){
     setLoadingVisible(true);
+    console.log(date);
     setTimeout(() => {
       setExpanded(prevExpanded => ({
         ...prevExpanded,
@@ -147,7 +153,12 @@ const UserDataScreen = ({route}) => {
       }));
       setLoadingVisible(false);
     }, 200);
-    
+  }else{
+   setExpanded(prevExpanded => ({
+     ...prevExpanded,
+     [date]: !prevExpanded[date],
+   }));
+  }
   };
   const handleMonthChange = month => {
      console.log(monthNames[month]);
@@ -296,6 +307,7 @@ const UserDataScreen = ({route}) => {
               alignSelf: 'center',
               fontWeight: 'bold',
               color: '#000',
+              padding:5
             }}>
             No Data Available
           </Text>
@@ -403,13 +415,13 @@ const UserDataScreen = ({route}) => {
                                   </View>
                                   <View style={styles2.divider} />
                                   <View style={styles2.distanceSection}>
-                                    <View style={styles2.headerContainer}>
+                                    <View style={[styles2.headerContainer,]} className="space-x-1">
                                       <Icon
                                         name="speedometer-outline"
                                         size={wp(6)}
                                         color="#4A90E2"
                                       />
-                                      <Text style={styles2.headerText}>
+                                      <Text style={[styles2.headerText,{fontSize:wp(3.5)}]}>
                                         Distance Travelled in Km
                                       </Text>
                                     </View>
@@ -540,9 +552,7 @@ const UserDataScreen = ({route}) => {
                                   <LineView />
                                   <View style={styles2.container}>
                                     {/* Fuel Cost Card */}
-                                    <View
-                                      
-                                      style={styles3.costCard}>
+                                    <View style={styles3.costCard}>
                                       <LinearGradient
                                         colors={['#F8FAFF', '#F0F7FF']}
                                         start={{x: 0, y: 0}}
@@ -777,6 +787,7 @@ const UserDataScreen = ({route}) => {
         )}
       </LinearGradient>
       <LoadingAlert visible={loadingVisible} message="Loading Data..." />
+      <LoadingAlert visible={mainloadingVisible} message="Loading Data..." />
     </ScrollView>
   );
 };
@@ -1102,6 +1113,7 @@ const styles2 = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: wp('1.25%'),
+    
   },
   meterCard: {
     flex: 1,
@@ -1323,7 +1335,7 @@ const styles2 = StyleSheet.create({
     marginBottom: hp('0.5%'),
   },
   dateValue: {
-    fontSize: wp('4.5%'),
+    fontSize: wp('3.5%'),
     fontWeight: '600',
     color: '#333333',
   },

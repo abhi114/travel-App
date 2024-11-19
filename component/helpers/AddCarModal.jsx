@@ -197,7 +197,7 @@ const CarDetailsModal = ({ isVisible, onClose, onSubmit }) => {
                     className="text-gray-800 font-bold" 
                     style={{ fontSize: wp('5%') }}
                   >
-                    Add Car Details
+                    Add Vehicle Details
                   </Text>
                   <TouchableOpacity
                     onPress={onClose}
@@ -247,7 +247,7 @@ const CarDetailsModal = ({ isVisible, onClose, onSubmit }) => {
                           className="text-gray-500 text-center"
                           style={{ fontSize: wp('3.5%') }}
                         >
-                          Tap to add car photo
+                          Tap to add Vehicle photo
                         </Text>
                       </View>
                     )}
@@ -264,7 +264,7 @@ const CarDetailsModal = ({ isVisible, onClose, onSubmit }) => {
                       className="text-gray-700 mb-1 font-medium"
                       style={{ fontSize: wp('3.5%') }}
                     >
-                      Car Model
+                      Vehicle Model
                     </Text>
                     <TextInput
                       value={carModel}
@@ -284,7 +284,7 @@ const CarDetailsModal = ({ isVisible, onClose, onSubmit }) => {
                       className="text-gray-700 mb-1 font-medium"
                       style={{ fontSize: wp('3.5%') }}
                     >
-                      Car Number
+                      Registration Number
                     </Text>
                     <TextInput
                       value={carNumber}

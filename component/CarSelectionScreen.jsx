@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   FlatList,
   StatusBar,
+  Alert,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -16,6 +17,8 @@ import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CarDetailsModal from './helpers/AddCarModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Trash2 } from 'lucide-react-native';
+import { LoadingAlert, SuccessAlert } from './CustomAlerts';
 
 
 const CarSelectionScreen = ({route}) => {
@@ -23,43 +26,19 @@ const CarSelectionScreen = ({route}) => {
   const [selectedCar, setSelectedCar] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [loading,setloading] = useState(false);
+  const [successVisible,setSuccessVisible] = useState(false);
   const [cars,setCars] = useState([
-  {
-    carNumber: '947239847',
-    model: 'Jeep Rubicon',
-    downloadURL: 'https://images.pexels.com/photos/810357/pexels-photo-810357.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    status: 'Available',
-    statusColor: '#4CAF50',
-  },
-  {
-    carNumber: '789239878',
-    model: 'Tesla Model X',
-    downloadURL: 'https://www.tesla.com/xNVh4yUEc3B9/04_Desktop.jpg',
-    status: 'Available',
-    statusColor: '#FF5252',
-  },
-  {
-    carNumber: '667239097',
-    model: 'Audi A8 Quattro',
-    downloadURL: 'https://images.pexels.com/photos/810357/pexels-photo-810357.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    status: 'In Service / mechanic',
-    statusColor: '#FF5252',
-  },
-  {
-    carNumber: '143239224',
-    model: 'Ford Mustang GT',
-    downloadURL: 'https://images.pexels.com/photos/810357/pexels-photo-810357.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    status: 'Available',
-    statusColor: '#4CAF50',
-  },
+  
 ]);
   const {id,setSelecCar} = route.params
   //console.log(id);
  const getAllCarData = async () => {
   try {
+    setloading(true);
     const userRef = firestore().collection('userInfo').doc(id); // Reference to the user's document
     const doc = await userRef.get();
-
+    
+    
     if (doc.exists) {
       const userData = doc.data();
       const carPhotosUrl = userData?.CarPhotosUrl;
@@ -68,23 +47,23 @@ const CarSelectionScreen = ({route}) => {
         // Extract all car data objects and store them in an array
         const carDataArray = Object.values(carPhotosUrl);
 
-        // Filter out any entries that already exist in `cars` based on `carNumber`
-        const newCars = carDataArray.filter(
-          (newCar) => !cars.some((existingCar) => existingCar.carNumber === newCar.carNumber)
-        );
-
-        // If there are new entries, update the state
-        if (newCars.length > 0) {
-          setCars((prevCars) => [...prevCars, ...newCars]);
-        }
-
-        return newCars;
+        // Sync the state with the database data
+        setCars(carDataArray);
+        setloading(false);
+        //console.log('Updated Cars:', JSON.stringify(carDataArray));
+        return carDataArray;
       } else {
         console.log('No car photos data found');
+
+        // Clear the state if no car data exists
+        setCars([]);
         return [];
       }
     } else {
       console.log('No user data found');
+
+      // Clear the state if no user data exists
+      setCars([]);
       return [];
     }
   } catch (error) {
@@ -92,11 +71,26 @@ const CarSelectionScreen = ({route}) => {
     return [];
   }
 };
+const getSelectedCarItem = async () => {
+  try {
+    const item = await AsyncStorage.getItem('CarSelectedNumber');
+    if (item) {
+      const parsedItem = JSON.parse(item); // Parse the JSON string to an object
+      setSelectedCar(parsedItem.carNumber); // Set the selected car number
+      setSelecCar(parsedItem); // Set the selected car item
+    } else {
+      console.log('No selected car found in AsyncStorage');
+    }
+  } catch (error) {
+    console.error('Error retrieving selected car:', error);
+  }
+};
 
 useEffect(() => {
-  
+   getSelectedCarItem();
    getAllCarData();
   
+   
   
   return () => {
     
@@ -130,7 +124,82 @@ useEffect(() => {
     console.error('Error storing user data:', error);
   }
 };
+  const deleteCarData = async (carNumber) => {
+  try {
+    const userRef = firestore().collection('userInfo').doc(id); // Reference to the user's document
+    
+    // Get the current user document
+    const userDoc = await userRef.get();
 
+    // Check if the document exists and the carNumber data is present
+    if (!userDoc.exists) {
+      console.warn(`User document does not exist.`);
+      return;
+    }
+
+    const userData = userDoc.data();
+    const carData = userData?.CarPhotosUrl?.[carNumber];
+
+    if (!carData) {
+      console.warn(`No car data found for carNumber: ${carNumber}`);
+      setloading(false);
+      return;
+    }
+
+    // Delete the car photo from Firebase Storage
+    const downloadURL = carData.downloadURL;
+    if (downloadURL) {
+      const filePath = decodeURIComponent(downloadURL.split('/o/')[1].split('?')[0]); // Extract the file path
+      await storage().ref(filePath).delete();
+      console.log('Car photo deleted successfully from Firebase Storage.');
+    }
+
+    // Delete the car data from Firestore
+    const updatedCarPhotosUrl = { ...userData.CarPhotosUrl };
+    delete updatedCarPhotosUrl[carNumber];
+
+    await userRef.update({ CarPhotosUrl: updatedCarPhotosUrl });
+    console.log('Car data deleted successfully from Firestore.');
+
+    // Remove carNumber from AsyncStorage if it matches
+    const storedCarNumber = await AsyncStorage.getItem('CarNumber');
+    console.log("asyn data" + JSON.stringify(storedCarNumber));
+    if (storedCarNumber === carNumber) {
+      await AsyncStorage.removeItem('CarNumber');
+      console.log('CarNumber removed from AsyncStorage.');
+    }
+
+    // Optional: Refresh data
+    await getAllCarData();
+    setloading(false);
+    setSuccessVisible(true);
+  } catch (error) {
+    console.error('Error deleting car data:', error);
+    setloading(false)
+  }
+};
+ const showAlert =async  (carNumber) => {
+    Alert.alert(
+      "Delete Vehicle Data",
+      `Are you sure you want to delete the data for vehicle: ${carNumber}?`,
+      [
+        {
+          text: "Close",
+          style: "cancel", // Adds a dismissive style
+        },
+        {
+          text: "Confirm",
+          onPress: async () => {
+            setloading(true);
+            await deleteCarData(carNumber); // Trigger the delete function
+            console.log(`Confirmed deletion for carNumber: ${carNumber}`);
+          },
+          style: "destructive", // Adds a red destructive style
+        },
+      ],
+      { cancelable: true } // Allows the alert to close by tapping outside
+    );
+  };
   const StoreCarPhoto= async (uri,model,carNumber)=>{
       const timestamp = new Date().getTime();
       const uniqueFileName = `carPhoto_${timestamp}.png`;
@@ -172,15 +241,34 @@ useEffect(() => {
           isSelected && styles.selectedCard,
         ]}
         onPress={() => {setSelectedCar(item.carNumber),
-          console.log("selected Car is" + JSON.stringify(item))
+          //console.log("selected Car is" + JSON.stringify(item))
+          AsyncStorage.setItem("CarSelectedNumber",JSON.stringify(item));
           setSelecCar(item)}}
         activeOpacity={0.7}
       >
+         <TouchableOpacity
+          style={{ alignSelf: "flex-end", // Ensures the button only takes required width
+    backgroundColor: "#fff", // Red background
+    paddingHorizontal: 10, // Small horizontal padding
+    
+    }}
+          onPress={async () => {
+            // Add your remove vehicle logic here
+            showAlert(item.carNumber);
+            //await deleteCarData(item.carNumber);
+            //console.log("Remove vehicle:", item.carNumber);
+          }}
+          className="rounded-full"
+        >
+          <Trash2 color={'#000'} size={wp('5%')}/>
+        </TouchableOpacity>
+        
         <View style={styles.carContent}>
           <View style={[
             styles.imageContainer,
             {marginRight:5}
           ]}>
+            
             <Image
               source={{ uri: item.downloadURL }}
               style={styles.carImage}
@@ -197,19 +285,23 @@ useEffect(() => {
               {item.status}
             </Text>
           </View>
-          <TouchableOpacity 
+          <View 
             style={[
               styles.bookButton,
               isSelected && styles.selectedBookButton
             ]}
-            onPress={() => {}}
+            
           >
             <Text style={styles.bookButtonText}>
-              {isSelected ? 'Selected' : 'Choose Now'}
+              {isSelected ? 'Selected' : 'Select'}
             </Text>
-          </TouchableOpacity>
+          </View>
+          
         </View>
+        
+        
         {isSelected && <View style={styles.selectedIndicator} />}
+        
       </TouchableOpacity>
     );
   };
@@ -225,7 +317,7 @@ useEffect(() => {
         >
           <Icon name='arrow-back' size={wp(5)} color={'#000'} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Change Car</Text>
+        <Text style={styles.headerTitle}>Add/Remove Vehicle</Text>
         </View>
         <TouchableOpacity onPress={()=>setModalVisible(true)}>
           <Icon name='add-circle-outline' color={"#000"} size={wp(8)}/>
@@ -245,6 +337,8 @@ useEffect(() => {
       onSubmit={handleSubmit}
       />
           )}
+          {loading && <LoadingAlert visible={loading} />}
+          {successVisible && <SuccessAlert visible={successVisible} onClose={()=>{setSuccessVisible(false)}} message={"Data Deleted Sucessfully"}/>}
     </SafeAreaView>
   );
 };

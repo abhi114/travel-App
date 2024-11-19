@@ -91,11 +91,11 @@ const Linecharts = ({name}) => {
   };
 
   return (
-    <View style={{justifyContent: 'center', alignSelf: 'center'}}>
+    <View style={{justifyContent: 'center', alignSelf: 'center',}}>
       {MapLoading ? (
         <ActivityIndicator />
       ) : (
-        <View>
+        <View style={{padding:5}}>
           <Text style={{color: '#000000', fontWeight: 'bold', marginLeft: 15}}>
             {name}'s Data (Last 6 Months)
           </Text>

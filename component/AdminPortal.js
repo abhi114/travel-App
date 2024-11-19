@@ -18,6 +18,9 @@ import firestore from '@react-native-firebase/firestore';
 import AdminDriversPage from './AdminDriversPage';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AdminProfileSection from './AdminProfileSection';
+import AnalyticsGraphSection from './helpers/Analytics/Analytics';
+import SettingsNewSection from './helpers/SettingsSection';
 
 const Tab = createBottomTabNavigator();
 
@@ -66,13 +69,13 @@ const AdminPortal = ({route}) => {
           <TouchableOpacity
             onPress={() => setActiveSection('Profile')}
             style={styles.button}>
-            <Icon name="person" size={30} color="white" />
+            <Icon name="person" size={25} color="white" />
             <Text style={styles.buttonText}>Profile</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setActiveSection('Settings')}
             style={styles.button}>
-            <Icon name="settings" size={30} color="white" />
+            <Icon name="settings" size={25} color="white" />
             <Text style={styles.buttonText}>Settings</Text>
           </TouchableOpacity>
         </View>
@@ -127,23 +130,32 @@ const AdminPortal = ({route}) => {
         BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
       };
     }, [activeSection]);
-    return(
-      
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
-        {renderBackButton()}
-        <Text style={styles.headerTitle}>Profile Section</Text>
-      </View>
-      <View style={styles.contentContainer}>
-        <Icon name="person" size={80} color="#3498db" />
-        <Text style={styles.contentText}>Username: {data.name}</Text>
-        <Text style={styles.contentText}>
-          Mobile Number: {data.MobileNumber}
-        </Text>
-        <Text style={styles.contentText}>Address: {data.driverAddress}</Text>
-      </View>
-    </View>
-    )
+    return (
+      // <View style={styles.container}>
+      //   <View style={styles.headerContainer}>
+      //     {renderBackButton()}
+      //     <Text style={styles.headerTitle}>Profile Section</Text>
+      //   </View>
+      //   <View style={styles.contentContainer}>
+      //     <Icon name="person" size={80} color="#3498db" />
+      //     <Text style={styles.contentText}>Username: {data.name}</Text>
+      //     <Text style={styles.contentText}>
+      //       Mobile Number: {data.MobileNumber}
+      //     </Text>
+      //     <Text style={styles.contentText}>Address: {data.driverAddress}</Text>
+      //   </View>
+      // </View>
+      <AdminProfileSection
+        data={{
+          name: data.name,
+          MobileNumber: data.MobileNumber,
+          driverAddress: data.driverAddress,
+          email: 'john@example.com',
+          joinedDate: 'Jan 2024',
+        }}
+        onBackPress={() => setActiveSection('Home')}
+      />
+    );
   };
 
   const SettingsSection = () => {
@@ -180,38 +192,42 @@ const AdminPortal = ({route}) => {
      ]);
    };
     return (
-      <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          {renderBackButton()}
-          <Text style={styles.headerTitle}>Settings Section</Text>
-        </View>
-        <View style={styles.contentContainer}>
-          <Icon name="settings" size={80} color="#3498db" />
-          <Text style={styles.contentText}>Notifications: On</Text>
-          <Text style={styles.contentText}>Theme: Light</Text>
-          <TouchableNativeFeedback
-            onPress={handleLogout}
-            background={TouchableNativeFeedback.Ripple('#fff', true)}>
-            <View
-              style={{
-                backgroundColor: '#007bff', // blue color
-                padding: 16,
-                borderRadius: 8,
-                borderColor: '#007bff',
-                borderWidth: 1,
-              }}>
-              <Text
-                style={{
-                  fontSize: 18,
-                  color: '#fff', // white text color
-                  textAlign: 'center',
-                }}>
-                Logout
-              </Text>
-            </View>
-          </TouchableNativeFeedback>
-        </View>
-      </View>
+      // <View style={styles.container}>
+      //   <View style={styles.headerContainer}>
+      //     {renderBackButton()}
+      //     <Text style={styles.headerTitle}>Settings Section</Text>
+      //   </View>
+      //   <View style={styles.contentContainer}>
+      //     <Icon name="settings" size={80} color="#3498db" />
+      //     <Text style={styles.contentText}>Notifications: On</Text>
+      //     <Text style={styles.contentText}>Theme: Light</Text>
+      //     <TouchableNativeFeedback
+      //       onPress={handleLogout}
+      //       background={TouchableNativeFeedback.Ripple('#fff', true)}>
+      //       <View
+      //         style={{
+      //           backgroundColor: '#007bff', // blue color
+      //           padding: 16,
+      //           borderRadius: 8,
+      //           borderColor: '#007bff',
+      //           borderWidth: 1,
+      //         }}>
+      //         <Text
+      //           style={{
+      //             fontSize: 18,
+      //             color: '#fff', // white text color
+      //             textAlign: 'center',
+      //           }}>
+      //           Logout
+      //         </Text>
+      //       </View>
+      //     </TouchableNativeFeedback>
+      //   </View>
+      // </View>
+      <SettingsNewSection
+        onBackPress={() => setActiveSection('Home')}
+        onLogout={() => handleLogout()}
+      />
     );
   };
 
@@ -244,28 +260,32 @@ const AdminPortal = ({route}) => {
     }, [activeSection]);
     
     return (
-      <View style={styles.container}>
-        <ScrollView>
-          <View style={styles.headerContainer}>
-            {renderBackButton()}
-            <Text style={styles.headerTitle}>Analytics Section</Text>
-          </View>
-          <View style={styles.contentContainer}>
-            <Text style={[styles.contentText, {fontWeight: 'bold'}]}>
-              Analysis Of User Data
-            </Text>
-            <LineView />
-            <Linecharts name={'User'} />
-          </View>
-          <View style={styles.contentContainer}>
-            <Text style={[styles.contentText, {fontWeight: 'bold'}]}>
-              Analysis Of Driver's Data
-            </Text>
-            <LineView />
-            {userInfo && <Linecharts name={'Driver'} userInfo={userInfo} />}
-          </View>
-        </ScrollView>
-      </View>
+      // <View style={styles.container}>
+      //   <ScrollView>
+      //     <View style={styles.headerContainer}>
+      //       {renderBackButton()}
+      //       <Text style={styles.headerTitle}>Analytics Section</Text>
+      //     </View>
+      //     <View style={styles.contentContainer}>
+      //       <Text style={[styles.contentText, {fontWeight: 'bold'}]}>
+      //         Analysis Of User Data
+      //       </Text>
+      //       <LineView />
+      //       <Linecharts name={'User'} />
+      //     </View>
+      //     <View style={styles.contentContainer}>
+      //       <Text style={[styles.contentText, {fontWeight: 'bold'}]}>
+      //         Analysis Of Driver's Data
+      //       </Text>
+      //       <LineView />
+      //       {userInfo && <Linecharts name={'Driver'} userInfo={userInfo} />}
+      //     </View>
+      //   </ScrollView>
+      // </View>
+      <AnalyticsGraphSection
+        userInfo={userInfo}
+        onBackPress={() => setActiveSection('Home')}
+      />
     );
   };
 
@@ -433,7 +453,7 @@ const AdminPortal = ({route}) => {
       alignItems: 'center',
       backgroundColor: '#2ecc71',
       padding: 10,
-      borderRadius: 5,
+      borderRadius: 20,
     },
     buttonText: {
       color: 'white',

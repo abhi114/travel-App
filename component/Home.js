@@ -55,6 +55,7 @@ const Home = ({route}) => {
         console.error('Failed to open URL:', err),
       );
     }
+    console.log(month)
     const storeFuelData = async () => {
      try {
        const userRef = firestore().collection('userInfo').doc(id); // Reference user document

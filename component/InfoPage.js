@@ -23,7 +23,7 @@ import Icon3 from 'react-native-vector-icons/AntDesign';
 import Icon4 from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
-
+import {Smartphone, User} from 'lucide-react-native';
 import { LineView } from './helpers/helpers';
 import { FormAlert, LoadingAlert } from './CustomAlerts';
 
@@ -407,7 +407,7 @@ const InfoPage = ({route}) => {
           vehicleDetails,
           //dutyInstructions,
           mainData,
-          currentMonth,
+          month:currentMonth,
         });
     
   };
@@ -419,6 +419,7 @@ const InfoPage = ({route}) => {
      const query = encodeURIComponent(
        `${address},${city}`,
      );
+     console.log("query is " + query);
      const url = `https://www.google.com/maps/search/?api=1&query=${query}`;
      console.log(url);
      Linking.openURL(url);
@@ -490,70 +491,46 @@ const InfoPage = ({route}) => {
         </View>
         <View className="p-4 space-y-4 ">
           {/* Full Name Card */}
-          <View
-            style={{
-              backgroundColor: 'white',
-              borderRadius: wp('3%'),
-              padding: wp('4%'),
-              borderWidth: 1,
-              borderColor: '#f3f4f6',
-              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-            }}>
-            <Text
-              style={{
-                fontSize: wp('3.5%'),
-                fontWeight: '500',
-                color: '#4b5563',
-                marginBottom: hp('0.5%'),
-              }}>
-              Full Name <Text style={{color: '#3b82f6'}}>*</Text>
-            </Text>
-            <View
-              style={{
-                backgroundColor: '#f9fafb',
-                borderRadius: wp('2%'),
-                padding: wp('3%'),
-                borderWidth: 1,
-                borderColor: '#e5e7eb',
-              }}>
-              <Text style={{color: '#1f2937', fontWeight: '500'}}>
-                {driversdta.name}
-              </Text>
-            </View>
-          </View>
+          {/* <View className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 m-4"> */}
+            {/* Header */}
+            {/* <Text className="text-lg font-semibold text-gray-900 mb-4">
+              Driver Information
+            </Text> */}
 
-          {/* Number Card */}
-          <View
-            style={{
-              backgroundColor: 'white',
-              borderRadius: wp('3%'),
-              padding: wp('4%'),
-              borderWidth: 1,
-              borderColor: '#f3f4f6',
-              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.05)',
-            }}>
-            <Text
-              style={{
-                fontSize: wp('3.5%'),
-                fontWeight: '500',
-                color: '#4b5563',
-                marginBottom: hp('0.5%'),
-              }}>
-              Number <Text style={{color: '#3b82f6'}}>*</Text>
-            </Text>
-            <View
-              style={{
-                backgroundColor: '#f9fafb',
-                borderRadius: wp('2%'),
-                padding: wp('3%'),
-                borderWidth: 1,
-                borderColor: '#e5e7eb',
-              }}>
-              <Text style={{color: '#1f2937', fontWeight: '500'}}>
-                {driversdta.MobileNumber}
-              </Text>
+            {/* Name Section */}
+            {/* <View className="mb-4">
+              <View className="flex-row items-center mb-2">
+                <User className="w-5 h-5 text-blue-500 mr-2" />
+                <Text className="text-sm font-medium text-gray-600">
+                  Full Name
+                </Text>
+              </View>
+              <View className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                <Text className="text-base font-medium text-gray-800">
+                  {driversdta.name}
+                </Text>
+              </View>
+            </View> */}
+
+            {/* Phone Number Section */}
+            {/* <View>
+              <View className="flex-row items-center mb-2">
+                <Smartphone className="w-5 h-5 text-blue-500 mr-2" />
+                <Text className="text-sm font-medium text-gray-600">
+                  Mobile Number
+                </Text>
+              </View>
+              <TouchableOpacity
+                className="bg-gray-50 rounded-lg p-3 border border-gray-200"
+                onPress={() => {
+                  // Handle phone number tap - could be used to initiate a call
+                }}>
+                <Text className="text-base font-medium text-gray-800">
+                  {driversdta.MobileNumber}
+                </Text>
+              </TouchableOpacity>
             </View>
-          </View>
+          </View> */}
 
           {/* Reporting Date Card */}
           {/* <View
@@ -774,7 +751,10 @@ const InfoPage = ({route}) => {
                       justifyContent: 'center',
                       alignSelf: 'center',
                       padding: wp(3),
-                    }} onPress={()=>{openGoogleMaps()}}>
+                    }}
+                    onPress={() => {
+                      openGoogleMaps();
+                    }}>
                     <Icon1
                       name="location"
                       size={wp(6)}

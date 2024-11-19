@@ -17,6 +17,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const DriverDashboard = ({emailId, id, data,logout}) => {
   const navigation = useNavigation();
   const scaleAnim = useRef(new Animated.Value(0)).current; // Initial scale for the title
@@ -30,6 +31,21 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
     downloadURL:
       'https://images.pexels.com/photos/810357/pexels-photo-810357.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
   });
+  const getSelectedCarItem = async () => {
+    try {
+      const item = await AsyncStorage.getItem('CarSelectedNumber');
+      if (item) {
+        const parsedItem = JSON.parse(item); // Parse the JSON string to an object
+        //setSelectedCar(parsedItem.carNumber); // Set the selected car number
+        console.log(parsedItem);
+        setSelecCar(parsedItem); // Set the selected car item
+      } else {
+        console.log('No selected car found in AsyncStorage');
+      }
+    } catch (error) {
+      console.error('Error retrieving selected car:', error);
+    }
+  };
   useEffect(() => {
     // Title Animation
     Animated.timing(scaleAnim, {
@@ -50,6 +66,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
   }, []);
    useEffect(() => {
      // Update `nameData` whenever `data` prop changes
+     getSelectedCarItem()
      setNameData(data);
    }, [data]);
   return (

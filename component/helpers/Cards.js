@@ -160,10 +160,10 @@ const VehicleCard = ({data, item}) => {
           {data[item].vehicleDetails}
         </Text>
 
-        <Pressable style={styles.expandButton}>
+        {/* <Pressable style={styles.expandButton}>
           <Text style={styles.expandButtonText}>View Full Details</Text>
           <ChevronRight size={wp(4)} color="#4A90E2" />
-        </Pressable>
+        </Pressable> */}
       </LinearGradient>
     </Animated.View>
   );

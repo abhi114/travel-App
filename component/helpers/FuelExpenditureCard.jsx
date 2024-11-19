@@ -61,7 +61,7 @@ const FuelExpenditureCard = ({ selectedMonth, monthNames, userInfo }) => {
     container: {
       marginHorizontal: wp(3),
       marginVertical: hp(2),
-      height: hp(20),
+      
       borderRadius: wp(4),
       overflow: 'hidden',
       elevation: 5, // for Android shadow
@@ -81,28 +81,28 @@ const FuelExpenditureCard = ({ selectedMonth, monthNames, userInfo }) => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      marginBottom: hp(2),
+      marginBottom: hp(1),
     },
     iconContainer: {
       backgroundColor: 'rgba(255, 255, 255, 0.2)',
       padding: wp(2),
       borderRadius: wp(2),
-      width: wp(10),
-      height: wp(10),
+      width: wp('8%'),
+      height: wp('8%'),
       alignItems: 'center',
       justifyContent: 'center',
     },
     headerText: {
       color: '#FFFFFF',
-      fontSize: wp(4.5),
+      fontSize: wp(4),
       fontWeight: '600',
-      marginLeft: wp(3),
+      marginLeft:wp(2),
       flex: 1, // allows text to wrap if needed
     },
     subText: {
       color: 'rgba(255, 255, 255, 0.8)',
-      fontSize: wp(3.5),
-      marginBottom: hp(1),
+      fontSize: wp(3),
+      
     },
     amountContainer: {
       flexDirection: 'row',
@@ -116,7 +116,7 @@ const FuelExpenditureCard = ({ selectedMonth, monthNames, userInfo }) => {
     },
     amountText: {
       color: '#FFFFFF',
-      fontSize: wp(8),
+      fontSize: wp(5),
       fontWeight: '700',
     },
     rightIconContainer: {

@@ -38,12 +38,12 @@ const styles = StyleSheet.create({
   },
   headerIcon: {
     backgroundColor: 'rgba(74, 144, 226, 0.1)',
-    padding: wp('2.5%'),
+    padding: wp('2%'),
     borderRadius: wp('2.5%'),
-    marginRight: wp('3%'),
+    marginRight: wp('1%'),
   },
   headerTitle: {
-    fontSize: wp('4%'),
+    fontSize: wp('3.5%'),
     fontWeight: '600',
     color: '#1A237E',
   },
@@ -98,9 +98,8 @@ const styles = StyleSheet.create({
     alignSelf:'center'
   },
   statusBadge: {
-    position: 'absolute',
-    top: wp('4%'),
-    right: wp('4%'),
+   
+    marginLeft:wp(2),
     backgroundColor: '#4CAF50',
     paddingHorizontal: wp('3%'),
     paddingVertical: hp('0.5%'),
@@ -145,10 +144,11 @@ const PassengerDetails = ({filteredData, item, passengerKey}) => {
             <User size={wp(4)} color="#4A90E2" />
           </View>
           <Text style={styles.headerTitle}>Passenger Details</Text>
+          <View style={styles.statusBadge}>
+            <Text style={styles.statusText}>Active</Text>
+          </View>
         </View>
-        <View style={styles.statusBadge}>
-          <Text style={styles.statusText}>Active</Text>
-        </View>
+        
 
         <View style={styles.detailRow}>
           <View style={{justifyContent: 'center', flexDirection: 'row'}}>
@@ -193,7 +193,11 @@ const PassengerDetails = ({filteredData, item, passengerKey}) => {
             </View>
           </View>
         </View>
-        <TouchableOpacity style={styles.locationContainer} onPress={()=>{openGoogleMaps(passengerData.StartingAddress);}}>
+        <TouchableOpacity
+          style={styles.locationContainer}
+          onPress={() => {
+            openGoogleMaps(passengerData.StartingAddress);
+          }}>
           <View style={{justifyContent: 'center', flexDirection: 'row'}}>
             <View style={styles.locationHeader}>
               <MapPin
@@ -208,7 +212,11 @@ const PassengerDetails = ({filteredData, item, passengerKey}) => {
             {passengerData.StartingAddress}
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.locationContainer} onPress={()=>{openGoogleMaps(passengerData.StartingAddress);}}>
+        <TouchableOpacity
+          style={styles.locationContainer}
+          onPress={() => {
+            openGoogleMaps(passengerData.DestinationAddress);
+          }}>
           <View style={{justifyContent: 'center', flexDirection: 'row'}}>
             <View style={styles.locationHeader}>
               <MapPin

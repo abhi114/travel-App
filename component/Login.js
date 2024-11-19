@@ -311,17 +311,19 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     marginVertical: 5,
     marginHorizontal: 15,
-    
   },
   adminPortalButton: {
     justifyContent: 'center',
-    alignSelf: 'center',
+    alignItems: 'center',
     marginTop: 40,
+    paddingHorizontal: 20,
   },
   adminPortalText: {
     color: '#007AFF',
     textDecorationLine: 'underline',
     fontSize: 16,
+    textAlign: 'center',
+    padding:2
   },
   socialIconsContainer: {
     flexDirection: 'row',
