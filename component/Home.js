@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   ScrollView,
   View,
@@ -24,6 +24,7 @@ const Home = ({route}) => {
     const [endFuel,setEndFuel] = useState('');
     const [fuelcost,setfuelcost] = useState('');
     const [loadingVisible, setLoadingVisible] = useState(false);
+    const scrollViewRef = useRef(null);
     const getCurrentTime = () => {
       const date = new Date();
       let hours = date.getHours();
@@ -112,6 +113,9 @@ const Home = ({route}) => {
         console.log("hit");
         if(accept === false){
         setaccept(true);
+         setTimeout(() => {
+           scrollViewRef.current?.scrollToEnd({animated: true});
+         }, 100);
         return;
         }
         if(startKm == '' || endkm == '' || startFuel== '' || endFuel == '' || fuelcost == ''){
@@ -145,7 +149,7 @@ const Home = ({route}) => {
     }
  return (
    <View style={styles.container}>
-     <ScrollView style={styles.scrollContainer}>
+     <ScrollView ref={scrollViewRef} style={styles.scrollContainer}>
        <View style={styles.contentWrapper}>
          <Text style={styles.mainHeader}>Summary Details</Text>
 

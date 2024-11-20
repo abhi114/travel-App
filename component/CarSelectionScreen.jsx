@@ -281,8 +281,8 @@ useEffect(() => {
               isSelected && styles.selectedText
             ]}>{item.model}</Text>
             <Text style={styles.carId}>{item.carNumber}</Text>
-            <Text style={[styles.status, { color: item.statusColor }]}>
-              {item.status}
+            <Text style={[styles.status, { color: "#008000" }]}>
+              Available
             </Text>
           </View>
           <View 

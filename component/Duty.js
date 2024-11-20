@@ -6,7 +6,7 @@ import { useNavigation } from '@react-navigation/native';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import { LineView } from './helpers/helpers';
-import {LoadingAlert} from './CustomAlerts';
+import {LoadingAlert, SuccessAlert} from './CustomAlerts';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Animated, {
   FadeInDown,
@@ -26,6 +26,8 @@ import PassengerInfoScreen from './PassengerCard';
 const Sign = ({id, Rprtdate, mainData}) => {
   const signRef = useRef(null);
   const [currentSignature, setCurrentSignature] = useState('driversSignature');
+  const [driverSignature,SetDriverSignature] = useState(false);
+  const [passengerSignature,SetPassengerSignature] = useState(false);
   const [signatureSaved, setSignatureSaved] = useState(false);
   const [signSaveStart,setSignSaveStart] = useState(false);
   const navigation = useNavigation();
@@ -69,13 +71,14 @@ const Sign = ({id, Rprtdate, mainData}) => {
     setSignatureSaved(true);
     setSignSaveStart(false);
     if (currentSignature === 'passengersSignature') {
-      Alert.alert("Passenger's Signature Saved");
-       navigation.reset({
-         index: 0,
-         routes: [{name: 'Feedback', params: {id}}],
-       });
+      SetPassengerSignature(true);
+      //Alert.alert("Passenger's Signature Saved");
+      //  navigation.reset({
+      //    index: 0,
+      //    routes: [{name: 'Feedback', params: {id}}],
+      //  });
     }else{
-      Alert.alert(" Driver's Signature Saved");
+      SetDriverSignature(true);
     }
     resetSign();
   };
@@ -189,6 +192,28 @@ const Sign = ({id, Rprtdate, mainData}) => {
               </TouchableOpacity>
             </View>
           </View>
+        )}
+        {driverSignature && (
+          <SuccessAlert
+            visible={driverSignature}
+            message={"Driver's Signature Saved"}
+            onClose={() => {
+              SetDriverSignature(false);
+            }}
+          />
+        )}
+        {passengerSignature && (
+          <SuccessAlert
+            visible={passengerSignature}
+            message={"Passenger's Signature Saved"}
+            onClose={() => {
+              SetPassengerSignature(false);
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Feedback', params: {id}}],
+              });
+            }}
+          />
         )}
       </View>
     );
