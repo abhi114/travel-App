@@ -54,7 +54,7 @@ const CarSelectionScreen = ({route}) => {
         return carDataArray;
       } else {
         console.log('No car photos data found');
-
+        setloading(false);
         // Clear the state if no car data exists
         setCars([]);
         return [];

@@ -4,6 +4,12 @@ import { ScrollView } from 'react-native'
 import { TouchableOpacity } from 'react-native'
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native'
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import {User, Phone, MapPin, LogOut, Check} from 'lucide-react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const PersonalInfo = ({route}) => {
     const {id, emailId} = route.params;
@@ -11,6 +17,24 @@ const PersonalInfo = ({route}) => {
     const [number, enterNumber] = useState('');
     const [driversaddress,setdriversaddress] = useState('');
     const navigation = useNavigation();
+     const logout = () => {
+       Alert.alert('Confirm Logout', 'Are you sure you want to log out?', [
+         {
+           text: 'Cancel',
+           style: 'cancel',
+         },
+         {
+           text: 'Logout',
+           onPress: () => {
+             AsyncStorage.removeItem('loginState');
+             navigation.reset({
+               index: 0,
+               routes: [{name: 'Register'}],
+             });
+           },
+         },
+       ]);
+     };
     const monthExpenditure = {
       January: 0,
       February: 0,
@@ -70,61 +94,110 @@ const PersonalInfo = ({route}) => {
         });
     }
     
-  return (
-    <View style={styles.outerContainer}>
-      <ScrollView style={styles.container}>
-        <View style={styles.buttonContainer}>
-          <Text style={styles.headerText}>Enter User Details</Text>
-        </View>
-        <View style={styles.cardContainer}>
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Full Name</Text>
-            <TextInput
-              onChangeText={setName}
-              value={name}
-              placeholder="Enter Name"
-              placeholderTextColor="#8e8e8e"
-              style={styles.textInput}
-            />
-          </View>
-        </View>
+ return (
+   <View className="flex-1 bg-gray-50">
+     {/* Header Section */}
+     <View className="px-4 pt-5 pb-4 bg-white shadow-sm">
+       <View className="flex-row justify-between items-center">
+         <View className="flex-row items-center space-x-3">
+           <User color="#4A5568" size={wp('7%')} />
+           <Text className="text-2xl font-bold text-gray-800">
+             Profile Details
+           </Text>
+         </View>
+         <TouchableOpacity
+           onPress={logout}
+           className="bg-red-500 rounded-xl flex-row items-center px-3 py-2 space-x-2 shadow-md">
+           <LogOut color="white" size={wp('5%')} />
+           <Text className="text-white font-semibold">Logout</Text>
+         </TouchableOpacity>
+       </View>
+     </View>
 
-        <View style={styles.cardContainer}>
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Mobile Number</Text>
-            <TextInput
-              onChangeText={enterNumber}
-              value={number}
-              keyboardType="numeric"
-              placeholder="Enter Mobile Number"
-              placeholderTextColor="#8e8e8e"
-              style={styles.textInput}
-            />
-          </View>
-        </View>
+     {/* Form Container */}
+     <ScrollView
+       className="flex-1 px-4 pt-6"
+       showsVerticalScrollIndicator={false}>
+       {/* Full Name Input */}
+       <View className="mb-4">
+         <View className="flex-row items-center mb-2 space-x-2">
+           <User color="#4A5568" size={wp('5%')} />
+           <Text className="text-gray-700 font-semibold">Full Name</Text>
+         </View>
+         <View className="bg-white border border-gray-200 rounded-xl flex-row items-center px-4 shadow-sm">
+           <TextInput
+             onChangeText={setName}
+             value={name}
+             placeholder="Enter your full name"
+             placeholderTextColor="#9CA3AF"
+             className="flex-1 py-3 text-gray-800 font-medium"
+           />
+           {name && <Check color="#48BB78" size={wp('5%')} />}
+         </View>
+       </View>
 
-        <View style={styles.cardContainer}>
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Your Address</Text>
-            <TextInput
-              onChangeText={setdriversaddress}
-              value={driversaddress}
-              placeholder="Enter Address"
-              placeholderTextColor="#8e8e8e"
-              style={styles.textInput}
-            />
-          </View>
-        </View>
-      </ScrollView>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={() => onsubmit()}
-          style={styles.proceedButton}>
-          <Text style={styles.proceedButtonText}>Submit</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+       {/* Mobile Number Input */}
+       <View className="mb-4">
+         <View className="flex-row items-center mb-2 space-x-2">
+           <Phone color="#4A5568" size={wp('5%')} />
+           <Text className="text-gray-700 font-semibold">Mobile Number</Text>
+         </View>
+         <View className="bg-white border border-gray-200 rounded-xl flex-row items-center px-4 shadow-sm">
+           <TextInput
+             onChangeText={enterNumber}
+             value={number}
+             keyboardType="numeric"
+             placeholder="Enter mobile number"
+             placeholderTextColor="#9CA3AF"
+             className="flex-1 py-3 text-gray-800 font-medium"
+           />
+           {number && <Check color="#48BB78" size={wp('5%')} />}
+         </View>
+       </View>
+
+       {/* Address Input */}
+       <View className="mb-6">
+         <View className="flex-row items-center mb-2 space-x-2">
+           <MapPin color="#4A5568" size={wp('5%')} />
+           <Text className="text-gray-700 font-semibold">Your Address</Text>
+         </View>
+         <View className="bg-white border border-gray-200 rounded-xl px-4 shadow-sm">
+           <TextInput
+             onChangeText={setdriversaddress}
+             value={driversaddress}
+             placeholder="Enter your full address"
+             placeholderTextColor="#9CA3AF"
+             multiline
+             numberOfLines={3}
+             className="py-3 text-gray-800 font-medium h-24"
+           />
+           {driversaddress && (
+             <View className="absolute bottom-2 right-2">
+               <Check color="#48BB78" size={wp('5%')} />
+             </View>
+           )}
+         </View>
+       </View>
+     </ScrollView>
+
+     {/* Submit Button */}
+     <View className="px-4 pb-6 bg-white shadow-2xl">
+       <TouchableOpacity
+         onPress={onsubmit}
+         disabled={!name || !number || !driversaddress}
+         className={`rounded-xl py-4 items-center shadow-md ${
+           name && number && driversaddress
+             ? 'bg-blue-600 active:bg-blue-700'
+             : 'bg-gray-400'
+         }`}>
+         <View className="flex-row items-center space-x-2">
+           <Check color="white" size={wp('5%')} />
+           <Text className="text-white font-bold text-lg">Submit</Text>
+         </View>
+       </TouchableOpacity>
+     </View>
+   </View>
+ );
 }
 const styles = StyleSheet.create({
   outerContainer: {

@@ -14,7 +14,8 @@ import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import { MainFooter, validateEmail } from './helpers/helpers';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 const Register = () => {
   const [emailId, setEmailId] = useState('');
   const [password, setPassword] = useState('');
@@ -22,6 +23,7 @@ const Register = () => {
   const [number,setNumber] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [verificationId, setVerificationId] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
   useEffect(() => {
     const checkAdminLoginState = async () => {
@@ -163,14 +165,24 @@ const Register = () => {
           onChangeText={setEmailId}
           style={styles.input}
         />
-        <TextInput
-          secureTextEntry={true}
-          label="Password"
-          value={password}
-          onChangeText={setPassword}
-          style={styles.input}
-        />
-
+        <View style={{flexDirection: 'row'}}>
+          <TextInput
+            secureTextEntry={!showPassword}
+            label="Password"
+            value={password}
+            onChangeText={setPassword}
+            style={[styles.input,{flex:0.9}]}
+          />
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            style={{flex: 0.1, justifyContent: 'center', alignItems: 'center'}}>
+            {showPassword ? (
+              <Icon name="eye" size={24} color="gray" />
+            ) : (
+              <Icon name="eye-slash" size={24} color="gray" />
+            )}
+          </TouchableOpacity>
+        </View>
         <Button
           mode="contained"
           onPress={handleRegister}
@@ -212,7 +224,7 @@ const styles = StyleSheet.create({
   },
   input: {
     marginBottom: 16,
-    marginHorizontal:15,
+    marginHorizontal:10,
     borderRadius:15
   },
   otpInput: {
