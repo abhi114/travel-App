@@ -71,13 +71,34 @@ const CarSelectionScreen = ({route}) => {
     return [];
   }
 };
+async function getSelectedCar() {
+    try {
+        // Reference to the user's document
+        const userRef = firestore().collection('userInfo').doc(id);
+
+        // Fetch the document
+        const doc = await userRef.get();
+
+        if (doc.exists) {
+            const data = doc.data();
+            console.log(`SelectedCar for user ID ${id}:`, data?.SelectedCar);
+            return data?.SelectedCar; // Return the SelectedCar value
+        } else {
+            console.log(`No document found for user ID: ${id}`);
+            return null; // Return null if the document doesn't exist
+        }
+    } catch (error) {
+        console.error("Error fetching SelectedCar:", error);
+        return null; // Return null in case of an error
+    }
+}
 const getSelectedCarItem = async () => {
   try {
-    const item = await AsyncStorage.getItem('CarSelectedNumber');
+    const item = await getSelectedCar();
     if (item) {
-      const parsedItem = JSON.parse(item); // Parse the JSON string to an object
-      setSelectedCar(parsedItem.carNumber); // Set the selected car number
-      setSelecCar(parsedItem); // Set the selected car item
+      //const parsedItem = JSON.parse(item); // Parse the JSON string to an object
+      setSelectedCar(item.carNumber); // Set the selected car number
+      setSelecCar(item); // Set the selected car item
     } else {
       console.log('No selected car found in AsyncStorage');
     }
@@ -220,7 +241,7 @@ useEffect(() => {
       console.error("Failed to upload image to Firebase:", error);
     }
   }
-  const handleSubmit = async (data) => {
+ const handleSubmit = async (data) => {
   // Handle form submission
   const model = data.model;
   const carNumber =data.number
@@ -230,7 +251,22 @@ useEffect(() => {
   console.log('Car Number:', data.number);
 
 };
+async function updateSelectedCar(carValue) {
+    try {
+        // Reference to the user's document
+        const userRef = firestore().collection('userInfo').doc(id);
 
+        // Update the document with the key-value pair
+        await userRef.set(
+            { SelectedCar: carValue },
+            { merge: true } // Ensures that other fields in the document are not overwritten
+        );
+        
+        console.log(`Successfully updated SelectedCar to "${carValue}" for user ID: ${id}`);
+    } catch (error) {
+        console.error("Error updating SelectedCar:", error);
+    }
+}
   const renderCarItem = ({ item }) => {
     const isSelected = selectedCar === item.carNumber;
     
@@ -242,6 +278,7 @@ useEffect(() => {
         ]}
         onPress={() => {setSelectedCar(item.carNumber),
           //console.log("selected Car is" + JSON.stringify(item))
+          updateSelectedCar(item);
           AsyncStorage.setItem("CarSelectedNumber",JSON.stringify(item));
           setSelecCar(item)}}
         activeOpacity={0.7}
@@ -323,13 +360,13 @@ useEffect(() => {
           <Icon name='add-circle-outline' color={"#000"} size={wp(8)}/>
         </TouchableOpacity>
       </View>
-      <FlatList
+     {cars.length ==0 ?(<View style={{justifyContent:'center',alignItems:'center',alignSelf:'center'}}><Text style={{alignSelf:'center',justifyContent:'center',padding:20,color:"#000",fontSize:12,fontWeight:'bold'}}>No Car Data Available</Text></View>) : (<FlatList
         data={cars}
         renderItem={renderCarItem}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.listContainer}
-      />
+      />)}
       {modalVisible && (
       <CarDetailsModal
       isVisible={true}

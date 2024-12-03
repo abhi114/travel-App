@@ -753,7 +753,7 @@ const InfoPage = ({route}) => {
                       padding: wp(3),
                     }}
                     onPress={() => {
-                      openGoogleMaps();
+                      //openGoogleMaps();
                     }}>
                     <Icon1
                       name="location"

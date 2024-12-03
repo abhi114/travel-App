@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import LottieView from 'lottie-react-native';
+import firestore from '@react-native-firebase/firestore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   widthPercentageToDP as wp,
@@ -25,22 +26,44 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
   const insets = useSafeAreaInsets();
   const [nameData,setNameData] = useState(data);
   const width = Dimensions.get('screen').width;
+  //console.log(id);
   const [selectedCar, setSelecCar] = useState({
     model: 'Jeep Rubicon',
     carNumber: 'UP32AD2445',
     downloadURL:
       'https://images.pexels.com/photos/810357/pexels-photo-810357.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
   });
+  async function getSelectedCar() {
+    try {
+      // Reference to the user's document
+      const userRef = firestore().collection('userInfo').doc(id);
+
+      // Fetch the document
+      const doc = await userRef.get();
+
+      if (doc.exists) {
+        const data = doc.data();
+        console.log(`SelectedCar for user ID ${id}:`, data?.SelectedCar);
+        return data?.SelectedCar; // Return the SelectedCar value
+      } else {
+        console.log(`No document found for user ID: ${id}`);
+        return null; // Return null if the document doesn't exist
+      }
+    } catch (error) {
+      console.error('Error fetching SelectedCar:', error);
+      return null; // Return null in case of an error
+    }
+  }
   const getSelectedCarItem = async () => {
     try {
-      const item = await AsyncStorage.getItem('CarSelectedNumber');
+      const item = await getSelectedCar();
       if (item) {
-        const parsedItem = JSON.parse(item); // Parse the JSON string to an object
+        //const parsedItem = JSON.parse(item); // Parse the JSON string to an object
         //setSelectedCar(parsedItem.carNumber); // Set the selected car number
-        console.log(parsedItem);
-        setSelecCar(parsedItem); // Set the selected car item
+        console.log(item);
+        setSelecCar(item); // Set the selected car item
       } else {
-        console.log('No selected car found in AsyncStorage');
+        console.log('No selected car found in Firestore');
       }
     } catch (error) {
       console.error('Error retrieving selected car:', error);

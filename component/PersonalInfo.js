@@ -179,7 +179,7 @@ const PersonalInfo = ({route}) => {
          </View>
        </View>
      </ScrollView>
-
+     
      {/* Submit Button */}
      <View className="px-4 pb-6 bg-white shadow-2xl">
        <TouchableOpacity
