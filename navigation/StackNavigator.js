@@ -16,6 +16,7 @@ import Stats from '../component/Stats';
 import ReportsScreenDetailed from '../component/ReportsScreenDetailed';
 import CarSelectionScreen from '../component/CarSelectionScreen';
 import ProfileEditScreen from '../component/EditProfile';
+import AdminDriversPage from '../component/AdminDriversPage';
 
 
 
@@ -98,6 +99,7 @@ const StackNavigator = () => {
         name="EditProfile"
         component={ProfileEditScreen}
       />
+      
     </Stack.Navigator>
   );
 }

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -16,7 +16,7 @@ import { LineView } from './helpers/helpers';
 import UserDataScreen from './ReportsScreen';
 import firestore from '@react-native-firebase/firestore';
 import AdminDriversPage from './AdminDriversPage';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AdminProfileSection from './AdminProfileSection';
 import AnalyticsGraphSection from './helpers/Analytics/Analytics';
@@ -28,7 +28,10 @@ const AdminPortal = ({route}) => {
   const navigation = useNavigation();
   const [userInfo, setUserInfo] = useState([]);
   const [activeSection, setActiveSection] = useState('Home');
-  const {emailId, id, data} = route.params
+  const {data} = route.params
+  
+   //const {setActive} = route.params || {};
+   //console.log(setActive + 'hello');
   
   console.log("came back")
   const gotoStats = ()=>{
@@ -57,7 +60,7 @@ const AdminPortal = ({route}) => {
       onPress={() => setActiveSection('Home')}
       style={styles.backButton}>
       <Icon name="arrow-back" size={30} color="#000000" />
-      <Text style={styles.backButtonText}>Back to Home</Text>
+      
     </TouchableOpacity>
   );
 
@@ -322,10 +325,12 @@ const AdminPortal = ({route}) => {
   };
 
   const TasksSection = () => {
+   
    useEffect(() => {
      const handleBackPress = () => {
        if (activeSection !== 'Home') {
          setActiveSection('Home');
+
          return true; // Prevent default behavior (exit app)
        } else {
          return false; // Allow default behavior (exit app)
@@ -342,12 +347,16 @@ const AdminPortal = ({route}) => {
    }, [activeSection]);
     return (
       <View style={styles.container}>
-        <View style={styles.headerContainer}>
-          {renderBackButton()}
-          <Text style={styles.headerTitle}>Driver's Information</Text>
+        <View className="flex-row items-center justify-between bg-blue-400 px-4 py-8 border-b border-gray-200 shadow-sm">
+          <View className="flex-row items-center space-x-3">
+            {renderBackButton()}
+            <Text className="text-xl font-bold text-gray-800">
+              Driver's Information
+            </Text>
+          </View>
         </View>
         <View style={styles.contentContainer}>
-          <AdminDriversPage />
+          <AdminDriversPage data={data}/>
         </View>
       </View>
     );
@@ -443,6 +452,7 @@ const AdminPortal = ({route}) => {
       fontWeight: 'bold',
       color: 'white',
       marginBottom: 20,
+      
     },
     buttonsContainer: {
       flexDirection: 'row',

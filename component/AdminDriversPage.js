@@ -9,12 +9,13 @@ import {
 import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Icon1 from 'react-native-vector-icons/MaterialIcons';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-const AdminDriversPage = ({renderbackButton}) => {
+const AdminDriversPage = ({renderbackButton,route,data}) => {
   const [userInfo, setUserInfo] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
+   
    const monthNames = [
      'January',
      'February',
@@ -33,7 +34,7 @@ const AdminDriversPage = ({renderbackButton}) => {
   console.log(currentMonth)
   const handleViewProfile = id => {
     if (id) {
-      navigation.navigate('ReportsScreen', {id});
+      navigation.navigate('ReportsScreen', {id,data});
     }
   };
   useEffect(() => {
@@ -62,12 +63,7 @@ const AdminDriversPage = ({renderbackButton}) => {
       </View>
 
       {/* Subheader */}
-      <View style={styles.subheader}>
-        <View style={styles.subheaderContent}>
-          <Text style={styles.subheaderTitle}>All Drivers Information</Text>
-          <Icon name="drivers-license" size={28} color="#2196F3" />
-        </View>
-      </View>
+      
 
       {/* Content */}
       <ScrollView style={styles.scrollView}>
@@ -106,7 +102,10 @@ const AdminDriversPage = ({renderbackButton}) => {
 
                   <View style={styles.infoRow}>
                     <Icon1 name="date-range" size={20} color="#666" />
-                    <Text style={styles.infoLabel}>Registered:</Text>
+                    <Text numberOfLines={1} style={styles.infoLabel}
+                    className="mr-3">
+                    Registered:
+                    </Text>
                     <Text style={styles.infoValue}>{user.RegisterMonth}</Text>
                   </View>
 
@@ -125,7 +124,7 @@ const AdminDriversPage = ({renderbackButton}) => {
                   <TouchableOpacity
                     style={styles.viewProfileButton}
                     onPress={() => handleViewProfile(user.id)}>
-                    <Text style={styles.viewProfileText}>View Profile</Text>
+                    <Text style={styles.viewProfileText}>View Reports</Text>
                     <Icon1 name="arrow-forward" size={20} color="#fff" />
                   </TouchableOpacity>
                 </View>
@@ -158,7 +157,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: '700',
     color: '#1a1a1a',
     marginRight: 12,
@@ -226,7 +225,7 @@ const styles = StyleSheet.create({
     color: '#1a1a1a',
   },
   cardBody: {
-    padding: 16,
+    padding: 17,
   },
   infoRow: {
     flexDirection: 'row',
@@ -238,6 +237,7 @@ const styles = StyleSheet.create({
     color: '#666',
     marginLeft: 8,
     width: 70,
+    
   },
   infoValue: {
     flex: 1,

@@ -78,8 +78,8 @@ const SettingsNewSection = ({onBackPress, onLogout}) => {
       <View className="bg-blue-500 pt-12 pb-6">
         <TouchableOpacity
           onPress={onBackPress}
-          className="absolute top-12 left-4 p-2">
-          <ChevronLeft size={wp('6%')} color="white" />
+          className="absolute top-12 left-4 px-5  z-20">
+          <ChevronLeft size={wp('8%')} color="white" />
         </TouchableOpacity>
         <Text className="text-white text-center text-xl font-semibold">
           Settings

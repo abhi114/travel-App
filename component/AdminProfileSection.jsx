@@ -59,9 +59,9 @@ const AdminProfileSection = ({ data, onBackPress }) => {
       <View className="bg-blue-500 pt-12 pb-20 rounded-b-[40px] shadow-md">
         <TouchableOpacity 
           onPress={onBackPress}
-          className="absolute top-12 left-4 p-4"
+          className="absolute top-12 left-4 p-4 z-20"
         >
-          <ChevronLeft size={wp('7%')} color="white" />
+          <ChevronLeft size={wp('8%')} color="white" />
         </TouchableOpacity>
         <Text className="text-white text-center text-xl font-semibold">
           Profile Details

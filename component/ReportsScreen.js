@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  BackHandler,
  
 } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
@@ -20,7 +21,15 @@ import { LineView } from './helpers/helpers';
 import Widget from './ReportsScreenDetailed';
 import WeeklyStats from './WeeklyStats';
 import { ScrollView } from 'react-native';
-import { Car, ChevronDown, ChevronUp, FileText, MapPin } from 'lucide-react-native';
+import {
+  Car,
+  ChevronDown,
+  ChevronUp,
+  FileText,
+  MapPin,
+  User,
+  Phone,
+} from 'lucide-react-native';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -34,6 +43,7 @@ import { LoadingAlert } from './CustomAlerts';
 
 const UserDataScreen = ({route}) => {
   const {id} = route.params;
+  const data= route?.params?.data || [];
   const monthNames = [
     'January',
     'February',
@@ -70,6 +80,23 @@ const UserDataScreen = ({route}) => {
       <Text style={styles.eventLocation}>{location}</Text>
     </View>
   );
+  
+  useEffect(() => {
+    if(data){
+    const handleBackPress = () => {
+      //navigation.navigate('AdminDriversPage', {id,data});
+      navigation.goBack();
+      return true; // Indicates that the back press has been handled
+    };
+
+    BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackPress);
+    };
+  }
+  }, []);
+
     useEffect(() => {
       const fetchUserInfo = async () => {
         const response = firestore().collection('userInfo').doc(id);
@@ -88,7 +115,7 @@ const UserDataScreen = ({route}) => {
       };
       fetchUserInfo();
     }, []);
-    
+   
   useEffect(() => {
     const getUserData = async () => {
       try {
@@ -206,12 +233,86 @@ const UserDataScreen = ({route}) => {
 
   //   return sortedObject;
   // };
-  
+  const DriverCard = () => {
+    const [isExpanded, setIsExpanded] = useState(false);
+
+    return (
+      <View className="flex-1 items-center justify-center bg-gray-100 p-4">
+        <View className="w-full max-w-md bg-white rounded-xl shadow-lg">
+          {/* Collapsed/Expanded Header */}
+          <TouchableOpacity
+            onPress={() => setIsExpanded(!isExpanded)}
+            className="flex-row justify-between items-center p-4 border-b border-gray-200">
+            <View className="flex-row items-center space-x-3">
+              <View className="bg-blue-500 w-10 h-10 rounded-full items-center justify-center">
+                <Text className="text-white text-lg font-bold">
+                  {' '}
+                  {userInfo?.name
+                    ? userInfo.name.slice(0, 2).toUpperCase()
+                    : ''}
+                </Text>
+              </View>
+              <Text className="text-lg font-semibold text-gray-800">
+                {userInfo?.name}
+              </Text>
+            </View>
+            {isExpanded ? (
+              <ChevronUp color="#4B5563" size={24} />
+            ) : (
+              <ChevronDown color="#4B5563" size={24} />
+            )}
+          </TouchableOpacity>
+
+          {/* Expandable Details */}
+          {isExpanded && (
+            <View className="p-4 space-y-4">
+              {/* <View className="flex-row items-center space-x-3">
+                <User color="#4B5563" size={20} />
+                <View>
+                  <Text className="text-xs text-gray-500">Full Name</Text>
+                  <Text className="text-base font-medium text-gray-800">
+                    {userInfo?.name}
+                  </Text>
+                </View>
+              </View> */}
+
+              <View className="flex-row items-center space-x-3">
+                <Phone color="#4B5563" size={20} />
+                <View>
+                  <Text className="text-xs text-gray-500">Mobile Number</Text>
+                  <Text className="text-base font-medium text-gray-800">
+                    {userInfo?.MobileNumber}
+                  </Text>
+                </View>
+              </View>
+
+              <View className="flex-row items-center space-x-3">
+                <MapPin color="#4B5563" size={20} />
+                <View className="flex-1">
+                  <Text className="text-xs text-gray-500">Address</Text>
+                  <Text className="text-base font-medium text-gray-800 flex-wrap">
+                    {userInfo?.driverAddress}
+                  </Text>
+                </View>
+              </View>
+
+              <View className="bg-blue-50 p-3 rounded-lg mt-2">
+                <Text className="text-sm text-blue-800 text-center">
+                  Active Driving License
+                </Text>
+              </View>
+            </View>
+          )}
+        </View>
+      </View>
+    );
+  };
   return (
     <ScrollView style={styles2.container}>
       <View style={styles2.header}>
         <Text style={styles2.headerText}>Report Details</Text>
       </View>
+      <DriverCard/>
       <LinearGradient
         colors={['#F0F0F0', '#F5F5F5', '#FAFAFA']}
         start={{x: 0, y: 0}}
@@ -750,8 +851,8 @@ const UserDataScreen = ({route}) => {
                               </View>
                             )}
                           </View>
-                          <LineView />
-                          <Text
+                          {/* <LineView /> */}
+                          {/* <Text
                             style={{
                               margin: 8,
                               fontSize: 18,
@@ -759,8 +860,8 @@ const UserDataScreen = ({route}) => {
                               color: '#000000',
                             }}>
                             Feedbacks -
-                          </Text>
-                          {filteredData[item].Feedback !== undefined ? (
+                          </Text> */}
+                          {/* {filteredData[item].Feedback !== undefined ? (
                             <View style={styles.feedbackcard}>
                               <Text
                                 style={{
@@ -774,7 +875,7 @@ const UserDataScreen = ({route}) => {
                             </View>
                           ) : (
                             <Text>Feedbacks Not available</Text>
-                          )}
+                          )} */}
                         </View>
                       )}
                     </View>
