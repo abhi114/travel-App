@@ -108,8 +108,9 @@ const getSelectedCarItem = async () => {
 };
 
 useEffect(() => {
+    getAllCarData();
    getSelectedCarItem();
-   getAllCarData();
+   
   
    
   

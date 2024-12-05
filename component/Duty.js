@@ -210,7 +210,7 @@ const Sign = ({id, Rprtdate, mainData}) => {
               SetPassengerSignature(false);
               navigation.reset({
                 index: 0,
-                routes: [{name: 'Feedback', params: {id}}],
+                routes: [{name: 'ButtonPage', params: {id}}],
               });
             }}
           />

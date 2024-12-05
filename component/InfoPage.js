@@ -732,7 +732,7 @@ const InfoPage = ({route}) => {
           {/* Reporting Address Section */}
           <View className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
             <View className="flex-row items-center justify-between">
-              <View className="flex-1 mr-4">
+              <View className="flex-1 ">
                 <Text className="text-sm font-medium text-gray-700 mb-2">
                   Reporting Address <Text className="text-blue-500">*</Text>
                 </Text>
@@ -743,9 +743,9 @@ const InfoPage = ({route}) => {
                     placeholder="Enter address"
                     placeholderTextColor="#9ca3af"
                     className="bg-gray-50 rounded-lg  text-gray-800 border border-gray-200"
-                    style={{flex: 1, padding: wp(3), marginRight: wp(2)}}
+                    style={{flex: 1, padding: wp(3), }}
                   />
-                  <TouchableOpacity
+                  {/* <TouchableOpacity
                     className=" bg-blue-50 rounded-lg"
                     style={{
                       justifyContent: 'center',
@@ -761,7 +761,7 @@ const InfoPage = ({route}) => {
                       color="#3b82f6"
                       style={{justifyContent: 'center', alignSelf: 'center'}}
                     />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
               </View>
             </View>
