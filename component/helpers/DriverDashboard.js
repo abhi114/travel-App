@@ -11,6 +11,7 @@ import {
   Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon1 from 'react-native-vector-icons/MaterialCommunityIcons';
 import LottieView from 'lottie-react-native';
 import firestore from '@react-native-firebase/firestore';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -27,12 +28,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
   const [nameData,setNameData] = useState(data);
   const width = Dimensions.get('screen').width;
   //console.log(id);
-  const [selectedCar, setSelecCar] = useState({
-    model: 'Jeep Rubicon',
-    carNumber: 'UP32AD2445',
-    downloadURL:
-      'https://images.pexels.com/photos/810357/pexels-photo-810357.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-  });
+  const [selectedCar, setSelecCar] = useState({});
   async function getSelectedCar() {
     try {
       // Reference to the user's document
@@ -154,7 +150,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
           className="flex-row items-center bg-gray-800/50"
           onPress={() => {
             navigation.navigate('EditProfile', {
-              data:nameData,
+              data: nameData,
               id: id,
               setNameData: setNameData,
             });
@@ -215,33 +211,58 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
                 Current Vehicle
               </Text>
             </View>
-            <View className="flex-row items-center" style={{padding: hp('2%')}}>
-              <Image
-                source={{uri: selectedCar?.downloadURL}}
-                className="rounded-lg"
-                resizeMode="cover"
-                style={{
-                  width: wp('16%'),
-                  height: wp('16%'),
-                  marginRight: wp('4%'),
-                }}
-              />
-              <View className="flex-1">
-                <Text
-                  className="text-white font-semibold"
-                  style={{fontSize: wp('5%')}}>
-                  {selectedCar?.model}
-                </Text>
-                <Text className="text-gray-400" style={{fontSize: wp('4%')}}>
-                  ID: {selectedCar?.carNumber}
-                </Text>
-              </View>
+            {Object.keys(selectedCar).length>0 ? (
               <View
-                className="bg-blue-500/20 rounded-full"
-                style={{padding: wp('2%')}}>
-                <Icon name="directions-car" size={wp('6%')} color="#60A5FA" />
+                className="flex-row items-center"
+                style={{padding: hp('2%')}}>
+                <Image
+                  source={{uri: selectedCar?.downloadURL}}
+                  className="rounded-lg"
+                  resizeMode="cover"
+                  style={{
+                    width: wp('16%'),
+                    height: wp('16%'),
+                    marginRight: wp('4%'),
+                  }}
+                />
+                <View className="flex-1">
+                  <Text
+                    className="text-white font-semibold"
+                    style={{fontSize: wp('5%')}}>
+                    {selectedCar?.model}
+                  </Text>
+                  <Text className="text-gray-400" style={{fontSize: wp('4%')}}>
+                    ID: {selectedCar?.carNumber}
+                  </Text>
+                </View>
+                <View
+                  className="bg-blue-500/20 rounded-full"
+                  style={{padding: wp('2%')}}>
+                  <Icon name="directions-car" size={wp('6%')} color="#60A5FA" />
+                </View>
               </View>
-            </View>
+            ) : (
+              <View className="flex-row items-center space-x-5 p-4 bg-gray-800 rounded-lg">
+                <Icon1
+                  name="car-off"
+                  size={wp('8%')}
+                  color="#9CA3AF"
+                  className="mr-3"
+                />
+                <View>
+                  <Text
+                    className="text-gray-300 font-semibold"
+                    style={{fontSize: wp('4.5%')}}>
+                    No Car Selected
+                  </Text>
+                  <Text
+                    className="text-gray-500"
+                    style={{fontSize: wp('3.5%')}}>
+                   Add/Choose Vehicle
+                  </Text>
+                </View>
+              </View>
+            )}
             <View className="bg-blue-500/10 px-4 py-2 flex-row items-center justify-between">
               <Text className="text-blue-400 text-sm">
                 Tap to change vehicle

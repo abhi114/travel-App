@@ -25,7 +25,7 @@ const CarSelectionScreen = ({route}) => {
   const navigation = useNavigation();
   const [selectedCar, setSelectedCar] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [loading,setloading] = useState(false);
+  const [loading,setloading] = useState(true);
   const [successVisible,setSuccessVisible] = useState(false);
   const [cars,setCars] = useState([
   
@@ -108,6 +108,7 @@ const getSelectedCarItem = async () => {
 };
 
 useEffect(() => {
+   console.log("hitting use effect");
     getAllCarData();
    getSelectedCarItem();
    
@@ -158,7 +159,19 @@ useEffect(() => {
       console.warn(`User document does not exist.`);
       return;
     }
+     if (userDoc.exists) {
+            const userData = userDoc.data();
 
+            // Check if the car being deleted is the selected car
+            if (userData.SelectedCar.carNumber === carNumber) {
+                // Remove the SelectedCar field from Firestore
+                await userRef.update({
+                    SelectedCar: firestore.FieldValue.delete(),
+                });
+                setSelecCar({})
+                console.log(`Removed SelectedCar field as the car "${carNumber}" was selected.`);
+            }
+        }
     const userData = userDoc.data();
     const carData = userData?.CarPhotosUrl?.[carNumber];
 
@@ -253,10 +266,11 @@ useEffect(() => {
 
 };
 async function updateSelectedCar(carValue) {
+  
     try {
         // Reference to the user's document
         const userRef = firestore().collection('userInfo').doc(id);
-
+        const userDoc = await userRef.get();
         // Update the document with the key-value pair
         await userRef.set(
             { SelectedCar: carValue },
@@ -268,6 +282,30 @@ async function updateSelectedCar(carValue) {
         console.error("Error updating SelectedCar:", error);
     }
 }
+  const unselectCarItem = async (item)=>{
+      try {
+        // Reference to the user's document
+          const userRef = firestore().collection('userInfo').doc(id);
+          const userDoc = await userRef.get();
+        
+           if (userDoc.exists) {
+            const userData = userDoc.data();
+           if (userData.SelectedCar.carNumber === item.carNumber) {
+                // Remove the SelectedCar field from Firestore
+                await userRef.update({
+                    SelectedCar: firestore.FieldValue.delete(),
+                });
+                setSelecCar({})
+                setSelectedCar(null)
+                //console.log(`Removed SelectedCar field as the car "${carNumber}" was selected.`);
+            }
+          }
+    
+         } catch (error) {
+                console.error("Error updating SelectedCar:", error);
+        }
+               
+  }
   const renderCarItem = ({ item }) => {
     const isSelected = selectedCar === item.carNumber;
     
@@ -277,7 +315,13 @@ async function updateSelectedCar(carValue) {
           styles.carCard,
           isSelected && styles.selectedCard,
         ]}
-        onPress={() => {setSelectedCar(item.carNumber),
+        onPress={async () => {
+          if(item.carNumber === selectedCar){
+               unselectCarItem(item);
+                return;
+           }
+           
+          setSelectedCar(item.carNumber),
           //console.log("selected Car is" + JSON.stringify(item))
           updateSelectedCar(item);
           AsyncStorage.setItem("CarSelectedNumber",JSON.stringify(item));
