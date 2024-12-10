@@ -7,6 +7,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import Animated, {
   FadeInUp,
@@ -198,8 +199,12 @@ const ProfileEditScreen = ({route}) => {
               <Phone size={20} color="#6B7280" />
               <TextInput
                 value={profileData.mobile}
-                onChangeText={text =>
+                maxLength={10}
+                onChangeText={text =>{
+                  console.log(text);
+                 
                   setProfileData(prev => ({...prev, mobile: text}))
+                }
                 }
                 className="flex-1 ml-3 text-gray-800"
                 placeholder="Enter your mobile number"

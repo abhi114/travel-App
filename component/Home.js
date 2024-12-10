@@ -122,6 +122,10 @@ const Home = ({route}) => {
           Alert.alert("please enter the km and fuel values");
           return;
         }
+        if(startKm>endkm || startFuel>endFuel){
+      Alert.alert("Starting Value can't be greater than end value");
+              return; 
+        }
         setLoadingVisible(true);
         await storeData(startKm,endkm,startFuel,endFuel);
         await storeFuelData();
@@ -160,7 +164,7 @@ const Home = ({route}) => {
                <Text style={styles.nameText}>{name}</Text>
                <Text style={styles.numberText}>{number}</Text>
              </View>
-             <TouchableOpacity onPress={makecall} style={styles.phoneButton}>
+             <TouchableOpacity  style={styles.phoneButton}>
                <Icon name="phone" size={24} color="#fff" />
              </TouchableOpacity>
            </View>

@@ -146,6 +146,7 @@ const PersonalInfo = ({route}) => {
            <TextInput
              onChangeText={enterNumber}
              value={number}
+             maxLength={10}
              keyboardType="numeric"
              placeholder="Enter mobile number"
              placeholderTextColor="#9CA3AF"

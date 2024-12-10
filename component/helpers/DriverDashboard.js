@@ -20,6 +20,9 @@ import {
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Fuel } from 'lucide-react-native';
+import PetrolEntryModal from '../PetrolModal';
+import { LoadingAlert, SuccessAlert } from '../CustomAlerts';
 const DriverDashboard = ({emailId, id, data,logout}) => {
   const navigation = useNavigation();
   const scaleAnim = useRef(new Animated.Value(0)).current; // Initial scale for the title
@@ -27,8 +30,59 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
   const insets = useSafeAreaInsets();
   const [nameData,setNameData] = useState(data);
   const width = Dimensions.get('screen').width;
+
+   const monthNames = [
+     'January',
+     'February',
+     'March',
+     'April',
+     'May',
+     'June',
+     'July',
+     'August',
+     'September',
+     'October',
+     'November',
+     'December',
+   ];
+   const currentDate = new Date();
+   const currentMonth = monthNames[currentDate.getMonth()];
   //console.log(id);
   const [selectedCar, setSelecCar] = useState({});
+  const [petrolModel,setPetrolModel] = useState(false);
+  const [loading, setloading] = useState(false);
+  const [successVisible, setSuccessVisible] = useState(false);
+   const storeFuelData = async (priceNum) => {
+    setloading(true);
+     try {
+       const userRef = firestore().collection('userInfo').doc(id); // Reference user document
+       const userDoc = await userRef.get(); // Get user document
+       const userData = userDoc.data(); // Convert user document to object
+
+       if (userData.monthExpenditure) {
+         const currentMonthData = userData.monthExpenditure[currentMonth];
+         const totalCost =
+           (parseFloat(currentMonthData) || 0) + parseFloat(priceNum);
+         const fuelData = {
+           [`monthExpenditure.${currentMonth}`]: totalCost.toString(),
+         };
+         console.log('fuel data is' + JSON.stringify(fuelData));
+         await userRef.update(fuelData); // Set user data in the document
+         console.log('fuel data updated');
+         setloading(false);
+         setSuccessVisible(true);
+       } else {
+         setloading(false);
+         console.log('Monthly expenditure data not found');
+       }
+     } catch (error) {
+       setloading(false);
+       console.error('Error storing fuel data:', error);
+     }
+   };
+  const onSubmitPetrol =async priceNum => {
+      await storeFuelData(priceNum);
+  };
   async function getSelectedCar() {
     try {
       // Reference to the user's document
@@ -146,38 +200,68 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
             Welcome To <Text style={{color: '#FF0000'}}>Drive..</Text>
           </Text>
         </Animated.View>
-        <TouchableOpacity
-          className="flex-row items-center bg-gray-800/50"
-          onPress={() => {
-            navigation.navigate('EditProfile', {
-              data: nameData,
-              id: id,
-              setNameData: setNameData,
-            });
-          }}
-          style={{
-            paddingHorizontal: wp('6%'),
-            paddingVertical: hp('1.5%'),
-            borderRadius: wp('8%'),
-            marginBottom: hp('3%'),
-            shadowOpacity: 0.2,
-            shadowRadius: 5,
-          }}>
-          <Image
-            source={require('../../assets/profile.png')}
-            style={{
-              width: wp('10%'),
-              height: wp('10%'),
-              borderRadius: wp('5%'),
-              marginRight: wp('3%'),
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            className="flex-row items-center bg-gray-800/50"
+            onPress={() => {
+              navigation.navigate('EditProfile', {
+                data: nameData,
+                id: id,
+                setNameData: setNameData,
+              });
             }}
-          />
-          <Text
-            className=" text-white font-semibold"
-            style={{fontSize: wp('5%')}}>
-            {nameData?.name}
-          </Text>
-        </TouchableOpacity>
+            style={{
+              paddingHorizontal: wp('6%'),
+              paddingVertical: hp('1.5%'),
+              borderRadius: wp('8%'),
+              marginBottom: hp('3%'),
+              shadowOpacity: 0.2,
+              shadowRadius: 5,
+            }}>
+            <Image
+              source={require('../../assets/profile.png')}
+              style={{
+                width: wp('10%'),
+                height: wp('10%'),
+                borderRadius: wp('5%'),
+                marginRight: wp('3%'),
+              }}
+            />
+            <Text
+              className=" text-white font-semibold"
+              style={{fontSize: wp('5%')}}>
+              {nameData?.name}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            className="flex-row items-center bg-gray-800/50 ml-2"
+            onPress={() => {
+              setPetrolModel(true);
+            }}
+            style={{
+              paddingHorizontal: wp('4%'),
+              paddingVertical: hp('1.5%'),
+              borderRadius: wp('8%'),
+              marginBottom: hp('3%'),
+              shadowOpacity: 0.2,
+              shadowRadius: 5,
+            }}>
+            <Fuel
+              color={'#800080'}
+              style={{
+                width: wp('5%'),
+                height: wp('5%'),
+                borderRadius: wp('5%'),
+                marginRight: wp('3%'),
+              }}
+            />
+            <Text
+              className=" text-white font-semibold"
+              style={{fontSize: wp('4%')}}>
+              Add Petrol
+            </Text>
+          </TouchableOpacity>
+        </View>
         {/* Selected Car Display */}
         <View style={{width: wp('90%'), marginBottom: hp('3%')}}>
           <TouchableOpacity
@@ -211,7 +295,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
                 Current Vehicle
               </Text>
             </View>
-            {Object.keys(selectedCar).length>0 ? (
+            {Object.keys(selectedCar).length > 0 ? (
               <View
                 className="flex-row items-center"
                 style={{padding: hp('2%')}}>
@@ -258,7 +342,7 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
                   <Text
                     className="text-gray-500"
                     style={{fontSize: wp('3.5%')}}>
-                   Add/Choose Vehicle
+                    Add/Choose Vehicle
                   </Text>
                 </View>
               </View>
@@ -343,6 +427,22 @@ const DriverDashboard = ({emailId, id, data,logout}) => {
 
         {/* Bottom Decoration */}
       </View>
+      {loading && <LoadingAlert visible={loading} />}
+      {successVisible && (
+        <SuccessAlert
+          visible={successVisible}
+          onClose={() => {
+            setSuccessVisible(false);
+          }}
+          message={'Fuel Added Sucessfully'}
+        />
+      )}
+      {petrolModel && (
+        <PetrolEntryModal
+          onClose={() => setPetrolModel(false)}
+          onSubmit={onSubmitPetrol}
+        />
+      )}
     </View>
   );
 };
